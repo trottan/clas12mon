@@ -65,7 +65,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     JMenuBar menuBar                            = null;
     DataSourceProcessorPane processorPane 	= null;
     EmbeddedCanvasTabbed CLAS12Canvas           = null;
-
+    //EmbeddedCanvasTabbed CLAS12CDCanvas           = null;
     
     CodaEventDecoder               decoder = new CodaEventDecoder();
     CLASDecoder                clasDecoder = new CLASDecoder();
@@ -77,14 +77,23 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     // detector monitors
     DetectorMonitor[] monitors = {
-    		new DCmonitor("DC"),
-    		new HTCCmonitor("HTCC"),
-    		new LTCCmonitor("LTCC"),
-    		new FTOFmonitor("FTOF"),
-    		new ECmonitor("EC"),
-    		new CTOFmonitor("CTOF"),
-    		new SVTmonitor("SVT"),
-    		new RFmonitor("RF"),
+        
+                new CNDmonitor("CND"),       // 0
+                new CTOFmonitor("CTOF"),     // 1
+                new DCmonitor("DC"),         // 2
+                new ECmonitor("ECAL"),       // 3
+                new FTOFmonitor("FTOF"),     // 4
+                new FTTRKmonitor("FTTRK"),   // 5
+                new FTHODOmonitor("FTHODO"), // 6
+                new FTCALmonitor("FTCAL"),   // 7
+                new HTCCmonitor("HTCC"),     // 8
+                new LTCCmonitor("LTCC"),     // 9
+                new MVTmonitor("MVT"),       // 10
+                new SVTmonitor("SVT"),       // 11
+    		
+    		new RFmonitor("RF"),         // 12
+                new HELmonitor("HEL"),       // 13
+      
     };
         
     public EventViewer() {    	
@@ -95,17 +104,17 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         JMenu file = new JMenu("File");
         file.setMnemonic(KeyEvent.VK_A);
         file.getAccessibleContext().setAccessibleDescription("File options");
-        menuItem = new JMenuItem("Open histograms file...", KeyEvent.VK_O);
+        menuItem = new JMenuItem("Open histograms file", KeyEvent.VK_O);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription("Open histograms file");
         menuItem.addActionListener(this);
         file.add(menuItem);
-         menuItem = new JMenuItem("Print histograms to file...", KeyEvent.VK_P);
+         menuItem = new JMenuItem("Print histograms to file", KeyEvent.VK_P);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P, ActionEvent.CTRL_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription("Print histograms to file");
         menuItem.addActionListener(this);
         file.add(menuItem);
-        menuItem = new JMenuItem("Save histograms to file...", KeyEvent.VK_S);
+        menuItem = new JMenuItem("Save histograms to file", KeyEvent.VK_S);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription("Save histograms to file");
         menuItem.addActionListener(this);
@@ -114,9 +123,19 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         JMenu settings = new JMenu("Settings");
         settings.setMnemonic(KeyEvent.VK_A);
         settings.getAccessibleContext().setAccessibleDescription("Choose monitoring parameters");
-        menuItem = new JMenuItem("Set GUI update interval...", KeyEvent.VK_T);
+        menuItem = new JMenuItem("Set GUI update interval", KeyEvent.VK_T);
         menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
         menuItem.getAccessibleContext().setAccessibleDescription("Set GUI update interval");
+        menuItem.addActionListener(this);
+        settings.add(menuItem);
+        menuItem = new JMenuItem("Set global z-axis log scale", KeyEvent.VK_L);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_L, ActionEvent.CTRL_MASK));
+        menuItem.getAccessibleContext().setAccessibleDescription("Set global z-axis log scale");
+        menuItem.addActionListener(this);
+        settings.add(menuItem);
+         menuItem = new JMenuItem("Set global z-axis lin scale", KeyEvent.VK_R);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R, ActionEvent.CTRL_MASK));
+        menuItem.getAccessibleContext().setAccessibleDescription("Set global z-axis lin scale");
         menuItem.addActionListener(this);
         settings.add(menuItem);
         menuBar.add(settings);
@@ -139,10 +158,20 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         GStyle.getAxisAttributesX().setLabelFontSize(14);
         GStyle.getAxisAttributesY().setTitleFontSize(18);
         GStyle.getAxisAttributesY().setLabelFontSize(14);
-        CLAS12Canvas    = new EmbeddedCanvasTabbed("CLAS12");
-        CLAS12Canvas.getCanvas("CLAS12").divide(3,3);
-        CLAS12Canvas.getCanvas("CLAS12").setGridX(false);
-        CLAS12Canvas.getCanvas("CLAS12").setGridY(false);
+        CLAS12Canvas    = new EmbeddedCanvasTabbed("FD");
+        CLAS12Canvas.getCanvas("FD").divide(3,3);
+        CLAS12Canvas.getCanvas("FD").setGridX(false);
+        CLAS12Canvas.getCanvas("FD").setGridY(false); 
+        CLAS12Canvas.addCanvas("CD");
+        CLAS12Canvas.getCanvas("CD").divide(3,2);
+        CLAS12Canvas.getCanvas("CD").setGridX(false);
+        CLAS12Canvas.getCanvas("CD").setGridY(false);
+        CLAS12Canvas.addCanvas("FT");
+        CLAS12Canvas.getCanvas("FT").divide(3,2);
+        CLAS12Canvas.getCanvas("FT").setGridX(false);
+        CLAS12Canvas.getCanvas("FT").setGridY(false);
+        
+        
         JPanel    CLAS12View = new JPanel(new BorderLayout());
         JSplitPane splitPanel = new JSplitPane();
         splitPanel.setLeftComponent(CLAS12View);
@@ -161,31 +190,39 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 //        CLAS12View.add(clas12Name,BorderLayout.PAGE_START);
         CLAS12View.add(clas12Design);
         CLAS12View.add(clas12Text,BorderLayout.PAGE_END);
- 
-        
-        tabbedpane.add(splitPanel,"CLAS12");
+
+        tabbedpane.add(splitPanel,"CLAS12-summary");
         tabbedpane.addChangeListener(this);
        
         for(int k =0; k<this.monitors.length; k++) {
                 this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName());
         	this.monitors[k].getDetectorView().getView().addDetectorListener(this);
         }
+        this.tabbedpane.add(new Contact(),"Contacts");
         this.processorPane.addEventListener(this);
         
         this.setCanvasUpdate(canvasUpdateTime);
         this.plotSummaries();
+        
+        
     }
       
     public void actionPerformed(ActionEvent e) {
         System.out.println(e.getActionCommand());
-        if(e.getActionCommand()=="Set GUI update interval...") {
+        if(e.getActionCommand()=="Set GUI update interval") {
             this.chooseUpdateInterval();
         }
-        if(e.getActionCommand()=="Open histograms file...") {
+        if(e.getActionCommand()=="Set global z-axis log scale") {
+            //GStyle.getAxisAttributes().SetLogz();
+        }
+        if(e.getActionCommand()=="Set global z-axis lin scale") {
+           //GStyle.SetLog();
+        }
+        if(e.getActionCommand()=="Open histograms file") {
             String fileName = null;
             JFileChooser fc = new JFileChooser();
             fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            File workingDirectory = new File(System.getProperty("user.dir") + "/ONLINE/kpphistos");
+            File workingDirectory = new File(System.getProperty("user.dir"));  
             fc.setCurrentDirectory(workingDirectory);
             int option = fc.showOpenDialog(null);
             if (option == JFileChooser.APPROVE_OPTION) {
@@ -193,14 +230,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
             if(fileName != null) this.loadHistosFromFile(fileName);
         }        
-        if(e.getActionCommand()=="Print histograms to file...") {
+        if(e.getActionCommand()=="Print histograms to file") {
             this.printHistosToFile();
         }
-        if(e.getActionCommand()=="Save histograms to file...") {
+        if(e.getActionCommand()=="Save histograms to file") {
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
             String fileName = "mon12_" + this.runNumber + "_" + df.format(new Date()) + ".hipo";
             JFileChooser fc = new JFileChooser();
-            File workingDirectory = new File(System.getProperty("user.dir") + "/ONLINE/kpphistos");
+            File workingDirectory = new File(System.getProperty("user.dir"));   
             fc.setCurrentDirectory(workingDirectory);
             File file = new File(fileName);
             fc.setSelectedFile(file);
@@ -316,33 +353,67 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     }
 
     public void plotSummaries() {
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(0);
-        if(this.monitors[0].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[0].getDetectorSummary().getH1F("summary"));
-//        this.CLAS12Canvas.getCanvas("CLAS12").cd(1);
-//        if(this.monitors[1].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[1].getDetectorSummary().getH1F("sumHBT"));
-//        this.CLAS12Canvas.getCanvas("CLAS12").cd(2);
-//        if(this.monitors[1].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[1].getDetectorSummary().getH1F("sumTBT"));
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(1);
-        if(this.monitors[1].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[1].getDetectorSummary().getH1F("summary"));
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(2);
-        if(this.monitors[2].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[2].getDetectorSummary().getH1F("summary"));       
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(3);
-        if(this.monitors[3].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[3].getDetectorSummary().getH1F("sumP1A"));
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(4);
-        if(this.monitors[3].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[3].getDetectorSummary().getH1F("sumP1B"));
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(5);
-        if(this.monitors[3].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[3].getDetectorSummary().getH1F("sumP2"));
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(6);
-        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[4].getDetectorSummary().getH1F("sumECin"));
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(7);
-        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[4].getDetectorSummary().getH1F("sumECout"));
-        this.CLAS12Canvas.getCanvas("CLAS12").cd(8);
-        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CLAS12").draw(this.monitors[4].getDetectorSummary().getH1F("sumPCAL"));
+        
+        /////////////////////////////////////////////////
+        /// FD:
+        
+        // CD
+        this.CLAS12Canvas.getCanvas("FD").cd(0);
+        if(this.monitors[2].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[2].getDetectorSummary().getH1F("summary")); 
+         // HTTC
+        this.CLAS12Canvas.getCanvas("FD").cd(1);
+        if(this.monitors[8].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[8].getDetectorSummary().getH1F("summary"));
+        // HTTC
+        this.CLAS12Canvas.getCanvas("FD").cd(2);
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("summary"));
+        
+        // ECAL 
+        this.CLAS12Canvas.getCanvas("FD").cd(3);
+        if(this.monitors[3].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[3].getDetectorSummary().getH1F("sumECin"));
+        this.CLAS12Canvas.getCanvas("FD").cd(4);
+        if(this.monitors[3].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[3].getDetectorSummary().getH1F("sumECout"));
+        this.CLAS12Canvas.getCanvas("FD").cd(5);
+        if(this.monitors[3].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[3].getDetectorSummary().getH1F("sumPCAL"));
+   
+        // FTOF:
+        this.CLAS12Canvas.getCanvas("FD").cd(6);
+        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sumP1A"));
+        this.CLAS12Canvas.getCanvas("FD").cd(7);
+        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sumP1B"));
+        this.CLAS12Canvas.getCanvas("FD").cd(8);
+        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sumP2"));
+        
+        //////////////////////////////////////////////////
+        ///  CD:
+        
+        // CND
+        this.CLAS12Canvas.getCanvas("CD").cd(0);
+        if(this.monitors[0].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[0].getDetectorSummary().getH1F("summary"));
+        // CTOF
+        this.CLAS12Canvas.getCanvas("CD").cd(1);
+        if(this.monitors[1].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[1].getDetectorSummary().getH1F("summary"));
+        
+        
+        
+        ///////////////////////////////////////////////////
+        // FT:
+        
+        // FTCAL
+        this.CLAS12Canvas.getCanvas("FT").cd(0);
+        if(this.monitors[7].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FT").draw(this.monitors[7].getDetectorSummary().getH1F("summary"));
+        // FTHODO
+        this.CLAS12Canvas.getCanvas("FT").cd(1);
+        if(this.monitors[6].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FT").draw(this.monitors[6].getDetectorSummary().getH1F("summary"));
+        
+        ////////////////////////////////////////////////////
+        
+  
+ 
     }
     
     public void printHistosToFile() {
         DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
-        String data = System.getProperty("user.dir") + "/ONLINE/kpphistos/mon12_" + this.runNumber + "_" + df.format(new Date());        
+        String data = System.getProperty("user.dir")+ "/mon12_" + this.runNumber + "_" + df.format(new Date());        
         File theDir = new File(data);
         // if the directory does not exist, create it
         if (!theDir.exists()) {
@@ -360,7 +431,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         }
         String fileName = data + "/clas12_canvas.png";
         System.out.println(fileName);
-        this.CLAS12Canvas.getCanvas("CLAS12").save(fileName);
+       // this.CLAS12Canvas.getCanvas("CLAS12-summary").save(fileName);
         for(int k=0; k<this.monitors.length; k++) {
             this.monitors[k].printCanvas(data);
         }
@@ -393,8 +464,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     public void setCanvasUpdate(int time) {
         System.out.println("Setting " + time + " ms update interval");
         this.canvasUpdateTime = time;
-        this.CLAS12Canvas.getCanvas("CLAS12").initTimer(time);
-        this.CLAS12Canvas.getCanvas("CLAS12").update();
+        this.CLAS12Canvas.getCanvas("FD").initTimer(time);
+        this.CLAS12Canvas.getCanvas("FD").update();
+        this.CLAS12Canvas.getCanvas("CD").initTimer(time);
+        this.CLAS12Canvas.getCanvas("FT").initTimer(time);
+        this.CLAS12Canvas.getCanvas("FT").update();
         for(int k=0; k<this.monitors.length; k++) {
             this.monitors[k].setCanvasUpdate(time);
         }

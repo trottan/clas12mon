@@ -28,7 +28,7 @@ public class FTOFmonitor  extends DetectorMonitor {
         super(name);
         
         this.setDetectorTabNames("ADC Occupancies", "TDC Occupancies");
-        this.init(true);
+        this.init(false);   // set to true for picture on left side
     }
 
     @Override
@@ -42,6 +42,7 @@ public class FTOFmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("TDC Occupancies").divide(2, 3);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").setGridY(false);
+        
         H1F sumP1A = new H1F("sumP1A","sumP1A",6,1,7);
         sumP1A.setTitleX("sector");
         sumP1A.setTitleY("FTOF P1A hits");
@@ -59,23 +60,24 @@ public class FTOFmonitor  extends DetectorMonitor {
         sum.addDataSet(sumP1B, 1);
         sum.addDataSet(sumP2,  2);
         this.setDetectorSummary(sum);
+        
         for(int layer=1; layer <= 3; layer++) {
             H2F occADCL = new H2F("occADCL_lay"+layer, "layer " + layer + " Occupancy", this.npaddles[layer-1], 1, npaddles[layer-1]+1, 6, 1, 7);
             occADCL.setTitleX("paddle");
             occADCL.setTitleY("sector");
-            occADCL.setTitle("Left PMTs");
+            occADCL.setTitle("Left PMTs of layer "+layer);
             H2F occADCR = new H2F("occADCR_lay"+layer, "layer " + layer + " Occupancy", this.npaddles[layer-1], 1, npaddles[layer-1]+1, 6, 1, 7);
             occADCR.setTitleX("paddle");
             occADCR.setTitleY("sector");
-            occADCR.setTitle("Right PMTs");
+            occADCR.setTitle("Right PMTs of layer "+layer);
             H2F occTDCL = new H2F("occTDCL_lay"+layer, "layer " + layer + " Occupancy", this.npaddles[layer-1], 1, npaddles[layer-1]+1, 6, 1, 7);
             occTDCL.setTitleX("paddle");
             occTDCL.setTitleY("sector");
-            occTDCL.setTitle("Left PMTs");
+            occTDCL.setTitle("Left PMTs of layer "+layer);
             H2F occTDCR = new H2F("occTDCR_lay"+layer, "layer " + layer + " Occupancy", this.npaddles[layer-1], 1, npaddles[layer-1]+1, 6, 1, 7);
             occTDCR.setTitleX("paddle");
             occTDCR.setTitleY("sector");
-            occTDCR.setTitle("Right PMTs");
+            occTDCR.setTitle("Right PMTs of layer "+layer);
            
             DataGroup dg = new DataGroup(2,2);
             dg.addDataSet(occADCL, 0);
@@ -87,7 +89,9 @@ public class FTOFmonitor  extends DetectorMonitor {
     }
 
     @Override
+    
     public void drawDetector() {
+        
         double FTOFSize = 500.0;
         int[]     widths   = new int[]{6,15,25};
         int[]     lengths  = new int[]{6,15,25};
@@ -111,7 +115,9 @@ public class FTOFmonitor  extends DetectorMonitor {
         }
         this.getDetectorView().setName("FTOF");
         this.getDetectorView().updateBox();
+                
     }
+    
         
     @Override
     public void plotHistos() {

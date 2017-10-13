@@ -3,6 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package org.clas.detectors;
 
 import org.clas.viewer.DetectorMonitor;
@@ -24,7 +25,7 @@ public class ECmonitor  extends DetectorMonitor {
     public ECmonitor(String name) {
         super(name);
 
-        this.setDetectorTabNames("ADC Occupancies","TDC Occupancies");
+        this.setDetectorTabNames("ADC Occupancies","TDC Occupancies", "ADC Histograms", "TDC Histograms", "ADC sum");
         this.init(false);
     }
 
@@ -38,6 +39,16 @@ public class ECmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("TDC Occupancies").divide(3, 3);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").setGridY(false);
+        this.getDetectorCanvas().getCanvas("ADC Histograms").divide(3, 3);
+        this.getDetectorCanvas().getCanvas("ADC Histograms").setGridX(false);
+        this.getDetectorCanvas().getCanvas("ADC Histograms").setGridY(false);
+        this.getDetectorCanvas().getCanvas("TDC Histograms").divide(3, 3);
+        this.getDetectorCanvas().getCanvas("TDC Histograms").setGridX(false);
+        this.getDetectorCanvas().getCanvas("TDC Histograms").setGridY(false);
+        this.getDetectorCanvas().getCanvas("ADC sum").divide(1, 1);
+        this.getDetectorCanvas().getCanvas("ADC sum").setGridX(false);
+        this.getDetectorCanvas().getCanvas("ADC sum").setGridY(false);
+        
         String[] stacks = new String[]{"PCAL","ECin","ECout"};
         String[] views = new String[]{"u","v","w"};
         DataGroup sum = new DataGroup(3,1);
@@ -50,6 +61,7 @@ public class ECmonitor  extends DetectorMonitor {
             sum.addDataSet(sumStack, i);
         }
         this.setDetectorSummary(sum);
+        
         for(int layer=1; layer <= 9; layer++) {
             int stack = (int) ((layer-1)/3) + 1;
             int view  = layer - (stack-1)*3;
@@ -64,6 +76,9 @@ public class ECmonitor  extends DetectorMonitor {
             dg.addDataSet(occTDC, 0);
             this.getDataGroup().add(dg,0,layer,0);
         }
+        
+        
+        
     }
         
     @Override
@@ -76,6 +91,10 @@ public class ECmonitor  extends DetectorMonitor {
             this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,layer,0).getH2F("occTDC_lay"+layer));
         }
         this.getDetectorCanvas().getCanvas("ADC Occupancies").update();
+        
+        
+        
+        
     }
 
     @Override
