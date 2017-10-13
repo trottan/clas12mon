@@ -97,7 +97,7 @@ public class DetectorMonitor implements IDataEventListener {
         return detectorName;
     }
     
-    public DetectorOccupancy getDetectorOccupany() {
+    public DetectorOccupancy getDetectorOccupancy() {
         return detectorOccupancy;
     }
     

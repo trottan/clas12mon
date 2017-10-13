@@ -41,19 +41,19 @@ public class HTCCmonitor  extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         H2F occADC = new H2F("occADC", "occADC", 8, 1, 9, 6, 1, 7);
-        occADC.setTitleX("ring-pmt");
+        occADC.setTitleX("ring-PMT");
         occADC.setTitleY("sector");
         occADC.setTitle("ADC Occupancy");
         H2F occTDC = new H2F("occTDC", "occTDC", 8, 1, 9, 6, 1, 7);
-        occTDC.setTitleX("ring-pmt");
+        occTDC.setTitleX("ring-PMT");
         occTDC.setTitleY("sector");
         occTDC.setTitle("TDC Occupancy");
         H2F adc = new H2F("adc", "adc", 100, 0, 5000, 48, 1, 49);
-        adc.setTitleX("adc");
-        adc.setTitleY("pmt");
+        adc.setTitleX("ADC - amplitude");
+        adc.setTitleY("PMT");
         H2F tdc = new H2F("tdc", "tdc", 50, 0, 250, 48, 1, 49);
-        tdc.setTitleX("tdc");
-        tdc.setTitleY("pmt");
+        tdc.setTitleX("TDC - amplitude");
+        tdc.setTitleY("PMT");
            
         DataGroup dg = new DataGroup(2,2);
         dg.addDataSet(occADC, 0);

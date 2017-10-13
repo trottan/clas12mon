@@ -196,7 +196,7 @@ public class RFmonitor extends DetectorMonitor {
         ArrayList<Integer> rf2 = new ArrayList();
         if(event.hasBank("RF::tdc")==true){
             DataBank  bank = event.getBank("RF::tdc");
-            this.getDetectorOccupany().addTDCBank(bank);
+            this.getDetectorOccupancy().addTDCBank(bank);
             int rows = bank.rows();
             for(int i = 0; i < rows; i++){
                 int    sector = bank.getByte("sector",i);

@@ -42,6 +42,7 @@ public class DCmonitor extends DetectorMonitor {
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
+        
         for(int sector=1; sector <= 6; sector++) {
             H2F raw = new H2F("raw_sec" + sector, "Sector " + sector + " Occupancy", 112, 1, 113, 36, 1, 37.);
             raw.setTitleX("wire");
@@ -126,7 +127,7 @@ public class DCmonitor extends DetectorMonitor {
         // process event info and save into data group
         if(event.hasBank("DC::tdc")==true){
             DataBank  bank = event.getBank("DC::tdc");
-            this.getDetectorOccupany().addTDCBank(bank);
+            this.getDetectorOccupancy().addTDCBank(bank);
             int rows = bank.rows();
             for(int i = 0; i < rows; i++){
                 int    sector = bank.getByte("sector",i);

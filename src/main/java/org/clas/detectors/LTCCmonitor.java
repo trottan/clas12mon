@@ -21,7 +21,7 @@ public class LTCCmonitor  extends DetectorMonitor {
     public LTCCmonitor(String name) {
         super(name);
 
-        this.setDetectorTabNames("Occupancies and Spectra");
+        this.setDetectorTabNames("ADC Occupancies and Spectra", "TDC Occupancies and Spectra");
         this.init(false);
     }
 
@@ -29,9 +29,13 @@ public class LTCCmonitor  extends DetectorMonitor {
     public void createHistos() {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").divide(2, 2);
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").setGridX(false);
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").setGridY(false);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").divide(2, 2);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").setGridX(false);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").setGridY(false);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").divide(2, 2);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").setGridX(false);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").setGridY(false);
+        
         H1F summary = new H1F("summary","summary",6,1,7);
         summary.setTitleX("sector");
         summary.setTitleY("LTCC hits");
@@ -39,54 +43,82 @@ public class LTCCmonitor  extends DetectorMonitor {
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
+        
         H2F occADC = new H2F("occADC", "occADC", 18, 1, 19, 12, 1, 7);
-        occADC.setTitleX("pmt");
-        occADC.setTitleY("sector/left-right");
+        occADC.setTitleX("PMT");
+        occADC.setTitleY("sector (left-right combined)");
         occADC.setTitle("Raw ADC Occupancy");
         H2F occTDC = new H2F("occTDC", "occTDC", 18, 1, 19, 12, 1, 7);
-        occTDC.setTitleX("pmt left");
-        occTDC.setTitleY("sector-left/right");
+        occTDC.setTitleX("PMT left");
+        occTDC.setTitleY("sector (left-right combined)");
         H2F occADCref = new H2F("occADCref", "occADCref", 18, 1, 19, 12, 1, 7);
-        occADCref.setTitleX("pmt");
-        occADCref.setTitleY("sector-left/right");
+        occADCref.setTitleX("PMT");
+        occADCref.setTitleY("sector (left-right combined)");
+        
         for(int ibin=0; ibin<occADCref.getDataBufferSize(); ibin++) occADCref.setDataBufferBin(ibin, (float) 1.0);
         H2F occADCnorm = new H2F("occADCnorm", "occADCnorm", 18, 1, 19, 12, 1, 7);
-        occADCnorm.setTitleX("pmt");
-        occADCnorm.setTitleY("sector-left/right");
+        occADCnorm.setTitleX("PMT");
+        occADCnorm.setTitleY("sector (left-right combined)");
         occADCnorm.setTitle("Normalized ADC Occupancy");
+        
+        H2F occTDCref = new H2F("occTDCref", "occTDCref", 18, 1, 19, 12, 1, 7);
+        occTDCref.setTitleX("PMT");
+        occTDCref.setTitleY("sector (left-right combined)");
+        for(int ibin=0; ibin<occTDCref.getDataBufferSize(); ibin++) occTDCref.setDataBufferBin(ibin, (float) 1.0);
+        H2F occTDCnorm = new H2F("occTDCnorm", "occTDCnorm", 18, 1, 19, 12, 1, 7);
+        occTDCnorm.setTitleX("PMT");
+        occTDCnorm.setTitleY("sector (left-right combined)");
+        occTDCnorm.setTitle("Normalized TDC Occupancy");
+        
         H2F adcL = new H2F("adcL", "adcL", 100, 0, 5000, 108, 1, 109);
-        adcL.setTitleX("adc left");
-        adcL.setTitleY("sector-pmt");
+        adcL.setTitleX("ADC left");
+        adcL.setTitleY("PMT (all sectors combined)");
         H2F tdcL = new H2F("tdcL", "tdcL", 100, 0, 250, 108, 1, 109);
-        tdcL.setTitleX("tdc left");
-        tdcL.setTitleY("sector-pmt");
+        tdcL.setTitleX("TDC left");
+        tdcL.setTitleY("PMT (all sectors combined)");
         H2F adcR = new H2F("adcR", "adcR", 100, 0, 5000, 108, 1, 109);
-        adcR.setTitleX("adc right");
-        adcR.setTitleY("sector-pmt");
+        adcR.setTitleX("ADC right");
+        adcR.setTitleY("PMT (all sectors combined)");
         H2F tdcR = new H2F("tdcR", "tdcR", 100, 0, 250, 108, 1, 109);
-        tdcR.setTitleX("tdc right");
-        tdcR.setTitleY("sector-pmt");           
-        DataGroup dg = new DataGroup(1,5);
+        tdcR.setTitleX("TDC right");
+        tdcR.setTitleY("PMT (all sectors combined)");  
+        
+        
+        DataGroup dg = new DataGroup(1,10);
         dg.addDataSet(occADC, 0);
         dg.addDataSet(occADCnorm, 1);
         dg.addDataSet(occADCref, 2);
         dg.addDataSet(adcL, 3);
         dg.addDataSet(adcR, 4);
+        dg.addDataSet(occTDC, 5);
+        dg.addDataSet(occTDCnorm, 6);
+        dg.addDataSet(occTDCref, 7);
+        dg.addDataSet(tdcL, 8);
+        dg.addDataSet(tdcR, 9);
         this.getDataGroup().add(dg,0,0,0);
     }
  
     @Override
     public void plotHistos() {        
         // plotting histos
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").cd(0);
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADC"));
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").cd(1);
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADCnorm"));
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").cd(2);
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcL"));
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").cd(3);
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcR"));
-        this.getDetectorCanvas().getCanvas("Occupancies and Spectra").update();
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").cd(0);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADC"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").cd(1);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADCnorm"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcL"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").cd(3);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcR"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").update();
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").cd(0);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDC"));
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").cd(1);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDCnorm"));
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcL"));
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").cd(3);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcR"));
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").update();
         this.getDetectorView().getView().repaint();
         this.getDetectorView().update();
  
@@ -110,19 +142,22 @@ public class LTCCmonitor  extends DetectorMonitor {
 //                System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
 //                      " ADC = " + adc + " TIME = " + time); 
                     this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill((comp)*1.0,(sector+order*0.5));
-//                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill((comp)*1.0,(sector-1)*2.0+layer);
+                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill((comp)*1.0,(sector-1)*2.0+layer);
                     if(order==0) {
                         this.getDataGroup().getItem(0,0,0).getH2F("adcL").fill(adc*1.0,iPMT*1.0);
-//                        this.getDataGroup().getItem(0,0,0).getH2F("tdcL").fill(time,iPMT*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH2F("tdcL").fill(time,iPMT*1.0);
                     } 
                     else if (order==1) {
                         this.getDataGroup().getItem(0,0,0).getH2F("adcR").fill(adc*1.0,iPMT*1.0);
-//                        this.getDataGroup().getItem(0,0,0).getH2F("tdcR").fill(time,iPMT*1.0);                    
+                        this.getDataGroup().getItem(0,0,0).getH2F("tdcR").fill(time,iPMT*1.0);                    
                     }
                     this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
                 }
 	    }
     	}
+        
+        
+        
     }
 
     @Override
@@ -131,6 +166,11 @@ public class LTCCmonitor  extends DetectorMonitor {
             float ref = this.getDataGroup().getItem(0,0,0).getH2F("occADCref").getDataBufferBin(ibin);
             float con = this.getDataGroup().getItem(0,0,0).getH2F("occADC").getDataBufferBin(ibin);
             if(ref>0) this.getDataGroup().getItem(0,0,0).getH2F("occADCnorm").setDataBufferBin(ibin, con/ref); 
+        }
+        for(int ibin=0; ibin<this.getDataGroup().getItem(0,0,0).getH2F("occTDC").getDataBufferSize(); ibin++) {
+            float ref = this.getDataGroup().getItem(0,0,0).getH2F("occTDCref").getDataBufferBin(ibin);
+            float con = this.getDataGroup().getItem(0,0,0).getH2F("occTDC").getDataBufferBin(ibin);
+            if(ref>0) this.getDataGroup().getItem(0,0,0).getH2F("occTDCnorm").setDataBufferBin(ibin, con/ref); 
         }
     }
 
