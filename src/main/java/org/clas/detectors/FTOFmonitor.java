@@ -61,9 +61,10 @@ public class FTOFmonitor  extends DetectorMonitor {
         
         DataGroup sum = new DataGroup(3,1);        
         for(int lay=0; lay<3; lay++) {           
-            H1F sumStack = new H1F("sum"+lay,"sum"+lay,6,1,7);
+            H1F sumStack = new H1F("sum"+lay,"sum"+lay,6,0.5,6.5);
             sumStack.setTitleX("sector");
             sumStack.setTitleY("FTOF "+stacks[lay] + " hits");
+            sumStack.setTitle("FTOF");
             sumStack.setFillColor(34);
             sum.addDataSet(sumStack, lay);
         }        
@@ -73,11 +74,11 @@ public class FTOFmonitor  extends DetectorMonitor {
         for(int lay=0; lay < 3; lay++) {
             DataGroup dg = new DataGroup(2,2);
         	for(int ord=0; ord < 2; ord++) {
-            H2F occADC = new H2F("occADC"+lay+ord, "lay/ord " + lay + ord + " Occupancy", 6, 1, 7, npaddles[lay], 1, npaddles[lay]+1);
+            H2F occADC = new H2F("occADC"+lay+ord, "lay/ord " + lay + ord + " Occupancy", 6, 0.5, 6.5, npaddles[lay], 1, npaddles[lay]+1);
             occADC.setTitle(stacks[lay]+" "+views[ord]+" PMTS");
             occADC.setTitleY("paddle");
             occADC.setTitleX("sector");
-            H2F occTDC = new H2F("occTDC"+lay+ord, "lay/ord " + lay + ord + " Occupancy", 6, 1, 7, npaddles[lay], 1, npaddles[lay]+1);
+            H2F occTDC = new H2F("occTDC"+lay+ord, "lay/ord " + lay + ord + " Occupancy", 6, 0.5, 6.5, npaddles[lay], 1, npaddles[lay]+1);
             occTDC.setTitle(stacks[lay]+" "+views[ord]+" PMTS");
             occTDC.setTitleY("paddle");
             occTDC.setTitleX("sector");           

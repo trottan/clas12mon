@@ -48,11 +48,11 @@ public class TRKmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Tracking Statistics").setGridX(false);
         this.getDetectorCanvas().getCanvas("Tracking Statistics").setGridY(false);
         
-        H1F sumHBT = new H1F("sumHBT","sumHBT",6,1,7);
+        H1F sumHBT = new H1F("sumHBT","sumHBT",6,0.5,6.5);
         sumHBT.setTitleX("sector");
         sumHBT.setTitleY("HB tracks");
         sumHBT.setFillColor(34);
-        H1F sumTBT = new H1F("sumTBT","sumTBT",6,1,7);
+        H1F sumTBT = new H1F("sumTBT","sumTBT",6,0.5,6.5);
         sumTBT.setTitleX("sector");
         sumTBT.setTitleY("TB tracks");
         sumTBT.setFillColor(32);
@@ -61,28 +61,28 @@ public class TRKmonitor extends DetectorMonitor {
         summary.addDataSet(sumTBT, 1);
         this.setDetectorSummary(summary);
 
-        H2F clusterSizeHBT      = new H2F("clusterSizeHBT", "clusterSizeHBT", 15, 3, 18, 6, 1, 7);
+        H2F clusterSizeHBT      = new H2F("clusterSizeHBT", "clusterSizeHBT", 15, 3, 18, 6, 0.5, 6.5);
         clusterSizeHBT.setTitleX("HBT cluster size");
         clusterSizeHBT.setTitleY("sector");
-        H2F numberOfHitsHBT     = new H2F("numberOfHitsHBT", "numberOfHitsHBT", 100, 0, 200, 6, 1, 7);
+        H2F numberOfHitsHBT     = new H2F("numberOfHitsHBT", "numberOfHitsHBT", 100, 0, 200, 6, 0.5, 6.5);
         numberOfHitsHBT.setTitleX("HBT hits");
         numberOfHitsHBT.setTitleY("sector");
-        H2F numberOfClustersHBT = new H2F("numberOfClustersHBT", "numberOfClustersHBT", 60, 0, 60, 6, 1, 7);
+        H2F numberOfClustersHBT = new H2F("numberOfClustersHBT", "numberOfClustersHBT", 60, 0, 60, 6, 0.5, 6.5);
         numberOfClustersHBT.setTitleX("HBT clusters");
         numberOfClustersHBT.setTitleY("sector");
-        H2F numberOfCrossesHBT  = new H2F("numberOfCrossesHBT", "numberOfCrossesHBT", 20, 0, 20, 6, 1, 7);
+        H2F numberOfCrossesHBT  = new H2F("numberOfCrossesHBT", "numberOfCrossesHBT", 20, 0, 20, 6, 0.5, 6.5);
         numberOfCrossesHBT.setTitleX("HBT crosses");
         numberOfCrossesHBT.setTitleY("sector");
-        H2F clusterSizeTBT      = new H2F("clusterSizeTBT", "clusterSizeTBT", 15, 3, 18, 6, 1, 7);
+        H2F clusterSizeTBT      = new H2F("clusterSizeTBT", "clusterSizeTBT", 15, 3, 18, 6, 0.5, 6.5);
         clusterSizeTBT.setTitleX("TBT cluster size");
         clusterSizeTBT.setTitleY("sector");
-        H2F numberOfHitsTBT     = new H2F("numberOfHitsTBT", "numberOfHitsTBT", 100, 0, 200, 6, 1, 7);
+        H2F numberOfHitsTBT     = new H2F("numberOfHitsTBT", "numberOfHitsTBT", 100, 0, 200, 6, 0.5, 6.5);
         numberOfHitsTBT.setTitleX("TBT hits");
         numberOfHitsTBT.setTitleY("sector");
-        H2F numberOfClustersTBT = new H2F("numberOfClustersTBT", "numberOfClustersTBT", 60, 0, 60, 6, 1, 7);
+        H2F numberOfClustersTBT = new H2F("numberOfClustersTBT", "numberOfClustersTBT", 60, 0, 60, 6, 0.5, 6.5);
         numberOfClustersTBT.setTitleX("TBT clusters");
         numberOfClustersTBT.setTitleY("sector");
-        H2F numberOfCrossesTBT  = new H2F("numberOfCrossesTBT", "numberOfCrossesTBT", 20, 0, 20, 6, 1, 7);
+        H2F numberOfCrossesTBT  = new H2F("numberOfCrossesTBT", "numberOfCrossesTBT", 20, 0, 20, 6, 0.5, 6.5);
         numberOfCrossesTBT.setTitleX("TBT crosses");
         numberOfCrossesTBT.setTitleY("sector");
 

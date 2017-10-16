@@ -29,40 +29,41 @@ public class CTOFmonitor  extends DetectorMonitor {
     public void createHistos() {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",6,1,7);
-        summary.setTitleX("sector");
+        H1F summary = new H1F("summary","summary",96,0.5,96.5);
+        summary.setTitleX("PMT");
         summary.setTitleY("CTOF hits");
+        summary.setTitle("CTOF");
         summary.setFillColor(38);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H1F occADCL = new H1F("occADCL", "occADCL", 48, 1, 49);
+        H1F occADCL = new H1F("occADCL", "occADCL", 48, 0.5, 48.5);
         occADCL.setTitleX("PMT Upstream");
         occADCL.setTitleY("Counts");
         occADCL.setFillColor(38);
-        H1F occADCR = new H1F("occADCR", "occADCR", 48, 1, 49);
+        H1F occADCR = new H1F("occADCR", "occADCR", 48, 0.5, 48.5);
         occADCR.setTitleX("PMT Downstream");
         occADCR.setTitleY("Counts");
         occADCR.setFillColor(38);
-        H2F adcL = new H2F("adcL", "adcL", 50, 0, 5000, 48, 1, 49);
+        H2F adcL = new H2F("adcL", "adcL", 50, 0, 5000, 48, 0.5, 48.5);
         adcL.setTitleX("ADC Upstream - amplitude");
         adcL.setTitleY("PMT Upstream");
-        H2F adcR = new H2F("adcR", "adcR", 50, 0, 5000, 48, 1, 49);
+        H2F adcR = new H2F("adcR", "adcR", 50, 0, 5000, 48, 0.5, 48.5);
         adcR.setTitleX("ADC Downstream - amplitude");
         adcR.setTitleY("PMT Downstream");   
-        H1F occTDCL = new H1F("occTDCL", "occTDCL", 48, 1, 49);
+        H1F occTDCL = new H1F("occTDCL", "occTDCL", 48, 0.5, 48.5);
         occTDCL.setTitleX("PMT Upstream");
         occTDCL.setTitleY("Counts");
         occTDCL.setFillColor(38);
-        H1F occTDCR = new H1F("occTDCR", "occTDCR", 48, 1, 49);
+        H1F occTDCR = new H1F("occTDCR", "occTDCR", 48, 0.5, 48.5);
         occTDCR.setTitleX("PMT Downstream");
         occTDCR.setTitleY("Counts");
         occTDCR.setFillColor(38);
-        H2F tdcL = new H2F("tdcL", "tdcL", 50, 0, 50000, 48, 1, 49);
+        H2F tdcL = new H2F("tdcL", "tdcL", 50, 0, 50000, 48, 0.5, 48.5);
         tdcL.setTitleX("TDC Upstream - amplitude");
         tdcL.setTitleY("PMT Upstream");
-        H2F tdcR = new H2F("tdcR", "tdcR", 50, 0, 50000, 48, 1, 49);
+        H2F tdcR = new H2F("tdcR", "tdcR", 50, 0, 50000, 48, 0.5, 48.5);
         tdcR.setTitleX("TDC Downstream - amplitude");
         tdcR.setTitleY("PMT Downstream"); 
         DataGroup dg = new DataGroup(2,4);
@@ -130,8 +131,10 @@ public class CTOFmonitor  extends DetectorMonitor {
                         this.getDataGroup().getItem(0,0,0).getH1F("occADCR").fill(comp*1.0);
                         this.getDataGroup().getItem(0,0,0).getH2F("adcR").fill(adc*1.0,comp*1.0);
                     }
+                    
+                    this.getDetectorSummary().getH1F("summary").fill((order*48+comp)*1.0); 
                 }
-                this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
+                
 	    }
     	}
         if(event.hasBank("CTOF::tdc")==true){

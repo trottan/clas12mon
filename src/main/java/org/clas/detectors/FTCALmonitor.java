@@ -30,27 +30,28 @@ public class FTCALmonitor  extends DetectorMonitor {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
         
-        H1F summary = new H1F("summary","summary",484,1,485);
+        H1F summary = new H1F("summary","summary",484,0.5,484.5);
         summary.setTitleX("PMT");
         summary.setTitleY("FTCAL hits");
+        summary.setTitle("FTCAL");
         summary.setFillColor(38);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H2F occFADC2D = new H2F("occFADC_2D", "occFADC_2D", 22, 1, 23, 22, 1, 23);
+        H2F occFADC2D = new H2F("occFADC_2D", "occFADC_2D", 22, 0.5, 22.5, 22, 0.5, 22.5);
         occFADC2D.setTitleX("PMT IDX");
         occFADC2D.setTitleY("PMT IDY");
         
-        H1F occFADC = new H1F("occFADC", "occFADC", 484, 1, 485);
+        H1F occFADC = new H1F("occFADC", "occFADC", 484, 0.5, 484.5);
         occFADC.setTitleX("PMT");
         occFADC.setTitleY("Counts");
         occFADC.setFillColor(38);
         
-        H2F fadc = new H2F("fadc", "fadc", 50, 0, 5000, 484, 1, 485);
+        H2F fadc = new H2F("fadc", "fadc", 50, 0, 5000, 484, 0.5, 484.5);
         fadc.setTitleX("FADC - amplitude");
         fadc.setTitleY("PMT");
-        H2F fadc_time = new H2F("fadc_time", "fadc_time", 50, 0, 50000, 484, 1, 485);
+        H2F fadc_time = new H2F("fadc_time", "fadc_time", 50, 0, 50000, 484, 0.5, 484.5);
         fadc_time.setTitleX("FADC - time");
         fadc_time.setTitleY("PMT");
         

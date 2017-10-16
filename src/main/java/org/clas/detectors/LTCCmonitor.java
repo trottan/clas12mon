@@ -36,50 +36,51 @@ public class LTCCmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").setGridY(false);
         
-        H1F summary = new H1F("summary","summary",6,1,7);
+        H1F summary = new H1F("summary","summary",6,0.5,6.5);
         summary.setTitleX("sector");
         summary.setTitleY("LTCC hits");
+        summary.setTitle("LTCC");
         summary.setFillColor(37);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H2F occADC = new H2F("occADC", "occADC", 12, 1, 7, 18, 1, 19);
+        H2F occADC = new H2F("occADC", "occADC", 12, 0.5, 6.5, 18, 0.5, 18.5);
         occADC.setTitleY("PMT");
         occADC.setTitleX("sector (left-right combined)");
         occADC.setTitle("Raw ADC Occupancy");
-        H2F occTDC = new H2F("occTDC", "occTDC", 12, 1, 7, 18, 1, 19);
+        H2F occTDC = new H2F("occTDC", "occTDC", 12, 0.5, 6.5, 18, 0.5, 18.5);
         occTDC.setTitleY("PMT left");
         occTDC.setTitleX("sector (left-right combined)");
-        H2F occADCref = new H2F("occADCref", "occADCref", 12, 1, 7, 18, 1, 19);
+        H2F occADCref = new H2F("occADCref", "occADCref", 12, 0.5, 6.5, 18, 0.5, 18.5);
         occADCref.setTitleY("PMT");
         occADCref.setTitleX("sector (left-right combined)");
         
         for(int ibin=0; ibin<occADCref.getDataBufferSize(); ibin++) occADCref.setDataBufferBin(ibin, (float) 1.0);
-        H2F occADCnorm = new H2F("occADCnorm", "occADCnorm", 12, 1, 7, 18, 1, 19);
+        H2F occADCnorm = new H2F("occADCnorm", "occADCnorm", 12, 0.5, 6.5, 18, 0.5, 18.5);
         occADCnorm.setTitleY("PMT");
         occADCnorm.setTitleX("sector (left-right combined)");
         occADCnorm.setTitle("Normalized ADC Occupancy");
         
-        H2F occTDCref = new H2F("occTDCref", "occTDCref", 12, 1, 7, 18, 1, 19);
+        H2F occTDCref = new H2F("occTDCref", "occTDCref", 12, 0.5, 6.5, 18, 0.5, 18.5);
         occTDCref.setTitleY("PMT");
         occTDCref.setTitleX("sector (left-right combined)");
         for(int ibin=0; ibin<occTDCref.getDataBufferSize(); ibin++) occTDCref.setDataBufferBin(ibin, (float) 1.0);
-        H2F occTDCnorm = new H2F("occTDCnorm", "occTDCnorm", 12, 1, 7, 18, 1, 19);
+        H2F occTDCnorm = new H2F("occTDCnorm", "occTDCnorm", 12, 0.5, 6.5, 18, 0.5, 18.5);
         occTDCnorm.setTitleY("PMT");
         occTDCnorm.setTitleX("sector (left-right combined)");
         occTDCnorm.setTitle("Normalized TDC Occupancy");
         
-        H2F adcL = new H2F("adcL", "adcL", 100, 0, 5000, 108, 1, 109);
+        H2F adcL = new H2F("adcL", "adcL", 100, 0, 5000, 108, 0.5, 108.5);
         adcL.setTitleX("ADC left");
         adcL.setTitleY("PMT (all sectors combined)");
-        H2F tdcL = new H2F("tdcL", "tdcL", 100, 0, 250, 108, 1, 109);
+        H2F tdcL = new H2F("tdcL", "tdcL", 100, 0, 250, 108, 0.5, 108.5);
         tdcL.setTitleX("TDC left");
         tdcL.setTitleY("PMT (all sectors combined)");
-        H2F adcR = new H2F("adcR", "adcR", 100, 0, 5000, 108, 1, 109);
+        H2F adcR = new H2F("adcR", "adcR", 100, 0, 5000, 108, 0.5, 108.5);
         adcR.setTitleX("ADC right");
         adcR.setTitleY("PMT (all sectors combined)");
-        H2F tdcR = new H2F("tdcR", "tdcR", 100, 0, 250, 108, 1, 109);
+        H2F tdcR = new H2F("tdcR", "tdcR", 100, 0, 250, 108, 0.5, 108.5);
         tdcR.setTitleX("TDC right");
         tdcR.setTitleY("PMT (all sectors combined)");  
         

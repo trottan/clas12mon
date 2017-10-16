@@ -30,9 +30,10 @@ public class MVTmonitor extends DetectorMonitor {
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",6,1,7);
+        H1F summary = new H1F("summary","summary",6,0.5,6.5);
         summary.setTitleX("sector");
         summary.setTitleY("MVT hits");
+        summary.setTitle("MVT");
         summary.setFillColor(33);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);

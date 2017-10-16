@@ -56,23 +56,34 @@ public class ECmonitor  extends DetectorMonitor {
         String[] views = new String[]{"u","v","w"};
         
         DataGroup sum = new DataGroup(3,1);
-        for(int i=0; i<3; i++) {
+        for(int i=0; i<1; i++) {
             String name = "sum"+stacks[i];
-            H1F sumStack = new H1F("sum"+stacks[i],"sum"+stacks[i],6,1,7);
+            H1F sumStack = new H1F("sum"+stacks[i],"sum"+stacks[i],6,0.5,6.5);
             sumStack.setTitleX("sector");
             sumStack.setTitleY(stacks[i] + " hits");
+            sumStack.setTitle("EC");
             sumStack.setFillColor(35);
             sum.addDataSet(sumStack, i);
         }
+        for(int i=1; i<3; i++) {
+            String name = "sum"+stacks[i];
+            H1F sumStack = new H1F("sum"+stacks[i],"sum"+stacks[i],12,0.5,6.5);
+            sumStack.setTitleX("sector (in and out combined)");
+            sumStack.setTitleY("ECal hits");
+            sumStack.setTitle("EC");
+            sumStack.setFillColor(35);
+            sum.addDataSet(sumStack, i);
+        }
+
         this.setDetectorSummary(sum);
         
         for(int layer=1; layer <= 9; layer++) {
             int stack = (int) ((layer-1)/3) + 1;
             int view  = layer - (stack-1)*3;
-            H2F occADC = new H2F("occADC"+layer, "layer " + layer + " Occupancy", 6, 1, 7, this.npaddles[layer-1], 1, npaddles[layer-1]+1);
+            H2F occADC = new H2F("occADC"+layer, "layer " + layer + " Occupancy", 6, 0.5, 6.5, this.npaddles[layer-1], 1, npaddles[layer-1]+1);
             occADC.setTitleY(stacks[stack-1] + " " + views[view-1] + " strip");
             occADC.setTitleX("sector");
-            H2F occTDC = new H2F("occTDC"+layer, "layer " + layer + " Occupancy", 6, 1, 7, this.npaddles[layer-1], 1, npaddles[layer-1]+1);
+            H2F occTDC = new H2F("occTDC"+layer, "layer " + layer + " Occupancy", 6, 0.5, 6.5, this.npaddles[layer-1], 1, npaddles[layer-1]+1);
             occTDC.setTitleY(stacks[stack-1] + " " + views[view-1] + " strip");
             occTDC.setTitleX("sector");
             DataGroup dg = new DataGroup(2,2);
@@ -176,12 +187,13 @@ public class ECmonitor  extends DetectorMonitor {
                 if (layer>3) ecsum[sector-1]+=adc; //raw ADC sum in EC
                 if(adc>0 && time>=0) {
                     if(layer==1)      this.getDetectorSummary().getH1F("sumPCAL").fill(sector*1.0);
-                    else if(layer==2) this.getDetectorSummary().getH1F("sumECin").fill(sector*1.0);
-                    else              this.getDetectorSummary().getH1F("sumECout").fill(sector*1.0);
+                    else if(layer==2) this.getDetectorSummary().getH1F("sumECin").fill(sector-0.25);
+                    else              this.getDetectorSummary().getH1F("sumECin").fill(sector+0.25);
                 }
 	    }
     	    }   
         
+            // System.out.println("bitsec " + bitsec);
     	    // Plot only sector events in which the sector was in the trigger
     	    if(bitsec>0) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
                 

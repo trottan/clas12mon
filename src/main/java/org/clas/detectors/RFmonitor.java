@@ -34,7 +34,7 @@ public class RFmonitor extends DetectorMonitor {
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",6,1,7);
+        H1F summary = new H1F("summary","summary",6,0.5,6.5);
         summary.setTitleX("sector");
         summary.setTitleY("DC hits");
         summary.setFillColor(33);

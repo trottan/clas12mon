@@ -30,43 +30,44 @@ public class FTHODOmonitor  extends DetectorMonitor {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
         
-        H1F summary = new H1F("summary","summary",116,1,117);
+        H1F summary = new H1F("summary","summary",116,0.5,116.5);
         summary.setTitleX("PMT");
         summary.setTitleY("FTHODO hits");
+        summary.setTitle("FTHODO");
         summary.setFillColor(38);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H2F occFADC2Dl1 = new H2F("occFADC_2D_l1", "occFADC_2D_l1", 22, 1, 23, 9, 1, 10);
+        H2F occFADC2Dl1 = new H2F("occFADC_2D_l1", "occFADC_2D_l1", 22, 0.5, 22.5, 9, 0.5, 9.5);
         occFADC2Dl1.setTitleX("PMT IDX");
         occFADC2Dl1.setTitleY("PMT IDY");
         
-        H1F occFADCl1 = new H1F("occFADC_l1", "occFADC_l1", 116, 1, 117);
+        H1F occFADCl1 = new H1F("occFADC_l1", "occFADC_l1", 116, 0.5, 116.5);
         occFADCl1.setTitleX("PMT");
         occFADCl1.setTitleY("Counts");
         occFADCl1.setFillColor(38);
         
-        H2F fadcl1 = new H2F("fadc_l1", "fadc_l1", 50, 0, 5000, 116, 1, 117);
+        H2F fadcl1 = new H2F("fadc_l1", "fadc_l1", 50, 0, 5000, 116, 0.5, 116.5);
         fadcl1.setTitleX("FADC - amplitude");
         fadcl1.setTitleY("PMT");
-        H2F fadc_timel1 = new H2F("fadc_time_l1", "fadc_time_l1", 50, 0, 50000, 116, 1, 117);
+        H2F fadc_timel1 = new H2F("fadc_time_l1", "fadc_time_l1", 50, 0, 50000, 116, 0.5, 116.5);
         fadc_timel1.setTitleX("FADC - time");
         fadc_timel1.setTitleY("PMT");
         
-        H2F occFADC2Dl2 = new H2F("occFADC_2D_l2", "occFADC_2D_l2", 22, 1, 23, 9, 1, 10);
+        H2F occFADC2Dl2 = new H2F("occFADC_2D_l2", "occFADC_2D_l2", 22, 0.5, 22.5, 9, 0.5, 9.5);
         occFADC2Dl2.setTitleX("PMT IDX");
         occFADC2Dl2.setTitleY("PMT IDY");
         
-        H1F occFADCl2 = new H1F("occFADC_l2", "occFADC_l2", 116, 1, 117);
+        H1F occFADCl2 = new H1F("occFADC_l2", "occFADC_l2", 116, 0.5, 116.5);
         occFADCl2.setTitleX("PMT");
         occFADCl2.setTitleY("Counts");
         occFADCl2.setFillColor(38);
         
-        H2F fadcl2 = new H2F("fadc_l2", "fadc_l2", 50, 0, 5000, 116, 1, 117);
+        H2F fadcl2 = new H2F("fadc_l2", "fadc_l2", 50, 0, 5000, 116, 0.5, 116.5);
         fadcl2.setTitleX("FADC - amplitude");
         fadcl2.setTitleY("PMT");
-        H2F fadc_timel2 = new H2F("fadc_time_l2", "fadc_time_l2", 50, 0, 50000, 116, 1, 117);
+        H2F fadc_timel2 = new H2F("fadc_time_l2", "fadc_time_l2", 50, 0, 50000, 116, 0.5, 116.5);
         fadc_timel2.setTitleX("FADC - time");
         fadc_timel2.setTitleY("PMT");
         
@@ -144,8 +145,10 @@ public class FTHODOmonitor  extends DetectorMonitor {
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc_l2").fill(adc*1.0,comp*1.0);
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc_time_l2").fill(time*1.0,comp*1.0);
                     }
+                    
+                    this.getDetectorSummary().getH1F("summary").fill(comp*1.0);
                 }
-                this.getDetectorSummary().getH1F("summary").fill(comp*1.0);
+                
 	    }
     	}
             

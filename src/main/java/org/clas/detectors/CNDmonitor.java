@@ -30,9 +30,10 @@ public class CNDmonitor  extends DetectorMonitor {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
         
-        H1F summary = new H1F("summary","summary",72,1,72);
+        H1F summary = new H1F("summary","summary",72,0.5,72.5);
         summary.setTitleX(" PMT (all layers combined)");
         summary.setTitleY("CND hits");
+        summary.setTitle("CND");
         summary.setFillColor(38);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
@@ -48,32 +49,32 @@ public class CNDmonitor  extends DetectorMonitor {
         occADCR.setTitleY("layer");
         //occADCR.setTitle("Right PMTs vs layer");
         
-        H2F adcL = new H2F("adcL", "adcL", 50, 0, 5000, 72, 1, 73);
+        H2F adcL = new H2F("adcL", "adcL", 50, 0, 5000, 72, 0.5, 72.5);
         adcL.setTitleX("ADC left - amplitude");
         adcL.setTitleY("PMT left (all layers combined)");
         //adcL.setTitle("Left ADC amplitude distribution");
         
-        H2F adcR = new H2F("adcR", "adcR", 50, 0, 5000, 72, 1, 73);
+        H2F adcR = new H2F("adcR", "adcR", 50, 0, 5000, 72, 0.5, 72.5);
         adcR.setTitleX("ADC right - amplitude");
         adcR.setTitleY("PMT right (all layers combined)"); 
         //adcR.setTitle("Right ADC amplitude distribution");
             
-        H2F occTDCL = new H2F("occTDC_left", "Occupancy TDC left vs layer", 24, 1, 25, 3, 1, 4);
+        H2F occTDCL = new H2F("occTDC_left", "Occupancy TDC left vs layer", 24, 1, 25, 3, 0.5, 3.5);
         occTDCL.setTitleX("PMT left");
         occTDCL.setTitleY("layer");
         //occTDCL.setTitle("Left PMTs vs layer");
             
-        H2F occTDCR = new H2F("occTDC_right", "Occupancy TDC right vs layer", 24, 1, 25, 3, 1, 4);
+        H2F occTDCR = new H2F("occTDC_right", "Occupancy TDC right vs layer", 24, 1, 25, 3, 0.5, 3.5);
         occTDCR.setTitleX("PMT right");
         occTDCR.setTitleY("layer");
         //occTDCR.setTitle("Right PMTs vs layer");
          
-        H2F tdcL = new H2F("tdcL", "tdcL", 50, 0, 17000, 72, 1, 73);
+        H2F tdcL = new H2F("tdcL", "tdcL", 50, 0, 17000, 72, 0.5, 72.5);
         tdcL.setTitleX("TDC left - amplitude");
         tdcL.setTitleY("PMT left (all layers combined)");
         //tdcL.setTitle("Left TDC amplitude distribution");
         
-        H2F tdcR = new H2F("tdcR", "tdcR", 50, 0, 17000, 72, 1, 73);
+        H2F tdcR = new H2F("tdcR", "tdcR", 50, 0, 17000, 72, 0.5, 72.5);
         tdcR.setTitleX("TDC right - amplitude");
         tdcR.setTitleY("PMT right (all layers combined)");
         //tdcR.setTitle("Right TDC amplitude distribution");
@@ -146,8 +147,10 @@ public class CNDmonitor  extends DetectorMonitor {
                         this.getDataGroup().getItem(0,0,0).getH2F("occADC_right").fill(sector,layer);
                         this.getDataGroup().getItem(0,0,0).getH2F("adcR").fill(adc*1.0,((sector-1)*3 + layer)*1.0);
                     }
+                   
+                    this.getDetectorSummary().getH1F("summary").fill((sector-1)*3+layer);
                 }
-                this.getDetectorSummary().getH1F("summary").fill(sector*layer);
+                
 	    }
     	}
         if(event.hasBank("CND::tdc")==true){

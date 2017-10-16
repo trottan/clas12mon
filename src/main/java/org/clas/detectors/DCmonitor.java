@@ -36,20 +36,21 @@ public class DCmonitor extends DetectorMonitor {
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",6,1,7);
+        H1F summary = new H1F("summary","summary",6,0.5,6.5);
         summary.setTitleX("sector");
         summary.setTitleY("DC hits");
+        summary.setTitle("DC");
         summary.setFillColor(33);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
         for(int sector=1; sector <= 6; sector++) {
-            H2F raw = new H2F("raw_sec" + sector, "Sector " + sector + " Occupancy", 112, 1, 113, 36, 1, 37.);
+            H2F raw = new H2F("raw_sec" + sector, "Sector " + sector + " Occupancy", 112, 0.5, 112.5, 36, 0.5, 36.5);
             raw.setTitleX("wire");
             raw.setTitleY("layer");
             raw.setTitle("sector "+sector);
-            H2F occ = new H2F("occ_sec" + sector, "Sector " + sector + " Occupancy", 112, 1, 113, 36, 1, 37.);
+            H2F occ = new H2F("occ_sec" + sector, "Sector " + sector + " Occupancy", 112, 0.5, 112.5, 36, 0.5, 36.5);
             occ.setTitleX("wire");
             occ.setTitleY("layer");
             occ.setTitle("sector "+sector);
@@ -140,7 +141,7 @@ public class DCmonitor extends DetectorMonitor {
                 int       TDC = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); 
                 this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector).fill(wire*1.0,layer*1.0);
-                this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
+                if(TDC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
             }
        }       
     }

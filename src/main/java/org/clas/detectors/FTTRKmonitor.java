@@ -30,39 +30,40 @@ public class FTTRKmonitor  extends DetectorMonitor {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
         
-        H1F summary = new H1F("summary","summary",3392,1,3393);
+        H1F summary = new H1F("summary","summary",3392,0.5,3392.5);
         summary.setTitleX("sector");
         summary.setTitleY("FTTRK hits");
+        summary.setTitle("FTTRK");
         summary.setFillColor(38);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H1F occADCl1 = new H1F("occADC_layer1", "occADC_layer1", 848, 1, 849);
+        H1F occADCl1 = new H1F("occADC_layer1", "occADC_layer1", 848, 0.5, 848.5);
         occADCl1.setTitleX("PMT");
         occADCl1.setTitleY("Counts");
         occADCl1.setFillColor(38);
         occADCl1.setTitle("layer 1");
-        H1F occADCl2 = new H1F("occADC_layer2", "occADC_layer2", 848, 1, 849);
+        H1F occADCl2 = new H1F("occADC_layer2", "occADC_layer2", 848, 0.5, 848.5);
         occADCl2.setTitleX("PMT");
         occADCl2.setTitleY("Counts");
         occADCl2.setFillColor(38);
         occADCl2.setTitle("layer 2");
-        H1F occADCl3 = new H1F("occADC_layer3", "occADC_layer3", 848, 1, 849);
+        H1F occADCl3 = new H1F("occADC_layer3", "occADC_layer3", 848, 0.5, 848.5);
         occADCl3.setTitleX("PMT");
         occADCl3.setTitleY("Counts");
         occADCl3.setFillColor(38);
         occADCl3.setTitle("layer 3");
-        H1F occADCl4 = new H1F("occADC_layer4", "occADC_layer4", 848, 1, 849);
+        H1F occADCl4 = new H1F("occADC_layer4", "occADC_layer4", 848, 0.5, 848.5);
         occADCl4.setTitleX("PMT");
         occADCl4.setTitleY("Counts");
         occADCl4.setFillColor(38);
         occADCl4.setTitle("layer 4");
         
-        H2F adc = new H2F("adc", "adc", 50, 0, 5000, 3392, 1, 3393);
+        H2F adc = new H2F("adc", "adc", 50, 0, 5000, 3392, 0.5, 3392.5);
         adc.setTitleX("ADC - amplitude");
         adc.setTitleY("PMT");
-        H2F tdc = new H2F("tdc", "tdc", 50, 0, 50000, 3392, 1, 3393);
+        H2F tdc = new H2F("tdc", "tdc", 50, 0, 50000, 3392, 0.5, 3392.5);
         tdc.setTitleX("time");
         tdc.setTitleY("PMT");
         

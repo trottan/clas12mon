@@ -30,19 +30,20 @@ public class SVTmonitor extends DetectorMonitor {
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",6,1,7);
+        H1F summary = new H1F("summary","summary",6,0.5,6.5);
         summary.setTitleX("sector");
         summary.setTitleY("SVT hits");
+        summary.setTitle("SVT");
         summary.setFillColor(33);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         for(int region=1; region <= 4; region++) {
-            H2F raw = new H2F("raw_reg" + region, "Region " + region + " Occupancy", 128, 1., 129., 256, 1., 129.);
+            H2F raw = new H2F("raw_reg" + region, "Region " + region + " Occupancy", 128, 0.5, 128.5, 256, 0.5, 128.5);
             raw.setTitleX("strip");
             raw.setTitleY("sensor");
             raw.setTitle("region "+region);
-            H2F occ = new H2F("occ_reg" + region, "Region " + region + " Occupancy", 128, 1., 129., 256, 1., 129.);
+            H2F occ = new H2F("occ_reg" + region, "Region " + region + " Occupancy", 128, 0.5, 128.5, 256, 0.5, 128.5);
             occ.setTitleX("strip");
             occ.setTitleY("sensor");
             occ.setTitle("Occupancy");
@@ -91,7 +92,7 @@ public class SVTmonitor extends DetectorMonitor {
                 int     order = bank.getByte("order",i);
                 int region =1;
                 this.getDataGroup().getItem(region,0,0).getH2F("raw_reg"+region).fill(comp*1.0,Sensor(layer,sector)*1.0);
-                this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
+                if(ADC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
             }
        }       
     }
