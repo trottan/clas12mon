@@ -61,10 +61,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     List<DetectorPane2D> DetectorPanels   	= new ArrayList<DetectorPane2D>();
     JTabbedPane tabbedpane           		= null;
-    JPanel mainPanel 				        = null;
-    JMenuBar menuBar                         = null;
+    JPanel mainPanel 				= null;
+    JMenuBar menuBar                            = null;
     DataSourceProcessorPane processorPane 	= null;
-    EmbeddedCanvasTabbed CLAS12Canvas        = null;
+    EmbeddedCanvasTabbed CLAS12Canvas           = null;
     //EmbeddedCanvasTabbed CLAS12CDCanvas           = null;
     
     CodaEventDecoder               decoder = new CodaEventDecoder();
@@ -177,7 +177,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         splitPanel.setLeftComponent(CLAS12View);
         splitPanel.setRightComponent(CLAS12Canvas);
         JTextPane clas12Text   = new JTextPane();
-        clas12Text.setText("CLAS12\n monitoring plots\n V1.0\n");
+        clas12Text.setText("CLAS12\n monitoring plots\n V2.0\n");
         clas12Text.setEditable(false);
         StyledDocument styledDoc = clas12Text.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
