@@ -11,6 +11,7 @@ import org.jlab.detector.base.GeometryFactory;
 import org.jlab.detector.geant4.DCGeant4Factory;
 import org.jlab.detector.view.DetectorShape2D;
 import org.jlab.geom.base.ConstantProvider;
+import org.jlab.groot.base.GStyle;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
 import org.jlab.groot.group.DataGroup;
@@ -104,6 +105,7 @@ public class DCmonitor extends DetectorMonitor {
     @Override
     public void plotHistos() {
         // initialize canvas and plot histograms
+    	    
         this.getDetectorCanvas().getCanvas("Normalized Occupancies").divide(2, 3);
         this.getDetectorCanvas().getCanvas("Normalized Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("Normalized Occupancies").setGridY(false);
@@ -111,10 +113,12 @@ public class DCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridY(false);
         for(int sector=1; sector <=6; sector++) {
-            this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setRange(0, 10.);
+            this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setRange(0.01, 10.);
+            this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("occ_sec"+sector));
 //            this.getDataGroup().getItem(0,sector,0).getH2F("occ_sec"+sector).
+            this.getDetectorCanvas().getCanvas("Raw Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("Raw Occupancies").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Raw Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector));
         }
