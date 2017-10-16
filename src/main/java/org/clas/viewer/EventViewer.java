@@ -377,11 +377,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
    
         // FTOF:
         this.CLAS12Canvas.getCanvas("FD").cd(6);
-        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sumP1A"));
+        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sum0"));
         this.CLAS12Canvas.getCanvas("FD").cd(7);
-        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sumP1B"));
+        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sum1"));
         this.CLAS12Canvas.getCanvas("FD").cd(8);
-        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sumP2"));
+        if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[4].getDetectorSummary().getH1F("sum2"));
         
         //////////////////////////////////////////////////
         ///  CD:

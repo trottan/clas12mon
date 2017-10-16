@@ -8,11 +8,14 @@ package org.clas.viewer;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
@@ -47,6 +50,11 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     private Boolean                sectorButtons     = false;
     private int                 detectorActiveSector = 1;
     private Boolean                     detectorLogZ = true;
+    private Boolean                             isTB = false;
+    private JRadioButton bS1,bS2,bS3,bS4,bS5,bS6;
+    private JCheckBox        tbBtn;
+    
+    public  int bitsec = 0;
     
     public DetectorMonitor(String name){
         GStyle.getAxisAttributesX().setTitleFontSize(18);
@@ -158,27 +166,38 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
             if (sectorButtons) getDetectorPanel().add(getButtonPane(),BorderLayout.PAGE_END);  
         }
         createHistos();
-        plotHistos();
+        plotHistos(); 
+        if (sectorButtons) bS2.doClick();
     }
     
     public JPanel getButtonPane() {
     	    bG1 = new ButtonGroup();
         JPanel buttonPane = new JPanel();
-        JRadioButton bS1 = new JRadioButton("Sector 1"); buttonPane.add(bS1); bS1.setActionCommand("1"); bS1.addActionListener(this);
-        JRadioButton bS2 = new JRadioButton("Sector 2"); buttonPane.add(bS2); bS2.setActionCommand("2"); bS2.addActionListener(this); 
-        JRadioButton bS3 = new JRadioButton("Sector 3"); buttonPane.add(bS3); bS3.setActionCommand("3"); bS3.addActionListener(this); 
-        JRadioButton bS4 = new JRadioButton("Sector 4"); buttonPane.add(bS4); bS4.setActionCommand("4"); bS4.addActionListener(this); 
-        JRadioButton bS5 = new JRadioButton("Sector 5"); buttonPane.add(bS5); bS5.setActionCommand("5"); bS5.addActionListener(this);  
-        JRadioButton bS6 = new JRadioButton("Sector 6"); buttonPane.add(bS6); bS6.setActionCommand("6"); bS6.addActionListener(this); 
+        bS1 = new JRadioButton("Sector 1"); buttonPane.add(bS1); bS1.setActionCommand("1"); bS1.addActionListener(this);
+        bS2 = new JRadioButton("Sector 2"); buttonPane.add(bS2); bS2.setActionCommand("2"); bS2.addActionListener(this); 
+        bS3 = new JRadioButton("Sector 3"); buttonPane.add(bS3); bS3.setActionCommand("3"); bS3.addActionListener(this); 
+        bS4 = new JRadioButton("Sector 4"); buttonPane.add(bS4); bS4.setActionCommand("4"); bS4.addActionListener(this); 
+        bS5 = new JRadioButton("Sector 5"); buttonPane.add(bS5); bS5.setActionCommand("5"); bS5.addActionListener(this);  
+        bS6 = new JRadioButton("Sector 6"); buttonPane.add(bS6); bS6.setActionCommand("6"); bS6.addActionListener(this); 
         bG1.add(bS1);bG1.add(bS2);bG1.add(bS3);bG1.add(bS4);bG1.add(bS5);bG1.add(bS6);
-        bS2.setSelected(true);
+        tbBtn = new JCheckBox("TrigBit");
+        tbBtn.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+            	  isTB = e.getStateChange()==ItemEvent.SELECTED;
+            }
+        });         
+        tbBtn.setSelected(false);        
+        buttonPane.add(tbBtn);       
         return buttonPane;
-    }  
+    } 
+    public Boolean isGoodTrigger(int is) {return (isTB)? is==bitsec:true;}
+    
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub
         this.detectorActiveSector   = Integer.parseInt(bG1.getSelection().getActionCommand());
         plotHistos();
-    }      
+    } 
+    
     public void processEvent(DataEvent event) {
         // process event
     }

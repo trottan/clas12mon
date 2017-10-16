@@ -44,30 +44,30 @@ public class LTCCmonitor  extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H2F occADC = new H2F("occADC", "occADC", 18, 1, 19, 12, 1, 7);
-        occADC.setTitleX("PMT");
-        occADC.setTitleY("sector (left-right combined)");
+        H2F occADC = new H2F("occADC", "occADC", 12, 1, 7, 18, 1, 19);
+        occADC.setTitleY("PMT");
+        occADC.setTitleX("sector (left-right combined)");
         occADC.setTitle("Raw ADC Occupancy");
-        H2F occTDC = new H2F("occTDC", "occTDC", 18, 1, 19, 12, 1, 7);
-        occTDC.setTitleX("PMT left");
-        occTDC.setTitleY("sector (left-right combined)");
-        H2F occADCref = new H2F("occADCref", "occADCref", 18, 1, 19, 12, 1, 7);
-        occADCref.setTitleX("PMT");
-        occADCref.setTitleY("sector (left-right combined)");
+        H2F occTDC = new H2F("occTDC", "occTDC", 12, 1, 7, 18, 1, 19);
+        occTDC.setTitleY("PMT left");
+        occTDC.setTitleX("sector (left-right combined)");
+        H2F occADCref = new H2F("occADCref", "occADCref", 12, 1, 7, 18, 1, 19);
+        occADCref.setTitleY("PMT");
+        occADCref.setTitleX("sector (left-right combined)");
         
         for(int ibin=0; ibin<occADCref.getDataBufferSize(); ibin++) occADCref.setDataBufferBin(ibin, (float) 1.0);
-        H2F occADCnorm = new H2F("occADCnorm", "occADCnorm", 18, 1, 19, 12, 1, 7);
-        occADCnorm.setTitleX("PMT");
-        occADCnorm.setTitleY("sector (left-right combined)");
+        H2F occADCnorm = new H2F("occADCnorm", "occADCnorm", 12, 1, 7, 18, 1, 19);
+        occADCnorm.setTitleY("PMT");
+        occADCnorm.setTitleX("sector (left-right combined)");
         occADCnorm.setTitle("Normalized ADC Occupancy");
         
-        H2F occTDCref = new H2F("occTDCref", "occTDCref", 18, 1, 19, 12, 1, 7);
-        occTDCref.setTitleX("PMT");
-        occTDCref.setTitleY("sector (left-right combined)");
+        H2F occTDCref = new H2F("occTDCref", "occTDCref", 12, 1, 7, 18, 1, 19);
+        occTDCref.setTitleY("PMT");
+        occTDCref.setTitleX("sector (left-right combined)");
         for(int ibin=0; ibin<occTDCref.getDataBufferSize(); ibin++) occTDCref.setDataBufferBin(ibin, (float) 1.0);
-        H2F occTDCnorm = new H2F("occTDCnorm", "occTDCnorm", 18, 1, 19, 12, 1, 7);
-        occTDCnorm.setTitleX("PMT");
-        occTDCnorm.setTitleY("sector (left-right combined)");
+        H2F occTDCnorm = new H2F("occTDCnorm", "occTDCnorm", 12, 1, 7, 18, 1, 19);
+        occTDCnorm.setTitleY("PMT");
+        occTDCnorm.setTitleX("sector (left-right combined)");
         occTDCnorm.setTitle("Normalized TDC Occupancy");
         
         H2F adcL = new H2F("adcL", "adcL", 100, 0, 5000, 108, 1, 109);
@@ -141,8 +141,8 @@ public class LTCCmonitor  extends DetectorMonitor {
                 if(adc>0 && time> 0) {
 //                System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
 //                      " ADC = " + adc + " TIME = " + time); 
-                    this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill((comp)*1.0,(sector+order*0.5));
-                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill((comp)*1.0,(sector-1)*2.0+layer);
+                    this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill((sector+order*0.5), comp*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill((sector-1)*2.0+layer, comp*1.0);
                     if(order==0) {
                         this.getDataGroup().getItem(0,0,0).getH2F("adcL").fill(adc*1.0,iPMT*1.0);
                         this.getDataGroup().getItem(0,0,0).getH2F("tdcL").fill(time,iPMT*1.0);

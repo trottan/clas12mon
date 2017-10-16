@@ -40,13 +40,13 @@ public class HTCCmonitor  extends DetectorMonitor {
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
-        H2F occADC = new H2F("occADC", "occADC", 8, 1, 9, 6, 1, 7);
-        occADC.setTitleX("ring-PMT");
-        occADC.setTitleY("sector");
+        H2F occADC = new H2F("occADC", "occADC", 6, 1, 7, 8, 1, 9);
+        occADC.setTitleY("ring-PMT");
+        occADC.setTitleX("sector");
         occADC.setTitle("ADC Occupancy");
-        H2F occTDC = new H2F("occTDC", "occTDC", 8, 1, 9, 6, 1, 7);
-        occTDC.setTitleX("ring-PMT");
-        occTDC.setTitleY("sector");
+        H2F occTDC = new H2F("occTDC", "occTDC", 6, 1, 7, 8, 1, 9);
+        occTDC.setTitleY("ring-PMT");
+        occTDC.setTitleX("sector");
         occTDC.setTitle("TDC Occupancy");
         H2F adc = new H2F("adc", "adc", 100, 0, 5000, 48, 1, 49);
         adc.setTitleX("ADC - amplitude");
@@ -95,7 +95,7 @@ public class HTCCmonitor  extends DetectorMonitor {
 //                System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
 //                      " ADC = " + adc + " TIME = " + time); 
                 if(adc>0 && time>0) {
-                    this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill(((comp-1)*2+layer)*1.0,sector*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill(sector*1.0,((comp-1)*2+layer)*1.0);
                     this.getDataGroup().getItem(0,0,0).getH2F("adc").fill(adc*1.0,((sector-1)*8+(comp-1)*2+layer)*1.0);
                     this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(time,((sector-1)*8+(comp-1)*2+layer)*1.0);
                     this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
@@ -114,7 +114,7 @@ public class HTCCmonitor  extends DetectorMonitor {
 //                           System.out.println("ROW " + i + " SECTOR = " + sector
 //                                 + " LAYER = " + layer + " PADDLE = "
 //                                 + paddle + " TDC = " + TDC);    
-                if(tdc>0) this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(((comp-1)*2+layer)*1.0,sector*1.0);
+                if(tdc>0) this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(sector*1.0,((comp-1)*2+layer)*1.0);
 //                this.getDetectorSummary().getH1F("summary").fill(sector*1.0);                
             }
         }        
