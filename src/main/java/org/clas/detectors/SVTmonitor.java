@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clas.detectors;
 
 import org.clas.viewer.DetectorMonitor;
@@ -12,10 +7,7 @@ import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
-/**
- *
- * @author devita
- */
+
 public class SVTmonitor extends DetectorMonitor {
     
 
@@ -78,6 +70,7 @@ public class SVTmonitor extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
         // process event info and save into data group
         if(event.hasBank("BST::adc")==true){
             DataBank  bank = event.getBank("BST::adc");
@@ -94,7 +87,8 @@ public class SVTmonitor extends DetectorMonitor {
                 this.getDataGroup().getItem(region,0,0).getH2F("raw_reg"+region).fill(comp*1.0,Sensor(layer,sector)*1.0);
                 if(ADC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
             }
-       }       
+       }
+                
     }
     
     static int Sensor(int layer, int sector) {

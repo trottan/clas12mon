@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clas.detectors;
 
 import org.clas.viewer.DetectorMonitor;
@@ -12,10 +7,7 @@ import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
-/**
- *
- * @author devita
- */
+
 public class FTHODOmonitor  extends DetectorMonitor {        
     
     public FTHODOmonitor(String name) {
@@ -135,18 +127,18 @@ public class FTHODOmonitor  extends DetectorMonitor {
                 if(adc>0) {
                     if(layer == 1){
                         this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D_l1").fill(comp*1.0,sector*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH1F("occFADC_l1").fill(comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH1F("occFADC_l1").fill((comp-1)*8+sector);
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc_l1").fill(adc*1.0,comp*1.0);
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc_time_l1").fill(time*1.0,comp*1.0);
                     }
                     if(layer == 2){
                         this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D_l2").fill(comp*1.0,sector*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH1F("occFADC_l2").fill(comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH1F("occFADC_l2").fill((comp-1)*8+sector);
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc_l2").fill(adc*1.0,comp*1.0);
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc_time_l2").fill(time*1.0,comp*1.0);
                     }
                     
-                    this.getDetectorSummary().getH1F("summary").fill(comp*1.0);
+                    this.getDetectorSummary().getH1F("summary").fill((comp-1)*8+sector);
                 }
                 
 	    }

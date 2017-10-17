@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.clas.detectors;
 
 import org.clas.viewer.DetectorMonitor;
@@ -15,10 +9,7 @@ import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
-/**
- *
- * @author devita
- */
+
 public class ECmonitor  extends DetectorMonitor {
 
     private final int[] npaddles = new int[]{68,62,62,36,36,36,36,36,36};

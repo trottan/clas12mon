@@ -10,12 +10,14 @@ import org.jlab.groot.math.F1D;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
-public class HELmonitor extends DetectorMonitor {
 
+public class TRIGGERmonitor extends DetectorMonitor {
     
-    public HELmonitor(String name) {
+    private double tdc2Time = 0.023436;
+    
+    public TRIGGERmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("Helicity");
+        this.setDetectorTabNames("Trigger");
         this.init(false);
     }
 
@@ -25,19 +27,20 @@ public class HELmonitor extends DetectorMonitor {
         // create histograms
         this.setNumberOfEvents(0);
         H1F summary = new H1F("summary","summary",100,0.0,1.0);
-        summary.setTitleX("helicity");
+        summary.setTitleX("trigger");
         summary.setTitleY("counts");
         summary.setFillColor(33);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
-        H1F hel = new H1F("hel","hel", 100,0.0,1.0);
-        hel.setTitleX("helicity");
-        hel.setTitleY("Counts");
-        hel.setFillColor(33);
+        
+        H1F trig = new H1F("trig","trig", 100,0.0,1.0);
+        trig.setTitleX("trigger");
+        trig.setTitleY("Counts");
+        trig.setFillColor(33);
         
         DataGroup dg = new DataGroup(1,1);
-        dg.addDataSet(hel, 0);
+        dg.addDataSet(trig, 0);
 
         this.getDataGroup().add(dg, 0,0,0);
     }
@@ -45,11 +48,11 @@ public class HELmonitor extends DetectorMonitor {
     @Override
     public void plotHistos() {
         // initialize canvas and plot histograms
-        this.getDetectorCanvas().getCanvas("Helicity").divide(1, 1);
-        this.getDetectorCanvas().getCanvas("Helicity").setGridX(false);
-        this.getDetectorCanvas().getCanvas("Helicity").setGridY(false);
-        this.getDetectorCanvas().getCanvas("Helicity").cd(0);
-        this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getH1F("hel"));
+        this.getDetectorCanvas().getCanvas("Trigger").divide(1, 1);
+        this.getDetectorCanvas().getCanvas("Trigger").setGridX(false);
+        this.getDetectorCanvas().getCanvas("Trigger").setGridY(false);
+        this.getDetectorCanvas().getCanvas("Trigger").cd(0);
+        this.getDetectorCanvas().getCanvas("Trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("trig"));
         
     }
 
@@ -62,5 +65,6 @@ public class HELmonitor extends DetectorMonitor {
     public void timerUpdate() {
 
     }
+
     
 }

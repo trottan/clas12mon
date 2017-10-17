@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clas.detectors;
 
 import java.util.ArrayList;
@@ -15,10 +10,7 @@ import org.jlab.groot.math.F1D;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
-/**
- *
- * @author devita
- */
+
 public class RFmonitor extends DetectorMonitor {
     
     private double tdc2Time = 0.023436;

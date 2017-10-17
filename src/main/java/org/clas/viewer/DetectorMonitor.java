@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.clas.viewer;
 
 import java.awt.BorderLayout;
@@ -31,10 +26,7 @@ import org.jlab.io.base.DataEventType;
 import org.jlab.io.task.IDataEventListener;
 import org.jlab.utils.groups.IndexedList;
 
-/**
- *
- * @author devita
- */
+
 public class DetectorMonitor implements IDataEventListener, ActionListener {    
     
     private final String           detectorName;
