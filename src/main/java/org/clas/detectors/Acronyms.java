@@ -18,24 +18,26 @@ public class Acronyms  extends JTabbedPane {
         this.add("Acronyms", this.acronymsPanel);
         JTextPane acronymsDefinitions = new JTextPane();
         acronymsDefinitions.setText("Detectors:\n\n"
-                + "CND:      Central Neutron Detector \n"
-                + "CTOF:     Central Time of Flight \n"
-                + "DC:       Drift Chambers \n"
-                + "ECAL:     Electromagnetic Calorimeter \n"
-                + "FTOF:     Forward Time of Flight \n"
-                + "FTTRK:    Forward Tagger Tracker \n"
+                + "CND:         Central Neutron Detector \n"
+                + "CTOF:        Central Time of Flight \n"
+                + "DC:            Drift Chambers \n"
+                + "ECAL:         Electromagnetic Calorimeter \n"
+                + "FMT:           Forward Micromegas Tracker \n"
+                + "FTOF:         Forward Time of Flight \n"
+                + "FTTRK:       Forward Tagger Tracker \n"
                 + "FTHODO:   Forward Tagger Hodoscope \n"
-                + "FTCAL:    Forward Tagger Calorimeter \n"
-                + "HTTC:     High Threshold Cherenkov Counter \n"
-                + "LTTC:     Low Threshold Cherenkov Counter \n"
-                + "MVT (MM): Micromegas Tracker \n"
-                + "PCal:     Preshower Calorimeter  \n"
-                + "RICH:     Ring-Imaging Cherenkov Detector \n"
-                + "SVT:      Silicon Vertex Tracker \n\n"
+                + "FTCAL:       Forward Tagger Calorimeter \n"
+                + "HTTC:         High Threshold Cherenkov Counter \n"
+                + "LTTC:         Low Threshold Cherenkov Counter \n"
+                + "BMT:          Barrel Micromegas Tracker \n"
+                + "PCal:          Preshower Calorimeter  \n"
+                + "RICH:         Ring-Imaging Cherenkov Detector \n"
+                + "SVT:           Silicon Vertex Tracker \n\n"
                 + "Components:\n\n"
-                + "ADC:     Analohg to Digital Converter \n"
+                + "ADC:     Analog to Digital Converter \n"
                 + "TDC:     Time to Digital Converter \n"
-                + "PMT:     Photo Multiplier Tube ");
+                + "PMT:     Photo Multiplier Tube\n"
+                + "SiPM:    Silicon Photomultiplier\n");
         this.acronymsPanel.add(acronymsDefinitions,BorderLayout.CENTER);
         acronymsDefinitions.setFont(new Font("Avenir",Font.PLAIN,16));
         acronymsDefinitions.setEditable(false);

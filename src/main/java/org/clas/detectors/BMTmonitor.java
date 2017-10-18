@@ -7,7 +7,7 @@ import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
-public class MVTmonitor extends DetectorMonitor {
+public class BMTmonitor extends DetectorMonitor {
 	int numberOfSamples;
 	int timeSampling;
 
@@ -27,7 +27,7 @@ public class MVTmonitor extends DetectorMonitor {
 	boolean mask[][][];
 	float tMax[][][];
 	
-	public MVTmonitor(String name) {
+	public BMTmonitor(String name) {
 		super(name);
 		
 		numberOfSamples = 16;
@@ -91,7 +91,7 @@ public class MVTmonitor extends DetectorMonitor {
 		H2F summary = new H2F("summary","summary",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
 		summary.setTitleX("strips");
 		summary.setTitleY("detector");
-		summary.setTitle("MVT");
+		summary.setTitle("BMT");
 		DataGroup sum = new DataGroup(1,1);
 		sum.addDataSet(summary, 0);
 		this.setDetectorSummary(sum);

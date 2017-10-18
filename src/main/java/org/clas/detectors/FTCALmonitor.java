@@ -32,20 +32,20 @@ public class FTCALmonitor  extends DetectorMonitor {
         this.setDetectorSummary(sum);
         
         H2F occFADC2D = new H2F("occFADC_2D", "occFADC_2D", 22, 0.5, 22.5, 22, 0.5, 22.5);
-        occFADC2D.setTitleX("PMT IDX");
-        occFADC2D.setTitleY("PMT IDY");
+        occFADC2D.setTitleX("crzstal x");
+        occFADC2D.setTitleY("crystal y");
         
         H1F occFADC = new H1F("occFADC", "occFADC", 484, 0.5, 484.5);
-        occFADC.setTitleX("PMT");
+        occFADC.setTitleX("crzstal number");
         occFADC.setTitleY("Counts");
         occFADC.setFillColor(38);
         
         H2F fadc = new H2F("fadc", "fadc", 50, 0, 5000, 484, 0.5, 484.5);
         fadc.setTitleX("FADC - amplitude");
-        fadc.setTitleY("PMT");
-        H2F fadc_time = new H2F("fadc_time", "fadc_time", 50, 0, 50000, 484, 0.5, 484.5);
+        fadc.setTitleY("crzstal");
+        H2F fadc_time = new H2F("fadc_time", "fadc_time", 50, 0, 500, 484, 0.5, 484.5);
         fadc_time.setTitleX("FADC - time");
-        fadc_time.setTitleY("PMT");
+        fadc_time.setTitleY("crystal");
         
         DataGroup dg = new DataGroup(2,2);
         dg.addDataSet(occFADC2D, 0);
