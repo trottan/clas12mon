@@ -84,10 +84,10 @@ public class RECmonitor extends DetectorMonitor {
                 int    svtCosmicTrack_kfNdf = bankSVTCosmics.getInt("ndf", row);
                 
                 if(nTracks > 0){
-                this.getDataGroup().getItem(0,0,0).getH1F("trk_mult").fill(svtCosmicTrack_kfNdf);
+                this.getDataGroup().getItem(0,0,0).getH1F("trk_mult").fill(row);
                 this.getDataGroup().getItem(0,0,0).getH1F("trk_phi").fill(svtCosmicTrack_phi);
                 this.getDataGroup().getItem(0,0,0).getH1F("trk_theta").fill(svtCosmicTrack_theta);
-                this.getDataGroup().getItem(0,0,0).getH1F("trk_norm_chi2").fill(svtCosmicTrack_kfChi2);
+                if(svtCosmicTrack_kfNdf > 0)this.getDataGroup().getItem(0,0,0).getH1F("trk_norm_chi2").fill(svtCosmicTrack_kfChi2/svtCosmicTrack_kfNdf);
                 }
                 
             }
