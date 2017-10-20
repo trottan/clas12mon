@@ -94,7 +94,7 @@ public class RICHmonitor  extends DetectorMonitor {
 //                      " ADC = " + adc + " TIME = " + time); 
                 if(adc>0) {
                     this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill(comp*1.0,sector*1.0);
-                    this.getDataGroup().getItem(0,0,0).getH2F("adc").fill(adc*1.0, comp*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("adc").fill(adc*1.0, (comp-1)*64+sector);
                     this.getDetectorSummary().getH2F("summary").fill(comp*1.0,sector*1.0);
                 }
 	    }
@@ -111,7 +111,7 @@ public class RICHmonitor  extends DetectorMonitor {
 //                           System.out.println("ROW " + i + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = "+ comp + " TDC = " + TDC);    
                 if(tdc>0){ 
                     this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp*1.0,sector*1.0);
-                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, comp*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, (comp-1)*64+sector);
                 }
             }
         }        
