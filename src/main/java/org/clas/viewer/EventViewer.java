@@ -93,7 +93,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 new HTCCmonitor("HTCC"),      // 10
                 new LTCCmonitor("LTCC"),      // 11
                 new RICHmonitor("RICH"),      // 12
-                
+                new RECmonitor("RECON"),      // 12
              //   new TRKmonitor("TRK"),        // 14
                 new RFmonitor("RF"),          // 14
                 new HELmonitor("HEL"),        // 15

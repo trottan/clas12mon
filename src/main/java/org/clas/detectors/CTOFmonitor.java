@@ -88,8 +88,10 @@ public class CTOFmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(1);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occADCR"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(2);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcL"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(3);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcR"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").update();
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(0);
@@ -97,8 +99,10 @@ public class CTOFmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(1);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occTDCR"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(2);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcL"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(3);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcR"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies").update();
     }

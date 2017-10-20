@@ -78,7 +78,7 @@ public class BMTmonitor extends DetectorMonitor {
 		mask[3][5][102] = false; 
 		mask[3][5][735] = false;
 		
-		this.setDetectorTabNames("Occupancies", "Occupancy C", "Occupancy Z", "TimeOfMax");
+		this.setDetectorTabNames("Occupancies", "Occupancy C", "Occupancy Z", "TimeOfMax", "Multiplicity");
 		this.init(false);
 	}
 
@@ -87,7 +87,7 @@ public class BMTmonitor extends DetectorMonitor {
 	
 		// create histograms
 		this.setNumberOfEvents(0);
-                
+
 		H2F summary = new H2F("summary","summary",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
 		summary.setTitleX("strips");
 		summary.setTitleY("detector");
@@ -99,8 +99,13 @@ public class BMTmonitor extends DetectorMonitor {
 		H2F occupancyHisto = new H2F("Occupancies","Occupancies",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
 		occupancyHisto.setTitleX("Strips");
 		occupancyHisto.setTitleY("Detector");
+                H1F histmulti = new H1F("multi", "multi", 100, -0.5, 99.5);
+                histmulti.setTitleX("channel multiplicity");
+                histmulti.setTitleY("counts");
+                histmulti.setTitle("Multiplicity of BMT channels"); 
 		DataGroup occupancyGroup = new DataGroup("");
 		occupancyGroup.addDataSet(occupancyHisto, 0);
+                occupancyGroup.addDataSet(histmulti, 0);
 		this.getDataGroup().add(occupancyGroup, 0, 0, 0);
 		
 		H1F timeOfMaxHisto = new H1F("TimeOfMax","TimeOfMax",numberOfChips,0,numberOfChips);
@@ -126,7 +131,8 @@ public class BMTmonitor extends DetectorMonitor {
 				hitmapGroup.addDataSet(hitmapHisto, 0);
 				this.getDataGroup().add(hitmapGroup, sector, layer,2);
 			}
-		}		
+		}
+                        
 	}
 
 	@Override
@@ -136,6 +142,7 @@ public class BMTmonitor extends DetectorMonitor {
 		this.getDetectorCanvas().getCanvas("Occupancies").setGridY(false);
 		this.getDetectorCanvas().getCanvas("Occupancies").setAxisTitleSize(12);
 		this.getDetectorCanvas().getCanvas("Occupancies").setAxisLabelSize(12);
+                this.getDetectorCanvas().getCanvas("Occupancies").getPad(0).getAxisZ().setLog(getLogZ());
 		this.getDetectorCanvas().getCanvas("Occupancies").draw(this.getDataGroup().getItem(0, 0, 0).getH2F("Occupancies"));
 		this.getDetectorCanvas().getCanvas("Occupancies").update();
 
@@ -185,6 +192,14 @@ public class BMTmonitor extends DetectorMonitor {
 		}
 		this.getDetectorCanvas().getCanvas("Occupancy Z").update();
 		this.getDetectorCanvas().getCanvas("Occupancy C").update();
+                
+                this.getDetectorCanvas().getCanvas("Multiplicity").divide(1, 1);
+                this.getDetectorCanvas().getCanvas("Multiplicity").setGridX(false);
+                this.getDetectorCanvas().getCanvas("Multiplicity").setGridY(false);
+                this.getDetectorCanvas().getCanvas("Multiplicity").cd(0);
+                this.getDetectorCanvas().getCanvas("Multiplicity").draw(this.getDataGroup().getItem(0,0,0).getH1F("multi"));
+                this.getDetectorCanvas().getCanvas("Multiplicity").update();
+                
 	}
 
 	public void processEvent(DataEvent event) {
@@ -196,7 +211,9 @@ public class BMTmonitor extends DetectorMonitor {
 				int strip = bank.getShort("component", i);
 				float timeNb = 5;
 				//float timeNb = bank.getFloat("time", i);
-				
+
+                                this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
+                                
 				if (strip < 0 || !mask[sectorNb][layerNb][strip]){
 					continue;
 				}

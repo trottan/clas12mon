@@ -124,36 +124,50 @@ public class HTCCmonitor  extends DetectorMonitor {
     public void plotHistos() {
         // plotting histos
         this.getDetectorCanvas().getCanvas("Occupancies").cd(0);
+        this.getDetectorCanvas().getCanvas("Occupancies").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADC"));
         this.getDetectorCanvas().getCanvas("Occupancies").cd(1);
+        this.getDetectorCanvas().getCanvas("Occupancies").getPad(1).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDC"));
         this.getDetectorCanvas().getCanvas("Occupancies").update();
         
         this.getDetectorCanvas().getCanvas("ADC spectra").cd(0);
+        this.getDetectorCanvas().getCanvas("ADC spectra").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc_s1"));
         this.getDetectorCanvas().getCanvas("ADC spectra").cd(1);
+        this.getDetectorCanvas().getCanvas("ADC spectra").getPad(1).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc_s2"));
         this.getDetectorCanvas().getCanvas("ADC spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("ADC spectra").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc_s3"));
         this.getDetectorCanvas().getCanvas("ADC spectra").cd(3);
+        this.getDetectorCanvas().getCanvas("ADC spectra").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc_s4"));
         this.getDetectorCanvas().getCanvas("ADC spectra").cd(4);
+        this.getDetectorCanvas().getCanvas("ADC spectra").getPad(4).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc_s5"));
         this.getDetectorCanvas().getCanvas("ADC spectra").cd(5);
+        this.getDetectorCanvas().getCanvas("ADC spectra").getPad(5).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc_s6"));
         this.getDetectorCanvas().getCanvas("ADC spectra").update();
         
         this.getDetectorCanvas().getCanvas("timing spectra").cd(0);
+        this.getDetectorCanvas().getCanvas("timing spectra").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("timing spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc_s1"));
         this.getDetectorCanvas().getCanvas("timing spectra").cd(1);
+        this.getDetectorCanvas().getCanvas("timing spectra").getPad(1).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("timing spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc_s2"));
         this.getDetectorCanvas().getCanvas("timing spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("timing spectra").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("timing spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc_s3"));
         this.getDetectorCanvas().getCanvas("timing spectra").cd(3);
+        this.getDetectorCanvas().getCanvas("timing spectra").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("timing spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc_s4"));
         this.getDetectorCanvas().getCanvas("timing spectra").cd(4);
+        this.getDetectorCanvas().getCanvas("timing spectra").getPad(4).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("timing spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc_s5"));
         this.getDetectorCanvas().getCanvas("timing spectra").cd(5);
+        this.getDetectorCanvas().getCanvas("timing spectra").getPad(5).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("timing spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc_s6"));
         this.getDetectorCanvas().getCanvas("timing spectra").update();
         this.getDetectorView().getView().repaint();

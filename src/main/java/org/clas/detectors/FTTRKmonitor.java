@@ -82,6 +82,7 @@ public class FTTRKmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Occupancies_2D").setGridX(false);
         this.getDetectorCanvas().getCanvas("Occupancies_2D").setGridY(false);
         this.getDetectorCanvas().getCanvas("Occupancies_2D").cd(0);
+        this.getDetectorCanvas().getCanvas("Occupancies_2D").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("Occupancies_2D").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADC_2D"));
         this.getDetectorCanvas().getCanvas("Occupancies_1D").divide(2, 2);
         this.getDetectorCanvas().getCanvas("Occupancies_1D").setGridX(false);
@@ -98,8 +99,10 @@ public class FTTRKmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC and time spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC and time spectra").setGridY(false);
         this.getDetectorCanvas().getCanvas("ADC and time spectra").cd(0);
+        this.getDetectorCanvas().getCanvas("ADC and time spectra").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC and time spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc"));
         this.getDetectorCanvas().getCanvas("ADC and time spectra").cd(1);
+        this.getDetectorCanvas().getCanvas("ADC and time spectra").getPad(1).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC and time spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc"));
         this.getDetectorCanvas().getCanvas("ADC and time spectra").update();
     }

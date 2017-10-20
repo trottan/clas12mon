@@ -64,8 +64,10 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(1);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH1F("occTDC"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(3);
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").update();
         

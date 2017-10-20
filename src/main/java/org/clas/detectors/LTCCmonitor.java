@@ -99,21 +99,29 @@ public class LTCCmonitor  extends DetectorMonitor {
     public void plotHistos() {        
         // plotting histos
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").cd(0);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADC"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").cd(1);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").getPad(1).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADCnorm"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcL"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").cd(3);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcR"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies and Spectra").update();
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").cd(0);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDC"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").cd(1);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").getPad(1).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDCnorm"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcL"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").cd(3);
+        this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcR"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies and Spectra").update();
         this.getDetectorView().getView().repaint();

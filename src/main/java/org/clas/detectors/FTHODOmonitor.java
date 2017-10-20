@@ -94,10 +94,12 @@ public class FTHODOmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("FADC Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("FADC Occupancies").setGridY(false);
         this.getDetectorCanvas().getCanvas("FADC Occupancies").cd(0);
+        this.getDetectorCanvas().getCanvas("FADC Occupancies").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("FADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D_l1"));
         this.getDetectorCanvas().getCanvas("FADC Occupancies").cd(1);
         this.getDetectorCanvas().getCanvas("FADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occFADC_l1"));
         this.getDetectorCanvas().getCanvas("FADC Occupancies").cd(2);
+        this.getDetectorCanvas().getCanvas("FADC Occupancies").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("FADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D_l2"));
         this.getDetectorCanvas().getCanvas("FADC Occupancies").cd(3);
         this.getDetectorCanvas().getCanvas("FADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occFADC_l2"));
@@ -106,13 +108,17 @@ public class FTHODOmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("FADC spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("FADC spectra").setGridY(false);
         this.getDetectorCanvas().getCanvas("FADC spectra").cd(0);
+        this.getDetectorCanvas().getCanvas("FADC spectra").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("FADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadc_l1"));
         this.getDetectorCanvas().getCanvas("FADC spectra").cd(1);
+        this.getDetectorCanvas().getCanvas("FADC spectra").getPad(1).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("FADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadc_time_l1"));
         this.getDetectorCanvas().getCanvas("FADC spectra").update();
         this.getDetectorCanvas().getCanvas("FADC spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("FADC spectra").getPad(2).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("FADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadc_l2"));
         this.getDetectorCanvas().getCanvas("FADC spectra").cd(3);
+        this.getDetectorCanvas().getCanvas("FADC spectra").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("FADC spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadc_time_l2"));
         this.getDetectorCanvas().getCanvas("FADC spectra").update();
         
