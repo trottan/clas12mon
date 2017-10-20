@@ -100,7 +100,7 @@ public class BMTmonitor extends DetectorMonitor {
 		occupancyHisto.setTitleX("Strips");
 		occupancyHisto.setTitleY("Detector");
                 H1F histmulti = new H1F("multi", "multi", 200, -0.5, 199.5);
-                histmulti.setTitleX("channel multiplicity");
+                histmulti.setTitleX("hit multiplicity");
                 histmulti.setTitleY("counts");
                 histmulti.setTitle("Multiplicity of BMT channels"); 
 		DataGroup occupancyGroup = new DataGroup("");

@@ -78,7 +78,7 @@ public class FMTmonitor extends DetectorMonitor {
 		occupancyHisto.setTitleX("strips");
 		occupancyHisto.setTitleY("detector");
                 H1F histmulti = new H1F("multi", "multi", 100, -0.5, 99.5);
-                histmulti.setTitleX("channel multiplicity");
+                histmulti.setTitleX("hit multiplicity");
                 histmulti.setTitleY("counts");
                 histmulti.setTitle("Multiplicity of BMT channels"); 
 		DataGroup occupancyGroup = new DataGroup("");
