@@ -65,10 +65,18 @@ public class FMTmonitor extends DetectorMonitor {
 
 	@Override
 	public void createHistos() {
-	
+
+                H2F summary = new H2F("summary","summary",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
+		summary.setTitleX("strips");
+		summary.setTitleY("detector");
+		summary.setTitle("FMT");
+		DataGroup sum = new DataGroup(1,1);
+		sum.addDataSet(summary, 0);
+		this.setDetectorSummary(sum);
+
 		H2F occupancyHisto = new H2F("Occupancies","Occupancies",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
-		occupancyHisto.setTitleX("Strips");
-		occupancyHisto.setTitleY("Detector");
+		occupancyHisto.setTitleX("strips");
+		occupancyHisto.setTitleY("detector");
                 H1F histmulti = new H1F("multi", "multi", 100, -0.5, 99.5);
                 histmulti.setTitleX("channel multiplicity");
                 histmulti.setTitleY("counts");
@@ -79,8 +87,8 @@ public class FMTmonitor extends DetectorMonitor {
 		this.getDataGroup().add(occupancyGroup, 0, 0, 0);
 		
 		H1F timeOfMaxHisto = new H1F("TimeOfMax","TimeOfMax",numberOfChips,0,numberOfChips);
-		timeOfMaxHisto.setTitleX("Electronic chip");
-		timeOfMaxHisto.setTitleY("Time of max adc");
+		timeOfMaxHisto.setTitleX("electronic chip");
+		timeOfMaxHisto.setTitleY("time of max adc");
 		timeOfMaxHisto.setFillColor(4);
 		DataGroup timeOfMaxGroup = new DataGroup("");
 		timeOfMaxGroup.addDataSet(timeOfMaxHisto, 0);
@@ -90,7 +98,7 @@ public class FMTmonitor extends DetectorMonitor {
 			for (int layer = 1; layer <= maxNumberLayer; layer++) {
 				H1F hitmapHisto = new H1F("Occupancy Layer " + layer + " Sector " + sector, "Occupancy Layer " + layer + " Sector " + sector,
 						(numberStrips[layer])+1, 0., (double) (numberStrips[layer])+1);
-				hitmapHisto.setTitleX("Strips (Layer " + layer  + " Sector " + sector+")");
+				hitmapHisto.setTitleX("strips (Layer " + layer  + " Sector " + sector+")");
 				hitmapHisto.setTitleY("Nb of hits");
 				hitmapHisto.setFillColor(4);
 				DataGroup hitmapGroup = new DataGroup("");
@@ -181,7 +189,7 @@ public class FMTmonitor extends DetectorMonitor {
 				this.getDataGroup().getItem(sectorNb, layerNb, 2).getH1F("Occupancy Layer " + layerNb + " Sector " + sectorNb)
 				.fill(strip);
 				this.getDataGroup().getItem(0, 0, 0).getH2F("Occupancies").fill(strip,maxNumberSector*(layerNb-1)+(sectorNb-1),1);
-		
+                                this.getDetectorSummary().getH2F("summary").fill(strip,maxNumberSector*(layerNb-1)+(sectorNb-1),1);
 			}
 			int compt=0;
 			if (getNumberOfEvents() % 1000 == 0) {

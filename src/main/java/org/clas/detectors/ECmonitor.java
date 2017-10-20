@@ -52,7 +52,7 @@ public class ECmonitor  extends DetectorMonitor {
             H1F sumStack = new H1F("sum"+stacks[i],"sum"+stacks[i],6,0.5,6.5);
             sumStack.setTitleX("sector");
             sumStack.setTitleY(stacks[i] + " hits");
-            sumStack.setTitle("EC");
+            sumStack.setTitle("PCAL");
             sumStack.setFillColor(35);
             sum.addDataSet(sumStack, i);
         }
@@ -61,7 +61,7 @@ public class ECmonitor  extends DetectorMonitor {
             H1F sumStack = new H1F("sum"+stacks[i],"sum"+stacks[i],12,0.5,6.5);
             sumStack.setTitleX("sector (in and out combined)");
             sumStack.setTitleY("ECal hits");
-            sumStack.setTitle("EC");
+            sumStack.setTitle("ECAL");
             sumStack.setFillColor(35);
             sum.addDataSet(sumStack, i);
         }

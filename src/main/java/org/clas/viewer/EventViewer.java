@@ -81,24 +81,24 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
                 new BMTmonitor("BMT"),        // 0
                 new BSTmonitor("BST"),        // 1
-                new CNDmonitor("CND"),        // 1
-                new CTOFmonitor("CTOF"),      // 2
-                new DCmonitor("DC"),          // 3
-                new ECmonitor("ECAL"),        // 4
-                new FMTmonitor("FMT"),        // 5
-                new FTCALmonitor("FTCAL"),    // 6
-                new FTHODOmonitor("FTHODO"),  // 7
-                new FTOFmonitor("FTOF"),      // 8
-                new FTTRKmonitor("FTTRK"),    // 9
-                new HTCCmonitor("HTCC"),      // 10
-                new LTCCmonitor("LTCC"),      // 11
-                new RICHmonitor("RICH"),      // 12
-                new RECmonitor("RECON"),      // 12
-             //   new TRKmonitor("TRK"),        // 14
-                new RFmonitor("RF"),          // 14
-                new HELmonitor("HEL"),        // 15
-                new FCUPmonitor("Faraday Cup"),  // 16
-                new TRIGGERmonitor("Trigger"),   // 17
+                new CNDmonitor("CND"),        // 2
+                new CTOFmonitor("CTOF"),      // 3
+                new DCmonitor("DC"),          // 4
+                new ECmonitor("ECAL"),        // 5
+                new FMTmonitor("FMT"),        // 6
+                new FTCALmonitor("FTCAL"),    // 7
+                new FTHODOmonitor("FTHODO"),  // 8
+                new FTOFmonitor("FTOF"),      // 9
+                new FTTRKmonitor("FTTRK"),    // 10
+                new HTCCmonitor("HTCC"),      // 11
+                new LTCCmonitor("LTCC"),      // 12
+                new RICHmonitor("RICH"),      // 13
+                new RECmonitor("RECON"),      // 14
+             //   new TRKmonitor("TRK"),        // 15
+                new RFmonitor("RF"),          // 15
+                new HELmonitor("HEL"),        // 16
+                new FCUPmonitor("Faraday Cup"),  // 17
+                new TRIGGERmonitor("Trigger"),   // 18
      
     };
         
@@ -388,7 +388,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(this.monitors[12].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[12].getDetectorSummary().getH1F("summary"));
         // RICH
         this.CLAS12Canvas.getCanvas("FD").cd(3);
-        if(this.monitors[13].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[13].getDetectorSummary().getH1F("summary"));
+        this.CLAS12Canvas.getCanvas("FD").getPad(3).getAxisZ().setLog(true);
+        if(this.monitors[13].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[13].getDetectorSummary().getH2F("summary"));
         
         // ECAL 
         this.CLAS12Canvas.getCanvas("FD").cd(4);
@@ -396,13 +397,16 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         this.CLAS12Canvas.getCanvas("FD").cd(5);
         if(this.monitors[5].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getH1F("sumECin"));
    
-        // FTOF:
+        // FMT:
         this.CLAS12Canvas.getCanvas("FD").cd(6);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum0"));
+        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisZ().setLog(true);
+        if(this.monitors[6].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[6].getDetectorSummary().getH2F("summary"));
+        
+        // FTOF:
         this.CLAS12Canvas.getCanvas("FD").cd(7);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum1"));
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p1"));
         this.CLAS12Canvas.getCanvas("FD").cd(8);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum2"));
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p2"));
         
         //////////////////////////////////////////////////
         ///  CD:
@@ -415,9 +419,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(this.monitors[3].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[3].getDetectorSummary().getH1F("summary"));
         // BVT
         this.CLAS12Canvas.getCanvas("CD").cd(2);
+        this.CLAS12Canvas.getCanvas("CD").getPad(2).getAxisZ().setLog(true);
         if(this.monitors[0].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[0].getDetectorSummary().getH2F("summary"));
         // BST
         this.CLAS12Canvas.getCanvas("CD").cd(3);
+        this.CLAS12Canvas.getCanvas("CD").getPad(3).getAxisZ().setLog(true);
         if(this.monitors[1].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[1].getDetectorSummary().getH2F("summary"));
         
         

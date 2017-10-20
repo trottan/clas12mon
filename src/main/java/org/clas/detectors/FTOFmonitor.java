@@ -50,16 +50,20 @@ public class FTOFmonitor  extends DetectorMonitor {
         String[] stacks = new String[]{"P1A","P1B","P2"};
         String[] views = new String[]{"Left","Right"};   
         
-        DataGroup sum = new DataGroup(3,1);        
-        for(int lay=0; lay<3; lay++) {           
-            H1F sumStack = new H1F("sum"+lay,"sum"+lay,6,0.5,6.5);
-            sumStack.setTitleX("sector");
-            sumStack.setTitleY("FTOF "+stacks[lay] + " hits");
-            sumStack.setTitle("FTOF");
-            sumStack.setFillColor(34);
-            sum.addDataSet(sumStack, lay);
-        }        
-
+        H1F sumStackp1 = new H1F("sum_p1","sum_p1",12,0.5,6.5);
+        sumStackp1.setTitleX("sector P1A and P1B");
+        sumStackp1.setTitleY("FTOF P1 A+B hits");
+        sumStackp1.setTitle("FTOF panel 1a and 1b");
+        sumStackp1.setFillColor(34);
+        H1F sumStackp2 = new H1F("sum_p2","sum_p2",6,0.5,6.5);
+        sumStackp2.setTitleX("sector");
+        sumStackp2.setTitleY("FTOF P2 hits");
+        sumStackp2.setTitle("FTOF panel 2");
+        sumStackp2.setFillColor(34);
+            
+        DataGroup sum = new DataGroup(2,1); 
+        sum.addDataSet(sumStackp1, 0);
+        sum.addDataSet(sumStackp2, 1);
         this.setDetectorSummary(sum);
         
         for(int lay=0; lay < 3; lay++) {
@@ -218,9 +222,11 @@ public class FTOFmonitor  extends DetectorMonitor {
                 if(ADC>0 && isGoodTrigger(sector)) {
                 	  this.getDataGroup().getItem(0,lay,0).getH2F("occADC"+lay+ord).fill(sector*1.0,paddle*1.0);
                 	  this.getDataGroup().getItem(sector,lay,0).getH2F("datADC"+sector+lay+ord).fill(ADC,paddle*1.0);
-                	  this.getDetectorSummary().getH1F("sum"+lay).fill(sector*1.0);   
-                  storeADCHits(lay,sector-1,ord,paddle,ADC,time);
-                	}
+                	  if(layer == 1) this.getDetectorSummary().getH1F("sum_p1").fill(sector-0.25);
+                          if(layer == 2) this.getDetectorSummary().getH1F("sum_p1").fill(sector+0.25); 
+                          this.getDetectorSummary().getH1F("sum_p2").fill(sector*1.0); 
+                          storeADCHits(lay,sector-1,ord,paddle,ADC,time);
+                }
             }
         }
         if(event.hasBank("FTOF::tdc")==true){

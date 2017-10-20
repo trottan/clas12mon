@@ -143,6 +143,7 @@ public class FTHODOmonitor  extends DetectorMonitor {
                
                 if(adc>0) {
                     if(layer == 1){
+                        
                         this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D_l1").fill(comp*1.0,sector*1.0);
                         
                         if(sector == 1){
