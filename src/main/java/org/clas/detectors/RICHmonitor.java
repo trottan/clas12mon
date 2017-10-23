@@ -40,10 +40,10 @@ public class RICHmonitor  extends DetectorMonitor {
         occTDC.setTitleY("ring-PMT");
         occTDC.setTitleX("sector");
         occTDC.setTitle("TDC Occupancy");
-        H2F adc = new H2F("adc", "adc", 500, 0, 50000, 25024, 0.5, 25024.5);
+        H2F adc = new H2F("adc", "adc", 500, 0, 50000, 250, 0.5, 25024.5);
         adc.setTitleX("ADC - value");
         adc.setTitleY("PMT");
-        H2F tdc = new H2F("tdc", "tdc", 100, 0, 5000, 25024, 0.5, 25024.5);
+        H2F tdc = new H2F("tdc", "tdc", 100, 0, 5000, 250, 0.5, 25024.5);
         tdc.setTitleX("TDC - time");
         tdc.setTitleY("PMT");
         

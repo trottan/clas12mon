@@ -393,9 +393,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         // ECAL 
         this.CLAS12Canvas.getCanvas("FD").cd(4);
-        if(this.monitors[5].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getH1F("sumPCAL"));
+        this.CLAS12Canvas.getCanvas("FD").getPad(4).getAxisZ().setLog(true);
+        if(this.monitors[5].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getH2F("sumPCAL"));
         this.CLAS12Canvas.getCanvas("FD").cd(5);
-        if(this.monitors[5].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getH1F("sumECin"));
+        this.CLAS12Canvas.getCanvas("FD").getPad(5).getAxisZ().setLog(true);
+        if(this.monitors[5].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getH2F("sumECin"));
    
         // FMT:
         this.CLAS12Canvas.getCanvas("FD").cd(6);
@@ -404,9 +406,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         // FTOF:
         this.CLAS12Canvas.getCanvas("FD").cd(7);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p1"));
+        this.CLAS12Canvas.getCanvas("FD").getPad(7).getAxisZ().setLog(true);
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH2F("sum_p1"));
         this.CLAS12Canvas.getCanvas("FD").cd(8);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p2"));
+        this.CLAS12Canvas.getCanvas("FD").getPad(8).getAxisZ().setLog(true);
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH2F("sum_p2"));
         
         //////////////////////////////////////////////////
         ///  CD:
