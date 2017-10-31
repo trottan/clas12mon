@@ -38,6 +38,17 @@ public class FTCALmonitor  extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
+        /*
+        H2F statistics = new H2F("statistics","statistics", 100, 0, 100, 350,0.5,350.5);
+        statistics.setTitleX("time");
+        statistics.setTitleY("number of active channels");
+        statistics.setTitle("FTCAL");
+        DataGroup stat = new DataGroup(1,1);
+        stat.addDataSet(statistics, 0);
+        this.setDetectorSummary(stat);
+        int active_channels = 0;
+        */
+        
         H2F occFADC2D = new H2F("occFADC_2D", "occFADC_2D", 22, 0.5, 22.5, 22, 0.5, 22.5);
         occFADC2D.setTitleX("Crystal x");
         occFADC2D.setTitleY("Crystal y");
@@ -116,6 +127,8 @@ public class FTCALmonitor  extends DetectorMonitor {
                 
                 int IDY = ((int) comp/22) + 1;
                 int IDX = comp + 1 - (IDY -1)*22;    
+                
+               
                 
              //   System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
               //        " ADC = " + adc + " TIME = " + time); 

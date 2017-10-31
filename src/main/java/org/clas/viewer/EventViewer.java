@@ -52,6 +52,7 @@ import org.jlab.io.evio.EvioDataEvent;
 import org.jlab.io.hipo.HipoDataEvent;
 import org.jlab.io.task.DataSourceProcessorPane;
 import org.jlab.io.task.IDataEventListener;
+//import org.jlab.elog.LogEntry;
 
 /**
  *
@@ -152,7 +153,18 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         settings.add(menuItem);
         menuBar.add(settings);
          
-           
+        JMenu upload = new JMenu("Upload");
+        upload.setMnemonic(KeyEvent.VK_A);
+        upload.getAccessibleContext().setAccessibleDescription("Upload histograms to the Logbook");
+        menuItem = new JMenuItem("Upload to logbook (png)", KeyEvent.VK_U);
+        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+        menuItem.getAccessibleContext().setAccessibleDescription("Upload to logbook (png)");
+        menuItem.addActionListener(this);
+        upload.add(menuItem);
+        upload.add(menuItem);
+        menuBar.add(upload);
+        
+  
         // create main panel
         mainPanel = new JPanel();	
 	mainPanel.setLayout(new BorderLayout());
@@ -183,7 +195,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         CLAS12Canvas.getCanvas("FT").divide(1,3);
         CLAS12Canvas.getCanvas("FT").setGridX(false);
         CLAS12Canvas.getCanvas("FT").setGridY(false);
-        
+
         
         JPanel    CLAS12View = new JPanel(new BorderLayout());
         JSplitPane splitPanel = new JSplitPane();
@@ -267,6 +279,17 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
             this.saveHistosToFile(fileName);
         }
+        
+         if(e.getActionCommand()=="Upload to logbook (png)") {
+            /*
+            LogEntry entry = new LogEntry("Hello World", "TLOG");
+            entry.addAttachment("monitoring/clas12mon/output/clas12mon_0_10-17-2017_06.15.01_PM/CND_canvas0.png", "picture upload example 1");
+            long lognumber = entry.submitNow();
+            System.out.println("Successfully submitted log entry number: " + lognumber); 
+            */
+        }
+        
+        
     }
 
     public void chooseUpdateInterval() {
@@ -446,9 +469,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(this.monitors[0].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FT").draw(this.monitors[10].getDetectorSummary().getH1F("summary"));
         
         ////////////////////////////////////////////////////
+      
         
-  
- 
     }
     
     public void printHistosToFile() {

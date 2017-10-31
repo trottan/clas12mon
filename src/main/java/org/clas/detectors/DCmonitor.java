@@ -23,7 +23,7 @@ public class DCmonitor extends DetectorMonitor {
 
     public DCmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("Raw Occupancies","Normalized Occupancies");
+        this.setDetectorTabNames("Raw Occupancies","Normalized Occupancies", "Hit Multiplicity");
         this.init(false);
     }
 
@@ -51,11 +51,20 @@ public class DCmonitor extends DetectorMonitor {
             occ.setTitleY("layer");
             occ.setTitle("sector "+sector);
             
-            DataGroup dg = new DataGroup(2,1);
+            H1F mult = new H1F("multiplicity_sec"+ sector, "Multiplicity sector "+ sector, 1008, 0.5, 4032.5);
+            mult.setTitleX("hit multiplicity");
+            mult.setTitleY("counts");
+            mult.setTitle("multiplicity sector " + sector);
+            
+            DataGroup dg = new DataGroup(3,1);
             dg.addDataSet(raw, 0);
             dg.addDataSet(occ, 1);
+            dg.addDataSet(mult, 2);
             this.getDataGroup().add(dg, sector,0,0);
         }
+        
+       
+        
     }
 
     @Override
@@ -109,18 +118,28 @@ public class DCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Raw Occupancies").divide(2, 3);
         this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridY(false);
+        this.getDetectorCanvas().getCanvas("Hit Multiplicity").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridX(false);
+        this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridY(false);
+        
         for(int sector=1; sector <=6; sector++) {
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setRange(0.01, 10.);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("occ_sec"+sector));
-//            this.getDataGroup().getItem(0,sector,0).getH2F("occ_sec"+sector).
             this.getDetectorCanvas().getCanvas("Raw Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("Raw Occupancies").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Raw Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector));
+            this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridX(false);
+            this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridY(false);
+            this.getDetectorCanvas().getCanvas("Hit Multiplicity").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("Hit Multiplicity").draw(this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector));
         }
+        
         this.getDetectorCanvas().getCanvas("Normalized Occupancies").update();
         this.getDetectorCanvas().getCanvas("Raw Occupancies").update();
+        this.getDetectorCanvas().getCanvas("Hit Multiplicity").update();
+        
     }
 
     @Override
@@ -137,6 +156,7 @@ public class DCmonitor extends DetectorMonitor {
                 int       TDC = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); 
                 this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector).fill(wire*1.0,layer*1.0);
+                this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
                 if(TDC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
             }
        }       
