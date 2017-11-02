@@ -184,7 +184,8 @@ public class ECmonitor  extends DetectorMonitor {
         
             // System.out.println("bitsec " + bitsec);
     	    // Plot only sector events in which the sector was in the trigger
-    	    if(bitsec>0) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
+    	    
+   	    if(isGoodTrigger(bitsec)) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
                 
         if(event.hasBank("ECAL::tdc")==true){
             DataBank  bank = event.getBank("ECAL::tdc");

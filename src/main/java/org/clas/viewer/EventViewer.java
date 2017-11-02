@@ -368,6 +368,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
             if(event instanceof EvioDataEvent){
              	hipo = (HipoDataEvent) clasDecoder.getDataEvent(event);
+                DataBank   header = clasDecoder.createHeaderBank(hipo, 0, 0, (float) 0, (float) 0);
+                hipo.appendBanks(header);
             } 
             else {
                 hipo = (HipoDataEvent) event;
