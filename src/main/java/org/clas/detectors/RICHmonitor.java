@@ -24,7 +24,7 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").divide(2, 2);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridY(false);
-        H2F summary = new H2F("summary","summary",224, 0.5, 224.5, 184, 0.5, 184.5);
+        H2F summary = new H2F("summary","summary",192, 0.5, 192.5, 138, 0.5, 138.5);  // x = 224   y = 184
         summary.setTitleX("channel");
         summary.setTitleY("RICH hits");
         summary.setTitle("RICH");
@@ -32,18 +32,18 @@ public class RICHmonitor  extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H2F occADC = new H2F("occADC", "occADC", 224, 0.5, 224.5, 184, 0.5, 184.5);
+        H2F occADC = new H2F("occADC", "occADC", 192, 0.5, 192.5, 138, 0.5, 138.5);
         occADC.setTitleY("ring-PMT");
         occADC.setTitleX("sector");
         occADC.setTitle("ADC Occupancy");
-        H2F occTDC = new H2F("occTDC", "occTDC", 224, 0.5, 224.5, 184, 0.5, 184.5);
+        H2F occTDC = new H2F("occTDC", "occTDC", 192, 0.5, 192.5, 138, 0.5, 138.5);
         occTDC.setTitleY("ring-PMT");
         occTDC.setTitleX("sector");
         occTDC.setTitle("TDC Occupancy");
-        H2F adc = new H2F("adc", "adc", 250, 0, 50000, 644, 0.5, 41216.5);
+        H2F adc = new H2F("adc", "adc", 250, 0, 50000, 828, 0.5, 26496.5);
         adc.setTitleX("ADC - value");
         adc.setTitleY("PMT");
-        H2F tdc = new H2F("tdc", "tdc", 250, 0, 5000, 644, 0.5, 41216.5);
+        H2F tdc = new H2F("tdc", "tdc", 250, 0, 5000, 828, 0.5, 26496.5);
         tdc.setTitleX("TDC - time");
         tdc.setTitleY("PMT");
         
@@ -93,9 +93,9 @@ public class RICHmonitor  extends DetectorMonitor {
 //                System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
 //                      " ADC = " + adc + " TIME = " + time); 
                 if(adc>0) {
-                    this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill(comp*1.0,sector*1.0);
-                    this.getDetectorSummary().getH2F("summary").fill(comp*1.0,sector*1.0);
-                    this.getDataGroup().getItem(0,0,0).getH2F("adc").fill(adc*1.0, (comp-1)*64+sector);
+                    this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill(comp*1.0,layer*1.0);
+                    this.getDetectorSummary().getH2F("summary").fill(comp*1.0,layer*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("adc").fill(adc*1.0, (comp-1)*138+layer);
                     
                 }
 	    }
@@ -111,8 +111,8 @@ public class RICHmonitor  extends DetectorMonitor {
                 int     order = bank.getByte("order",i); // order specifies left-right for ADC
 //                           System.out.println("ROW " + i + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = "+ comp + " TDC = " + TDC);    
                 if(tdc>0){ 
-                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp*1.0,sector*1.0);
-                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, (comp-1)*64+sector);
+                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp*1.0,layer*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, (comp-1)*138+layer);
                 }
             }
         }        
