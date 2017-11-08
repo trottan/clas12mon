@@ -22,6 +22,14 @@ public class RECmonitor extends DetectorMonitor {
         // create histograms
         this.setNumberOfEvents(0);
 
+        H1F summary = new H1F("summary","summary",6,0.5,6.5);
+        summary.setTitleX("sector");
+        summary.setTitleY("REC");
+        summary.setFillColor(33);
+        DataGroup sum = new DataGroup(1,1);
+        sum.addDataSet(summary, 0);
+        this.setDetectorSummary(sum);
+        
         H1F trk_mult = new H1F("trk_mult", "trk_mult", 15, 0.5, 15.5);
         trk_mult.setTitleX("track multiplicity");
         trk_mult.setTitleY("counts");
@@ -46,7 +54,7 @@ public class RECmonitor extends DetectorMonitor {
         dg.addDataSet(trk_mult, 0);
         dg.addDataSet(trk_phi, 1);
         dg.addDataSet(trk_theta, 2);
-        dg.addDataSet(trk_norm_chi2, 2);
+        dg.addDataSet(trk_norm_chi2, 3);
         this.getDataGroup().add(dg,0,0,0);
         
     }

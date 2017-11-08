@@ -94,18 +94,18 @@ public class FTOFmonitor  extends DetectorMonitor {
             datTDC.setTitleX("TDC Channel");
             datTDC.setTitle("Sector "+sec);
             dg.addDataSet(datADC, 0);
-            dg.addDataSet(datTDC, 0);
+            dg.addDataSet(datTDC, 1);
         }
             H2F GMEAN = new H2F("GMEAN"+sec+lay, "sec/lay"+sec+lay+" GMEAN", 100, 0., 6000.,this.npaddles[lay], 1, npaddles[lay]+1 );
             GMEAN.setTitleY(stacks[lay] +" PMTS");
             GMEAN.setTitleX("GMEAN");
             GMEAN.setTitle("Sector "+sec);
-            dg.addDataSet(GMEAN, 0);
+            dg.addDataSet(GMEAN, 2);
             H2F TDIF = new H2F("TDIF"+sec+lay, "sec/lay"+sec+lay+" TDIF", 100, -40., 40.,this.npaddles[lay], 1, npaddles[lay]+1 );
             TDIF.setTitleY(stacks[lay] +" PMTS");
             TDIF.setTitleX("TLeft-TRight");
             TDIF.setTitle("Sector "+sec);
-            dg.addDataSet(TDIF, 0);
+            dg.addDataSet(TDIF, 3);
             this.getDataGroup().add(dg,sec,lay,0);
         }
         }

@@ -65,12 +65,12 @@ public class FTTRKmonitor  extends DetectorMonitor {
         
         DataGroup dg = new DataGroup(2,4);
         dg.addDataSet(occADC2D, 0);
-        dg.addDataSet(occADCl1, 0);
-        dg.addDataSet(occADCl2, 0);
-        dg.addDataSet(occADCl3, 0);
-        dg.addDataSet(occADCl4, 0);
-        dg.addDataSet(adc, 0);
-        dg.addDataSet(tdc, 0);
+        dg.addDataSet(occADCl1, 1);
+        dg.addDataSet(occADCl2, 2);
+        dg.addDataSet(occADCl3, 3);
+        dg.addDataSet(occADCl4, 4);
+        dg.addDataSet(adc, 5);
+        dg.addDataSet(tdc, 6);
         
         this.getDataGroup().add(dg,0,0,0);
     }

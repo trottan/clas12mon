@@ -77,14 +77,14 @@ public class FTCALmonitor  extends DetectorMonitor {
         fadc_time.setTitleX("FADC - time");
         fadc_time.setTitleY("Crystal");
         
-        DataGroup dg = new DataGroup(1,5);
+        DataGroup dg = new DataGroup(3,3);
         dg.addDataSet(occFADC2D, 0);
         dg.addDataSet(pedFADC2D, 1);
-        dg.addDataSet(pedFADC2Dtmp1, 1);
-        dg.addDataSet(pedFADC2Dtmp2, 1);
-        dg.addDataSet(fadc, 2);
-        dg.addDataSet(fadc_time, 3);
-        dg.addDataSet(occFADC, 4);
+        dg.addDataSet(pedFADC2Dtmp1, 2);
+        dg.addDataSet(pedFADC2Dtmp2, 3);
+        dg.addDataSet(fadc, 4);
+        dg.addDataSet(fadc_time, 5);
+        dg.addDataSet(occFADC, 6);
         
         this.getDataGroup().add(dg,0,0,0);
     }

@@ -495,7 +495,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         }
         String fileName = data + "/clas12_canvas.png";
         System.out.println(fileName);
-       // this.CLAS12Canvas.getCanvas("CLAS12-summary").save(fileName);
+        //this.CLAS12Canvas.getCanvas("Summary").save(fileName);
         for(int k=0; k<this.monitors.length; k++) {
             this.monitors[k].printCanvas(data);
         }
@@ -503,6 +503,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     
     public void createHistoPDF() {
+        /*
         DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
         String data = System.getProperty("user.dir") + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
         File theDir = new File(data);
@@ -528,8 +529,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         for(int k=0; k<this.monitors.length; k++) {
             this.monitors[k].printCanvas(data);
         }
-        
+        */
     }
+    
     
     
 
