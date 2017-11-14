@@ -67,7 +67,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     JMenuBar menuBar                            = null;
     DataSourceProcessorPane processorPane 	= null;
     EmbeddedCanvasTabbed CLAS12Canvas           = null;
-    //EmbeddedCanvasTabbed CLAS12CDCanvas           = null;
+    //EmbeddedCanvasTabbed CLAS12CDCanvas         = null;
     
     CodaEventDecoder               decoder = new CodaEventDecoder();
     CLASDecoder                clasDecoder = new CLASDecoder();

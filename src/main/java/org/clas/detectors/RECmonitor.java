@@ -6,6 +6,7 @@ import org.jlab.groot.data.H2F;
 import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
+import org.jlab.clas.physics.Vector3;
 
 
 public class RECmonitor extends DetectorMonitor {
@@ -13,7 +14,7 @@ public class RECmonitor extends DetectorMonitor {
 
     public RECmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("CVT tracking plots");
+        this.setDetectorTabNames("CVT tracking plots", "CD tracks per event", "CD hits per track", "CD momentum", "CD theta angle");
         this.init(false);
     }
     
@@ -57,6 +58,33 @@ public class RECmonitor extends DetectorMonitor {
         dg.addDataSet(trk_norm_chi2, 3);
         this.getDataGroup().add(dg,0,0,0);
         
+        
+        for(int sector=1; sector <= 6; sector++) {
+            H1F cd_trk_ev = new H1F("cd_trk_ev_sec" + sector, "number of tracks per events  sector " + sector, 20, 0.5, 20.5);
+            cd_trk_ev.setTitleX("number of tracks per event");
+            cd_trk_ev.setTitleY("counts");
+            cd_trk_ev.setTitle("sector "+sector);
+            H1F cd_hits_per_trk = new H1F("cd_hits_per_trk_sec" + sector, "number of hits per track  sector " + sector, 150, 0.5, 150.5);
+            cd_hits_per_trk.setTitleX("number of hits per track");
+            cd_hits_per_trk.setTitleY("counts");
+            cd_hits_per_trk.setTitle("sector "+sector);
+            H1F cd_momentum = new H1F("cd_momentum_sec" + sector, "momentum distribution  sector " + sector, 106, 0.0, 10.6);
+            cd_momentum.setTitleX("momentum");
+            cd_momentum.setTitleY("counts");
+            cd_momentum.setTitle("sector "+sector);
+            H1F cd_theta = new H1F("cd_theta_sec" + sector, "theta distribution  sector " + sector, 126, 0.0, 3.15);
+            cd_theta.setTitleX("theta");
+            cd_theta.setTitleY("counts");
+            cd_theta.setTitle("sector "+sector);
+  
+            dg.addDataSet(cd_trk_ev, 0);
+            dg.addDataSet(cd_hits_per_trk, 1);
+            dg.addDataSet(cd_momentum, 2);
+            dg.addDataSet(cd_theta, 3);
+            this.getDataGroup().add(dg, sector,0,0);
+        }
+            
+        
     }
         
     @Override
@@ -74,6 +102,34 @@ public class RECmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("CVT tracking plots").draw(this.getDataGroup().getItem(0,0,0).getH1F("trk_theta"));
         this.getDetectorCanvas().getCanvas("CVT tracking plots").cd(3);
         this.getDetectorCanvas().getCanvas("CVT tracking plots").draw(this.getDataGroup().getItem(0,0,0).getH1F("trk_norm_chi2"));
+        
+        this.getDetectorCanvas().getCanvas("CD tracks per event").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("CD tracks per event").setGridX(false);
+        this.getDetectorCanvas().getCanvas("CD tracks per event").setGridY(false);
+        this.getDetectorCanvas().getCanvas("CD hits per track").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("CD hits per track").setGridX(false);
+        this.getDetectorCanvas().getCanvas("CD hits per track").setGridY(false);
+        this.getDetectorCanvas().getCanvas("CD momentum").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("CD momentum").setGridX(false);
+        this.getDetectorCanvas().getCanvas("CD momentum").setGridY(false);
+        this.getDetectorCanvas().getCanvas("CD theta angle").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("CD theta angle").setGridX(false);
+        this.getDetectorCanvas().getCanvas("CD theta angle").setGridY(false);
+        
+        for(int sector=1; sector <=6; sector++) {
+            this.getDetectorCanvas().getCanvas("CD tracks per event").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            this.getDetectorCanvas().getCanvas("CD tracks per event").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("CD tracks per event").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_trk_ev_sec"+sector));
+            this.getDetectorCanvas().getCanvas("CD hits per track").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            this.getDetectorCanvas().getCanvas("CD hits per track").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("CD hits per track").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_hits_per_trk_sec" + sector));
+            this.getDetectorCanvas().getCanvas("CD momentum").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            this.getDetectorCanvas().getCanvas("CD momentum").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("CD momentum").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_momentum_sec" + sector));
+            this.getDetectorCanvas().getCanvas("CD theta angle").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            this.getDetectorCanvas().getCanvas("CD theta angle").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("CD theta angle").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_theta_sec" + sector));
+        }
 
     }
 
@@ -108,8 +164,29 @@ public class RECmonitor extends DetectorMonitor {
                 int svtTrack_q = bankSVTTracks.getInt("q", row);
             }
         } 
+        
+        else if (event.hasBank("TimeBasedTrkg::TBTracks")) {
+            DataBank bankTBTracks = event.getBank("TimeBasedTrkg::TBTracks");
+            int rows = bankTBTracks.rows();
+            int sector;
+            for(int i = 0; i < rows; i++){
+                sector = bankTBTracks.getByte("sector",i);
+
+                Vector3 momentum = new Vector3();
+		momentum.setXYZ(bankTBTracks.getFloat("p0_x", i), bankTBTracks.getFloat("p0_y", i),bankTBTracks.getFloat("p0_z", i));
                 
+                this.getDataGroup().getItem(sector,0,0).getH1F("cd_momentum_sec" + sector).fill(momentum.mag()); 
+                this.getDataGroup().getItem(sector,0,0).getH1F("cd_theta_sec" + sector).fill(momentum.theta());   
+                this.getDataGroup().getItem(sector,0,0).getH1F("cd_trk_ev_sec" + sector).fill(rows); 
+
+                DataBank bankTBHits = event.getBank("TimeBasedTrkg::TBHits");
+                int hits = bankTBHits.rows();
+                this.getDataGroup().getItem(sector,0,0).getH1F("cd_hits_per_trk_sec" + sector).fill(hits/rows);
+            
+            }
                 
+        } 
+                        
     }
                   
 
