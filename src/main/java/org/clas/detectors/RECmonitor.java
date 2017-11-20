@@ -155,7 +155,6 @@ public class RECmonitor extends DetectorMonitor {
                 }
                 
             }
-  
         } 
         
         else if (event.hasBank("CVTRec::Tracks")) {
@@ -163,8 +162,19 @@ public class RECmonitor extends DetectorMonitor {
             int nTracks = bankSVTTracks.rows();
             for (int row = 0; row < nTracks; ++row) {
                 int svtTrack_q = bankSVTTracks.getInt("q", row);
+                float  svtCosmicTrack_phi = bankSVTTracks.getFloat("phi", row);
+                float  svtCosmicTrack_theta = bankSVTTracks.getFloat("theta", row);
+                float  svtCosmicTrack_kfChi2 = bankSVTTracks.getFloat("chi2", row);
+                int    svtCosmicTrack_kfNdf = bankSVTTracks.getInt("ndf", row);
+                
+                if(nTracks > 0){
+                this.getDataGroup().getItem(0,0,0).getH1F("trk_mult").fill(row);
+                this.getDataGroup().getItem(0,0,0).getH1F("trk_phi").fill(svtCosmicTrack_phi);
+                this.getDataGroup().getItem(0,0,0).getH1F("trk_theta").fill(svtCosmicTrack_theta);
+                if(svtCosmicTrack_kfNdf > 0)this.getDataGroup().getItem(0,0,0).getH1F("trk_norm_chi2").fill(svtCosmicTrack_kfChi2/svtCosmicTrack_kfNdf);
+                }
             }
-        } 
+        }
         
         else if (event.hasBank("TimeBasedTrkg::TBTracks")) {
             DataBank bankTBTracks = event.getBank("TimeBasedTrkg::TBTracks");
