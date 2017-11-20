@@ -14,7 +14,7 @@ public class RECmonitor extends DetectorMonitor {
 
     public RECmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("CVT tracking plots", "CD tracks per event", "CD hits per track", "CD momentum", "CD theta angle");
+        this.setDetectorTabNames("CVT tracking plots", "DC tracks per event", "DC hits per track", "DC momentum", "DC theta angle");
         this.init(false);
     }
     
@@ -103,34 +103,34 @@ public class RECmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("CVT tracking plots").cd(3);
         this.getDetectorCanvas().getCanvas("CVT tracking plots").draw(this.getDataGroup().getItem(0,0,0).getH1F("trk_norm_chi2"));
         
-        this.getDetectorCanvas().getCanvas("CD tracks per event").divide(2, 3);
-        this.getDetectorCanvas().getCanvas("CD tracks per event").setGridX(false);
-        this.getDetectorCanvas().getCanvas("CD tracks per event").setGridY(false);
-        this.getDetectorCanvas().getCanvas("CD hits per track").divide(2, 3);
-        this.getDetectorCanvas().getCanvas("CD hits per track").setGridX(false);
-        this.getDetectorCanvas().getCanvas("CD hits per track").setGridY(false);
-        this.getDetectorCanvas().getCanvas("CD momentum").divide(2, 3);
-        this.getDetectorCanvas().getCanvas("CD momentum").setGridX(false);
-        this.getDetectorCanvas().getCanvas("CD momentum").setGridY(false);
-        this.getDetectorCanvas().getCanvas("CD theta angle").divide(2, 3);
-        this.getDetectorCanvas().getCanvas("CD theta angle").setGridX(false);
-        this.getDetectorCanvas().getCanvas("CD theta angle").setGridY(false);
+        this.getDetectorCanvas().getCanvas("DC tracks per event").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("DC tracks per event").setGridX(false);
+        this.getDetectorCanvas().getCanvas("DC tracks per event").setGridY(false);
+        this.getDetectorCanvas().getCanvas("DC hits per track").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("DC hits per track").setGridX(false);
+        this.getDetectorCanvas().getCanvas("DC hits per track").setGridY(false);
+        this.getDetectorCanvas().getCanvas("DC momentum").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("DC momentum").setGridX(false);
+        this.getDetectorCanvas().getCanvas("DC momentum").setGridY(false);
+        this.getDetectorCanvas().getCanvas("DC theta angle").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("DC theta angle").setGridX(false);
+        this.getDetectorCanvas().getCanvas("DC theta angle").setGridY(false);
         
         for(int sector=1; sector <=6; sector++) {
-            this.getDetectorCanvas().getCanvas("CD tracks per event").getPad(sector-1).getAxisZ().setLog(getLogZ());
-            this.getDetectorCanvas().getCanvas("CD tracks per event").cd(sector-1);
-            this.getDetectorCanvas().getCanvas("CD tracks per event").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_trk_ev_sec"+sector));
-            this.getDetectorCanvas().getCanvas("CD hits per track").getPad(sector-1).getAxisZ().setLog(getLogZ());
-            this.getDetectorCanvas().getCanvas("CD hits per track").cd(sector-1);
-            this.getDetectorCanvas().getCanvas("CD hits per track").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_hits_per_trk_sec" + sector));
-            this.getDetectorCanvas().getCanvas("CD momentum").getPad(sector-1).getAxisZ().setLog(getLogZ());
-            this.getDetectorCanvas().getCanvas("CD momentum").cd(sector-1);
-            this.getDetectorCanvas().getCanvas("CD momentum").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_momentum_sec" + sector));
-            this.getDetectorCanvas().getCanvas("CD theta angle").getPad(sector-1).getAxisZ().setLog(getLogZ());
-            this.getDetectorCanvas().getCanvas("CD theta angle").cd(sector-1);
-            this.getDetectorCanvas().getCanvas("CD theta angle").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_theta_sec" + sector));
+            this.getDetectorCanvas().getCanvas("DC tracks per event").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            this.getDetectorCanvas().getCanvas("DC tracks per event").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("DC tracks per event").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_trk_ev_sec"+sector));
+            this.getDetectorCanvas().getCanvas("DC hits per track").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            this.getDetectorCanvas().getCanvas("DC hits per track").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("DC hits per track").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_hits_per_trk_sec" + sector));
+            this.getDetectorCanvas().getCanvas("DC momentum").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            this.getDetectorCanvas().getCanvas("DC momentum").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("DC momentum").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_momentum_sec" + sector));
+            this.getDetectorCanvas().getCanvas("DC theta angle").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            this.getDetectorCanvas().getCanvas("DC theta angle").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("DC theta angle").draw(this.getDataGroup().getItem(sector,0,0).getH1F("cd_theta_sec" + sector));
         }
-
+    
     }
 
     @Override
@@ -157,6 +157,7 @@ public class RECmonitor extends DetectorMonitor {
             }
   
         } 
+        
         else if (event.hasBank("CVTRec::Tracks")) {
             DataBank bankSVTTracks = event.getBank("CVTRec::Tracks");
             int nTracks = bankSVTTracks.rows();
@@ -182,7 +183,7 @@ public class RECmonitor extends DetectorMonitor {
                 DataBank bankTBHits = event.getBank("TimeBasedTrkg::TBHits");
                 int hits = bankTBHits.rows();
                 this.getDataGroup().getItem(sector,0,0).getH1F("cd_hits_per_trk_sec" + sector).fill(hits/rows);
-            
+                
             }
                 
         } 
