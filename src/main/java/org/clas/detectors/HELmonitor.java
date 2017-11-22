@@ -24,14 +24,14 @@ public class HELmonitor extends DetectorMonitor {
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",100,0.0,1.0);
+        H1F summary = new H1F("summary","summary",30,-1.5,1.5);
         summary.setTitleX("helicity");
         summary.setTitleY("counts");
         summary.setFillColor(33);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
-        H1F hel = new H1F("hel","hel", 100,0.0,1.0);
+        H1F hel = new H1F("helicity","helicity", 30,-1.5,1.5);
         hel.setTitleX("helicity");
         hel.setTitleY("Counts");
         hel.setFillColor(33);
@@ -49,13 +49,29 @@ public class HELmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Helicity").setGridX(false);
         this.getDetectorCanvas().getCanvas("Helicity").setGridY(false);
         this.getDetectorCanvas().getCanvas("Helicity").cd(0);
-        this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getH1F("hel"));
+        this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getH1F("helicity"));
+        this.getDetectorCanvas().getCanvas("Helicity").update();
         
     }
 
     @Override
     public void processEvent(DataEvent event) {
+   
+    // process event info and save into data group
+        
+        if(event.hasBank("HEADER::info")==true){
+	    DataBank bank = event.getBank("HEADER::info");
+	    int rows = bank.rows();
+	    for(int loop = 0; loop < rows; loop++){
+                
+                int helicity  = bank.getByte("helicity", loop);
 
+                this.getDataGroup().getItem(0,0,0).getH1F("hel").fill(helicity);
+                this.getDetectorSummary().getH1F("summary").fill(helicity);
+            }
+	}
+               
+        
     }
 
     @Override

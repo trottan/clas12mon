@@ -18,14 +18,14 @@ public class BMTmonitor extends DetectorMonitor {
 	int numberOfChips;
 	int binDivision;
 	int numberStrips[];
+        int numberDream[];
 
 	double hitNumber[][][];
-	int dreamHit [][][];
+	int hitNumberDream [];
 	int timeMax[][][][];
 	int layerHit[][];
 	boolean isZ[];
 	boolean mask[][][];
-	float tMax[][][];
 	
 	public BMTmonitor(String name) {
 		super(name);
@@ -36,13 +36,14 @@ public class BMTmonitor extends DetectorMonitor {
 		maxNumberSector = 3;
 		maxNumberStrips = 1152;
 		numberOfStripsPerChip = 64 ;
+                
 		numberOfChips = 240;
 		isZ = new boolean[maxNumberLayer +1];
 		mask = new boolean[maxNumberSector + 1][maxNumberLayer + 1][maxNumberStrips + 1];
 		
+                hitNumberDream = new int [numberOfChips+1];
 		numberStrips = new int[maxNumberLayer + 1];
-		dreamHit = new int[maxNumberSector + 1][maxNumberLayer + 1][maxNumberStrips/numberOfStripsPerChip+1];
-		tMax = new float [maxNumberSector + 1][maxNumberLayer + 1][maxNumberStrips/numberOfStripsPerChip+1];
+                numberDream = new int[maxNumberLayer + 1];
 		
 		numberStrips[1] = 896;
 		numberStrips[2] = 640;
@@ -51,6 +52,13 @@ public class BMTmonitor extends DetectorMonitor {
 		numberStrips[5] = 768;
 		numberStrips[6] = 1152;
 		
+                numberDream[1] = 14;
+                numberDream[2] = 10;
+                numberDream[3] = 10;
+                numberDream[4] = 16;
+                numberDream[5] = 12;
+                numberDream[6] = 18; 
+                
 		isZ[1] = false;
 		isZ[2] = true;
 		isZ[3] = true;
@@ -206,38 +214,31 @@ public class BMTmonitor extends DetectorMonitor {
 		if (event.hasBank("BMT::adc") == true) {
 			DataBank bank = event.getBank("BMT::adc");
 			for (int i = 0; i < bank.rows(); i++) {
-				int sectorNb = bank.getByte("sector", i);
-				int layerNb = bank.getByte("layer", i);
+				int sector = bank.getByte("sector", i);
+				int layer = bank.getByte("layer", i);
 				int strip = bank.getShort("component", i);
-				float timeNb = 5;
-				//float timeNb = bank.getFloat("time", i);
-
+				float timeOfMax = bank.getFloat("time", i);
                                 this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
                                 
-				if (strip < 0 || !mask[sectorNb][layerNb][strip]){
+				if (strip < 0 || !mask[sector][layer][strip]){
 					continue;
 				}
-				
-				int dreamNb = (strip - 1) / numberOfStripsPerChip + 1;
-				
-				dreamHit[sectorNb][layerNb][dreamNb]++;
-				tMax[sectorNb][layerNb][dreamNb]=( tMax[sectorNb][layerNb][dreamNb]*(dreamHit[sectorNb][layerNb][dreamNb]-1) + timeNb )/ dreamHit[sectorNb][layerNb][dreamNb];
-				this.getDataGroup().getItem(sectorNb, layerNb, 2).getH1F("Occupancy Layer " + layerNb + " Sector " + sectorNb)
+                                int dream=0;
+                                int dreamLayer=0;
+                                for (int layerNb=1; layerNb<layer; layerNb++){
+                                    dreamLayer = dreamLayer + maxNumberSector * numberDream[layerNb];
+                                }
+                                int dreamSector = (sector-1) * numberDream[layer];
+                                int dreamTile = (strip-1) / numberOfStripsPerChip+1;
+                                dream = dreamLayer + dreamSector + dreamTile;
+                                hitNumberDream[dream]++;		
+				this.getDataGroup().getItem(sector, layer, 2).getH1F("Occupancy Layer " + layer + " Sector " + sector)
 				.fill(strip);
-				this.getDataGroup().getItem(0, 0, 0).getH2F("Occupancies").fill(strip,3*(layerNb-1)+(sectorNb-1),1);
-                                this.getDetectorSummary().getH2F("summary").fill(strip,3*(layerNb-1)+(sectorNb-1),1);
+				this.getDataGroup().getItem(0, 0, 0).getH2F("Occupancies").fill(strip,3*(layer-1)+(sector-1),1);
+                                this.getDetectorSummary().getH2F("summary").fill(strip,3*(layer-1)+(sector-1),1);
 		
-			}
-			int compt=0;
-			if (getNumberOfEvents() % 1000 == 0) {
-				for (int sector = 1; sector <= maxNumberSector; sector++) {
-					for (int layer = 1; layer <= maxNumberLayer; layer++) {
-						for (int dream = 1; dream <= numberStrips[layer] / numberOfStripsPerChip; dream++) {
-							this.getDataGroup().getItem(0, 0, 1).getH1F("TimeOfMax").setBinContent(compt,tMax[sector][layer][dream]);
-							compt++;
-						}
-					}
-				}
+                                double timeMaxDreamAvg = this.getDataGroup().getItem(0, 0, 1).getH1F("TimeOfMax").getBinContent(dream);
+                                this.getDataGroup().getItem(0, 0, 1).getH1F("TimeOfMax").setBinContent(dream,timeMaxDreamAvg + (timeOfMax - timeMaxDreamAvg)/hitNumberDream[dream]);
 			}
 		}
 	}
