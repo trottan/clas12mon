@@ -165,6 +165,10 @@ public class FMTmonitor extends DetectorMonitor {
 	}
 
 	public void processEvent(DataEvent event) {
+            
+            	if (this.getNumberOfEvents() >= super.eventResetTime_current[6] && super.eventResetTime_current[6] > 0){
+		    resetEventListener();
+		}
 		
 		if (event.hasBank("FMT::adc") == true) {
 			DataBank bank = event.getBank("FMT::adc");

@@ -164,6 +164,36 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         upload.add(menuItem);
         menuBar.add(upload);
         
+        JMenu reset = new JMenu("Reset");
+        reset.getAccessibleContext().setAccessibleDescription("Reset histograms");
+        
+        JMenuItem menuItemdefault = new JMenuItem("Default for all");
+        menuItemdefault.getAccessibleContext().setAccessibleDescription("Default for all");
+        menuItemdefault.addActionListener(this);
+        reset.add(menuItemdefault);
+        
+        JMenuItem menuItemdisable = new JMenuItem("Disable histogram reset");
+        menuItemdisable.getAccessibleContext().setAccessibleDescription("Disable histogram reset");
+        menuItemdisable.addActionListener(this);
+        reset.add(menuItemdisable);
+        
+        JMenuItem menuItemBMT = new JMenuItem("Reset BMT histograms");
+        menuItemBMT.getAccessibleContext().setAccessibleDescription("Reset BMT histograms");
+        menuItemBMT.addActionListener(this);
+        reset.add(menuItemBMT);
+        
+        JMenuItem menuItemBST = new JMenuItem("Reset BST histograms");
+        menuItemBST.getAccessibleContext().setAccessibleDescription("Reset BST histograms");
+        menuItemBST.addActionListener(this);
+        reset.add(menuItemBST);
+        
+        JMenuItem menuItemFMT = new JMenuItem("Reset FMT histograms");
+        menuItemFMT.getAccessibleContext().setAccessibleDescription("Reset FMT histograms");
+        menuItemFMT.addActionListener(this);
+        reset.add(menuItemFMT);
+        
+        menuBar.add(reset);
+        
   
         // create main panel
         mainPanel = new JPanel();	
@@ -287,6 +317,22 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             long lognumber = entry.submitNow();
             System.out.println("Successfully submitted log entry number: " + lognumber); 
             */
+        }
+         
+         if (e.getActionCommand()=="Default for all"){
+            for (int k=0;k<19;k++){
+                this.monitors[k].eventResetTime_current[k] = this.monitors[k].eventResetTime_default[k];
+            }
+        }
+         
+         if (e.getActionCommand()=="Disable histogram reset"){
+            for (int k=0;k<19;k++){
+                this.monitors[k].eventResetTime_current[k] = 0;
+            }
+        }
+        
+        if ( e.getActionCommand().substring(0, 5).equals("Reset")){
+            resetHistograms(e.getActionCommand());
         }
         
         
@@ -594,6 +640,125 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         frame.setJMenuBar(viewer.menuBar);
         frame.setSize(1400, 800);
         frame.setVisible(true);
+    }
+
+    private void resetHistograms(String actionCommand) {
+        
+        
+        if (actionCommand=="Reset BMT histograms"){
+        	 System.out.println("Reset BMT histograms");
+        	 
+        	 
+        	 int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset BMT plots ?", " ",
+ 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+ 			if (resetOption == JOptionPane.YES_OPTION) {
+ 				
+ 				String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ",
+ 						JOptionPane.PLAIN_MESSAGE, null, null, "10000");
+ 				if (resetTiming != null) {
+ 					int time = this.monitors[0].eventResetTime_default[0];
+ 					try {
+ 						time = Integer.parseInt(resetTiming);
+ 					} catch (NumberFormatException f) {
+ 						JOptionPane.showMessageDialog(null, "Value must be a positive integer!");
+ 					}
+ 					if (time > 0) {
+// 						for(int k=0; k<this.monitors.length; k++) {
+// 			                 this.monitors[k].eventResetTime = time;
+// 			             }
+ 						this.monitors[0].eventResetTime_current[0] = time;
+ 						
+ 					} else {
+ 						JOptionPane.showMessageDialog(null, "Value must be a positive integer!");
+ 					}
+ 				}
+ 			}else if (resetOption == JOptionPane.NO_OPTION){
+// 				for(int k=0; k<this.monitors.length; k++) {
+//	                 this.monitors[k].eventResetTime = 0;
+//	             }
+ 				this.monitors[0].eventResetTime_current[0] = 0;
+ 			}
+ 			
+         }
+        
+        
+        if (actionCommand=="Reset BST histograms"){
+        	 System.out.println("Reset BST histograms");
+        	 
+        	 
+        	 int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset BST plots ?", " ",
+ 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+ 			if (resetOption == JOptionPane.YES_OPTION) {
+ 				
+ 				String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ",
+ 						JOptionPane.PLAIN_MESSAGE, null, null, "10000");
+ 				if (resetTiming != null) {
+ 					int time = this.monitors[1].eventResetTime_default[1];
+ 					try {
+ 						time = Integer.parseInt(resetTiming);
+ 					} catch (NumberFormatException f) {
+ 						JOptionPane.showMessageDialog(null, "Value must be a positive integer!");
+ 					}
+ 					if (time > 0) {
+// 						for(int k=0; k<this.monitors.length; k++) {
+// 			                 this.monitors[k].eventResetTime = time;
+// 			             }
+ 						this.monitors[1].eventResetTime_current[1] = time;
+ 						
+ 					} else {
+ 						JOptionPane.showMessageDialog(null, "Value must be a positive integer!");
+ 					}
+ 				}
+ 			}else if (resetOption == JOptionPane.NO_OPTION){
+// 				for(int k=0; k<this.monitors.length; k++) {
+//	                 this.monitors[k].eventResetTime = 0;
+//	             }
+ 				this.monitors[1].eventResetTime_current[1] = 0;
+ 			}
+ 			
+         }
+        
+        
+        if (actionCommand=="Reset FMT histograms"){
+        	 System.out.println("Reset FMT histograms");
+        	 
+        	 
+        	 int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset FMT plots ?", " ",
+ 					JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+ 			if (resetOption == JOptionPane.YES_OPTION) {
+ 				
+ 				String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ",
+ 						JOptionPane.PLAIN_MESSAGE, null, null, "10000");
+ 				if (resetTiming != null) {
+ 					int time = this.monitors[6].eventResetTime_default[6];
+ 					try {
+ 						time = Integer.parseInt(resetTiming);
+ 					} catch (NumberFormatException f) {
+ 						JOptionPane.showMessageDialog(null, "Value must be a positive integer!");
+ 					}
+ 					if (time > 0) {
+// 						for(int k=0; k<this.monitors.length; k++) {
+// 			                 this.monitors[k].eventResetTime = time;
+// 			             }
+ 						this.monitors[6].eventResetTime_current[6] = time;
+ 						
+ 					} else {
+ 						JOptionPane.showMessageDialog(null, "Value must be a positive integer!");
+ 					}
+ 				}
+ 			}else if (resetOption == JOptionPane.NO_OPTION){
+// 				for(int k=0; k<this.monitors.length; k++) {
+//	                 this.monitors[k].eventResetTime = 0;
+//	             }
+ 				this.monitors[6].eventResetTime_current[6] = 0;
+ 			}
+ 			
+         }
+        
+        
+        
+        
+        
     }
    
 }

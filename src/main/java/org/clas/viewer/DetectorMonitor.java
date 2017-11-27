@@ -48,6 +48,11 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     
     public  int bitsec = 0;
     
+    public int eventResetTime_current[]=new int[19];
+    public int eventResetTime_default[]=new int[19];
+    
+    
+    
     public DetectorMonitor(String name){
         GStyle.getAxisAttributesX().setTitleFontSize(18);
         GStyle.getAxisAttributesX().setLabelFontSize(14);
@@ -58,6 +63,50 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         this.detectorCanvas = new EmbeddedCanvasTabbed();
         this.detectorView   = new DetectorPane2D();
         this.numberOfEvents = 0;
+        
+        eventResetTime_current[0]=0;
+        eventResetTime_current[1]=0;
+        eventResetTime_current[2]=0;
+        eventResetTime_current[3]=0;
+        eventResetTime_current[4]=0;
+        eventResetTime_current[5]=0;
+        eventResetTime_current[6]=0;
+        eventResetTime_current[7]=0;
+        eventResetTime_current[8]=0;
+        eventResetTime_current[9]=0;
+        eventResetTime_current[10]=0;
+        eventResetTime_current[11]=0;
+        eventResetTime_current[12]=0;
+        eventResetTime_current[13]=0;
+        eventResetTime_current[14]=0;
+        eventResetTime_current[15]=0;
+        eventResetTime_current[16]=0;
+        eventResetTime_current[17]=0;
+        eventResetTime_current[18]=0;
+        
+        eventResetTime_default[0]=10000000;    // BMT
+        eventResetTime_default[1]=0;   // BST
+        eventResetTime_default[2]=0;   // CND
+        eventResetTime_default[3]=0;   // CTOD
+        eventResetTime_default[4]=0;   // DC
+        eventResetTime_default[5]=0;   // ECAL
+        eventResetTime_default[6]=10000000;   // FMT
+        eventResetTime_default[7]=0;   // FTCAL
+        eventResetTime_default[8]=0;   // FTHODO
+        eventResetTime_default[9]=0;   // FTOF
+        eventResetTime_default[10]=0;  // FTTRK
+        eventResetTime_default[11]=0;  // HTTC
+        eventResetTime_default[12]=0;  // LTTC
+        eventResetTime_default[13]=0;  // RICH
+        eventResetTime_default[14]=0;  // RECONN
+        eventResetTime_default[15]=0;  // RF
+        eventResetTime_default[16]=0;  // HEL
+        eventResetTime_default[17]=0;  // Faraday Cup
+        eventResetTime_default[18]=0;  // Trigger
+     
+        for (int i=0; i<19; i++){
+            eventResetTime_current[i]=eventResetTime_default[i];
+        }
     }
 
     
