@@ -175,8 +175,7 @@ public class FMTmonitor extends DetectorMonitor {
 				int sectorNb = bank.getByte("sector", i);
 				int layerNb = bank.getByte("layer", i);
 				int strip = bank.getShort("component", i);
-				float timeNb = 5;
-				//float timeNb = bank.getFloat("time", i);
+				float timeNb = bank.getFloat("time", i);
 				
 				if (strip < 0 || !mask[sectorNb][layerNb][strip]){
 					continue;
