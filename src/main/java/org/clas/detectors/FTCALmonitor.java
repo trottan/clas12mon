@@ -11,8 +11,8 @@ import org.jlab.io.base.DataEvent;
 
 public class FTCALmonitor  extends DetectorMonitor {        
 
-    private final int nCrystalX = 22;
-    private final int nCrystalY = nCrystalX;
+    private final int nCrystal = 22;
+    private final double crystalWidth = 15;
     private DetectorCollection<Integer> crystals = new DetectorCollection<Integer>();
     
 
@@ -49,21 +49,21 @@ public class FTCALmonitor  extends DetectorMonitor {
         int active_channels = 0;
         */
         
-        H2F occFADC2D = new H2F("occFADC_2D", "occFADC_2D", 22, 0.5, 22.5, 22, 0.5, 22.5);
-        occFADC2D.setTitleX("Crystal x");
-        occFADC2D.setTitleY("Crystal y");
+        H2F occFADC2D = new H2F("occFADC_2D", "occFADC_2D", 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2, 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2);
+        occFADC2D.setTitleX("Crystal -X");
+        occFADC2D.setTitleY("Crystal -Y");
         
-        H2F pedFADC2D = new H2F("pedFADC_2D", "pedFADC2D", 22, 0.5, 22.5, 22, 0.5, 22.5);
-        pedFADC2D.setTitleX("Crystal x");
-        pedFADC2D.setTitleY("Crystal y");
+        H2F pedFADC2D = new H2F("pedFADC_2D", "pedFADC2D", 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2, 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2);
+        pedFADC2D.setTitleX("Crystal -X");
+        pedFADC2D.setTitleY("Crystal -Y");
         
-        H2F pedFADC2Dtmp1 = new H2F("pedFADC_2Dtmp1", "pedFADC_2Dtmp1", 22, 0.5, 22.5, 22, 0.5, 22.5);
-        pedFADC2Dtmp1.setTitleX("Crystal x");
-        pedFADC2Dtmp1.setTitleY("Crystal y");
+        H2F pedFADC2Dtmp1 = new H2F("pedFADC_2Dtmp1", "pedFADC_2Dtmp1", 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2, 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2);
+        pedFADC2Dtmp1.setTitleX("Crystal -X");
+        pedFADC2Dtmp1.setTitleY("Crystal -Y");
         
-        H2F pedFADC2Dtmp2 = new H2F("pedFADC_2Dtmp2", "pedFADC_2Dtmp2", 22, 0.5, 22.5, 22, 0.5, 22.5);
-        pedFADC2Dtmp2.setTitleX("Crystal x");
-        pedFADC2Dtmp2.setTitleY("Crystal y");
+        H2F pedFADC2Dtmp2 = new H2F("pedFADC_2Dtmp2", "pedFADC_2Dtmp2", 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2, 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2);
+        pedFADC2Dtmp2.setTitleX("Crystal -X");
+        pedFADC2Dtmp2.setTitleY("Crystal -Y");
         
         H1F occFADC = new H1F("occFADC", "occFADC", 332, 0.5, 332.5);
         occFADC.setTitleX("Crystal");
@@ -112,11 +112,11 @@ public class FTCALmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
-        
-        if (this.getNumberOfEvents() >= super.eventResetTime_current[7] && super.eventResetTime_current[7] > 0){
+
+       if (this.getNumberOfEvents() >= super.eventResetTime_current[7] && super.eventResetTime_current[7] > 0){
             resetEventListener();
         }
-        
+
         // process event info and save into data group
         if(event.hasBank("FTCAL::adc")==true){
 	    DataBank bank = event.getBank("FTCAL::adc");
@@ -132,15 +132,16 @@ public class FTCALmonitor  extends DetectorMonitor {
                 
                 int IDY = ((int) comp/22) + 1;
                 int IDX = comp + 1 - (IDY -1)*22;    
-                
+                double x = (IDX-0.5-nCrystal/2)*crystalWidth;
+                double y = (IDY-0.5-nCrystal/2)*crystalWidth;
                
                 
              //   System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
               //        " ADC = " + adc + " TIME = " + time); 
                 if(adc>0) {
-                        this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D").fill(IDX*1.0,IDY*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp1").fill(IDX*1.0,IDY*1.0,ped);
-                        this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp2").fill(IDX*1.0,IDY*1.0,ped*ped);
+                        this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D").fill(-x,-y);
+                        this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp1").fill(-x,-y,ped);
+                        this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp2").fill(-x,-y,ped*ped);
                         this.getDataGroup().getItem(0,0,0).getH1F("occFADC").fill(crystals.get(1, 1, comp));
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc").fill(adc*1.0,crystals.get(1, 1, comp));
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc_time").fill(time*1.0,crystals.get(1, 1, comp));
@@ -175,7 +176,7 @@ public class FTCALmonitor  extends DetectorMonitor {
 
     private void initCrystalArray(){
         int icrystal=1;
-        for (int component = 0; component < nCrystalX*nCrystalY; component++) {
+        for (int component = 0; component < nCrystal*nCrystal; component++) {
             if(doesThisCrystalExist(component)) {
                 icrystal++;
                 crystals.add(1, 1, component, icrystal);
@@ -186,11 +187,11 @@ public class FTCALmonitor  extends DetectorMonitor {
     private boolean doesThisCrystalExist(int id) {
 
         boolean crystalExist=false;
-        int iy = id / nCrystalX;
-        int ix = id - iy * nCrystalX;
+        int iy = id / nCrystal;
+        int ix = id - iy * nCrystal;
 
-        double xcrystal = (nCrystalX - ix - 0.5);
-        double ycrystal = (nCrystalY - iy - 0.5);
+        double xcrystal = (nCrystal - ix - 0.5);
+        double ycrystal = (nCrystal - iy - 0.5);
         double rcrystal = Math.sqrt(Math.pow(xcrystal - 11, 2.0) + Math.pow(ycrystal - 11, 2.0));
         if (rcrystal > 4 && rcrystal < 11) {
             crystalExist=true;
