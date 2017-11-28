@@ -131,6 +131,11 @@ public class LTCCmonitor  extends DetectorMonitor {
     
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[12] && super.eventResetTime_current[12] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
         if(event.hasBank("LTCC::adc")==true){
 	    DataBank bank = event.getBank("LTCC::adc");

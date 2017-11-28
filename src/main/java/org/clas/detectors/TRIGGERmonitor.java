@@ -2,6 +2,8 @@ package org.clas.detectors;
 
 import java.util.ArrayList;
 import org.clas.viewer.DetectorMonitor;
+import org.jlab.detector.base.DetectorType;
+import org.jlab.detector.view.DetectorShape2D;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
 import org.jlab.groot.fitter.DataFitter;
@@ -13,10 +15,12 @@ import org.jlab.io.base.DataEvent;
 
 public class TRIGGERmonitor extends DetectorMonitor {
     
+
     
     public TRIGGERmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("Trigger beam", "Trigger cosmic");
+        this.setDetectorTabNames("Trigger beam", "Trigger cosmic", "EC peak trigger", "EC cluster trigger", "HTCC cluster trigger", "FTOF Cluster trigger");
+        this.useSectorButtons(true);
         this.init(false);
     }
 
@@ -40,12 +44,97 @@ public class TRIGGERmonitor extends DetectorMonitor {
         trig_cos.setTitleX("trigger cosmic (1 = FD, 2 = SVT, 3 = CTOF, 4 = CND, 5 = MVT)");
         trig_cos.setTitleY("Counts");
         
-        DataGroup dg = new DataGroup(1,2);
-        dg.addDataSet(trig, 0);
-        dg.addDataSet(trig_cos, 1);
+
+        DataGroup dg = new DataGroup(4,3);
+        
+        
+        for(int sec=1; sec <= 6; sec++) {
+            
+            /// ECAL peak
+            
+            H1F hist_ecpeak_energy = new H1F("ecpeak_energy"+sec, "ecpeak_energy"+sec, 120, 0, 12);
+            hist_ecpeak_energy.setTitleX("EC peak energy");
+            hist_ecpeak_energy.setTitleY("counts");
+            hist_ecpeak_energy.setTitle("Sector "+sec);
+            
+            H1F hist_ecpeak_time = new H1F("ecpeak_time"+sec, "ecpeak_time"+sec, 1000, 0, 1000);
+            hist_ecpeak_time.setTitleX("EC peak time");
+            hist_ecpeak_time.setTitleY("counts");
+            hist_ecpeak_time.setTitle("Sector "+sec);
+            
+            H1F hist_ecpeak_coord = new H1F("ecpeak_coord"+sec, "ecpeak_coord"+sec, 200, 0., 200.);
+            hist_ecpeak_coord.setTitleX("EC peak coordinate");
+            hist_ecpeak_coord.setTitleY("counts");
+            hist_ecpeak_coord.setTitle("Sector "+sec);
+
+            // ECAL cluster
+            
+            H1F hist_eccluster_energy = new H1F("eccluster_energy"+sec, "eccluster_energy"+sec, 120, 0, 12);
+            hist_eccluster_energy.setTitleX("EC cluster energy");
+            hist_eccluster_energy.setTitleY("counts");
+            hist_eccluster_energy.setTitle("Sector "+sec);
+            
+            H1F hist_eccluster_time = new H1F("eccluster_time"+sec, "eccluster_time"+sec, 1000, 0, 1000);
+            hist_eccluster_time.setTitleX("EC cluster time");
+            hist_eccluster_time.setTitleY("counts");
+            hist_eccluster_time.setTitle("Sector "+sec);
+            
+            H2F hist_eccluster_coord = new H2F("eccluster_coord"+sec, "eccluster_coord"+sec, 200, 0, 200, 200, 0, 200);
+            hist_eccluster_coord.setTitleX("EC cluster coordinate");
+            hist_eccluster_coord.setTitleY("counts");
+            hist_eccluster_coord.setTitle("Sector "+sec);
+            
+            
+             /// HTTC
+        
+            H1F hist_httc_cluster_mask_high = new H1F("httc_cluster_mask_high"+sec,"httc_cluster_mask_high"+sec, 200,0,200);
+            hist_httc_cluster_mask_high.setTitleX("httc_cluster_mask_high");
+            hist_httc_cluster_mask_high.setTitleY("Counts");
+            hist_httc_cluster_mask_high.setTitle("Sector "+sec);
+            H1F hist_httc_cluster_mask_low = new H1F("httc_cluster_mask_low"+sec,"httc_cluster_mask_low"+sec, 200,0,200);
+            hist_httc_cluster_mask_low.setTitleX("httc_cluster_mask_low");
+            hist_httc_cluster_mask_low.setTitleY("Counts");
+            hist_httc_cluster_mask_low.setTitle("Sector "+sec);
+        
+            /// FTOF
+        
+            H1F hist_ftof_cluster_mask_high = new H1F("ftof_cluster_mask_high"+sec,"ftof_cluster_mask_high"+sec, 200,0,200);
+            hist_ftof_cluster_mask_high.setTitleX("ftof_cluster_mask_high");
+            hist_ftof_cluster_mask_high.setTitleY("Counts");
+            hist_ftof_cluster_mask_high.setTitle("Sector "+sec);
+            H1F hist_ftof_cluster_mask_low = new H1F("ftof_cluster_mask_low"+sec,"ftof_cluster_mask_low"+sec, 200,0,200);
+            hist_ftof_cluster_mask_low.setTitleX("ftof_cluster_mask_low");
+            hist_ftof_cluster_mask_low.setTitleY("Counts");
+            hist_ftof_cluster_mask_low.setTitle("Sector "+sec);
+            
+            
+            dg.addDataSet(hist_ecpeak_energy, 0);
+            dg.addDataSet(hist_ecpeak_time, 1);
+            dg.addDataSet(hist_ecpeak_coord, 2);
+            dg.addDataSet(hist_eccluster_energy, 3);
+            dg.addDataSet(hist_eccluster_time, 4);
+            dg.addDataSet(hist_eccluster_coord, 5);
+            dg.addDataSet(hist_httc_cluster_mask_high, 6);
+            dg.addDataSet(hist_httc_cluster_mask_low, 7);
+            dg.addDataSet(hist_ftof_cluster_mask_high, 8);
+            dg.addDataSet(hist_ftof_cluster_mask_low, 9);
+
+            this.getDataGroup().add(dg,sec,0,0);
+
+        }
+        
+        dg.addDataSet(trig, 10);
+        dg.addDataSet(trig_cos, 11);
 
         this.getDataGroup().add(dg, 0,0,0);
     }
+        
+    
+    @Override
+        public void drawDetector() {
+
+    }
+     
         
     @Override
     public void plotHistos() {
@@ -64,13 +153,62 @@ public class TRIGGERmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Trigger cosmic").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic"));
         this.getDetectorCanvas().getCanvas("Trigger cosmic").update();
         
+        this.getDetectorCanvas().getCanvas("EC peak trigger").divide(3, 1);
+        this.getDetectorCanvas().getCanvas("EC peak trigger").setGridX(false);
+        this.getDetectorCanvas().getCanvas("EC peak trigger").setGridY(false);
+        this.getDetectorCanvas().getCanvas("EC cluster trigger").divide(3, 1);
+        this.getDetectorCanvas().getCanvas("EC cluster trigger").setGridX(false);
+        this.getDetectorCanvas().getCanvas("EC cluster trigger").setGridY(false);
+        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").divide(1, 2);
+        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").setGridX(false);
+        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").setGridY(false);
+        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").divide(1, 2);
+        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").setGridX(false);
+        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").setGridY(false);
+        
+        
+        for(int sec=1; sec<7; sec++) {
+            if(getActiveSector()==sec) {
+                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(0);
+                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_energy"+sec));
+                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(1);
+                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_time"+sec));
+                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(2);
+                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_coord"+sec));
+                this.getDetectorCanvas().getCanvas("EC peak trigger").update();
+                
+                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(0);
+                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("eccluster_energy"+sec));
+                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(1);
+                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("eccluster_time"+sec));
+                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(2);
+                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH2F("eccluster_coord"+sec));
+                this.getDetectorCanvas().getCanvas("EC cluster trigger").update();
+        
+                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").cd(0);
+                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("httc_cluster_mask_high"+sec));
+                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").cd(1);
+                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("httc_cluster_mask_low"+sec));
+                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").update();
+
+                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").cd(0);
+                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ftof_cluster_mask_high"+sec));
+                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").cd(1);
+                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ftof_cluster_mask_low"+sec));
+                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").update();
+            }
+        }
         
     }
 
     @Override
     public void processEvent(DataEvent event) {
 
-    // process event info and save into data group
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[18] && super.eventResetTime_current[18] > 0){
+            resetEventListener();
+        }
+        
+        // process event info and save into data group
         
         if(event.hasBank("RUN::config")==true){
 	    DataBank bank = event.getBank("RUN::config");
@@ -123,7 +261,27 @@ public class TRIGGERmonitor extends DetectorMonitor {
                 
             }
 	}
+        
+        
+        
+        for(int sec=1; sec<=6; sec++) {
+            if (isGoodTrigger(sec)) {
+                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_energy"+sec).fill(0);
+                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_time"+sec).fill(0);
+                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_coord"+sec).fill(0);
                 
+                this.getDataGroup().getItem(sec,0,0).getH1F("eccluster_energy"+sec).fill(0);
+                this.getDataGroup().getItem(sec,0,0).getH1F("eccluster_time"+sec).fill(0);
+                this.getDataGroup().getItem(sec,0,0).getH2F("eccluster_coord"+sec).fill(0,0);
+                
+                this.getDataGroup().getItem(sec,0,0).getH1F("httc_cluster_mask_high"+sec).fill(0);
+                this.getDataGroup().getItem(sec,0,0).getH1F("httc_cluster_mask_low"+sec).fill(0);
+                
+                this.getDataGroup().getItem(sec,0,0).getH1F("ftof_cluster_mask_high"+sec).fill(0);
+                this.getDataGroup().getItem(sec,0,0).getH1F("ftof_cluster_mask_low"+sec).fill(0);
+            }
+        }
+              
          
     }
 

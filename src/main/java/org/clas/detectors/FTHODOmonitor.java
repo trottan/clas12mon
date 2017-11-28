@@ -126,6 +126,11 @@ public class FTHODOmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[8] && super.eventResetTime_current[8] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
         if(event.hasBank("FTHODO::adc")==true){
 	    DataBank bank = event.getBank("FTHODO::adc");

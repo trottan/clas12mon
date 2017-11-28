@@ -62,6 +62,9 @@ public class FCUPmonitor extends DetectorMonitor {
     @Override
     public void processEvent(DataEvent event) {
 
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[17] && super.eventResetTime_current[17] > 0){
+            resetEventListener();
+        }
         
         if(event.hasBank("HEADER::info")==true){
 	    DataBank bank = event.getBank("HEADER::info");

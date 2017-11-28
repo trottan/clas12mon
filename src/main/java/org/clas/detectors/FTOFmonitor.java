@@ -188,6 +188,11 @@ public class FTOFmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[9] && super.eventResetTime_current[9] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
     	
 	    long timestamp = 0;

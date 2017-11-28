@@ -125,6 +125,11 @@ public class CNDmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[2] && super.eventResetTime_current[2] > 0){
+            resetEventListener();
+        }
+                        
         // process event info and save into data group
         if(event.hasBank("CND::adc")==true){
 	    DataBank bank = event.getBank("CND::adc");

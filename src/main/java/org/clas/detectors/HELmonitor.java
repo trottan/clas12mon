@@ -56,6 +56,10 @@ public class HELmonitor extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[16] && super.eventResetTime_current[16] > 0){
+            resetEventListener();
+        }
    
     // process event info and save into data group
         

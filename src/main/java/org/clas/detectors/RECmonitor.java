@@ -257,6 +257,10 @@ public class RECmonitor extends DetectorMonitor {
     @Override
     public void processEvent(DataEvent event) {
         
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[14] && super.eventResetTime_current[14] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
                 
         if (event.hasBank("CVTRec::Cosmics")==true){

@@ -79,6 +79,11 @@ public class RICHmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[13] && super.eventResetTime_current[13] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
         if(event.hasBank("RICH::adc")==true){
 	    DataBank bank = event.getBank("RICH::adc");

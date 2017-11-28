@@ -215,9 +215,6 @@ public class BMTmonitor extends DetectorMonitor {
 		if (this.getNumberOfEvents() >= super.eventResetTime_current[0] && super.eventResetTime_current[0] > 0){
 		    resetEventListener();
 		}
-		if (this.getNumberOfEvents()%10==0){
-    		    //System.out.println("limit BMT: "+super.eventResetTime);
-         	}
             
 		if (event.hasBank("BMT::adc") == true) {
 			DataBank bank = event.getBank("BMT::adc");

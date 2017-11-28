@@ -84,25 +84,25 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         eventResetTime_current[17]=0;
         eventResetTime_current[18]=0;
         
-        eventResetTime_default[0]=10000000;    // BMT
-        eventResetTime_default[1]=0;   // BST
-        eventResetTime_default[2]=0;   // CND
-        eventResetTime_default[3]=0;   // CTOD
-        eventResetTime_default[4]=0;   // DC
-        eventResetTime_default[5]=0;   // ECAL
+        eventResetTime_default[0]=10000000;   // BMT
+        eventResetTime_default[1]=10000000;   // BST
+        eventResetTime_default[2]=10000000;   // CND
+        eventResetTime_default[3]=10000000;   // CTOF
+        eventResetTime_default[4]=10000000;   // DC
+        eventResetTime_default[5]=10000000;   // ECAL
         eventResetTime_default[6]=10000000;   // FMT
-        eventResetTime_default[7]=0;   // FTCAL
-        eventResetTime_default[8]=0;   // FTHODO
-        eventResetTime_default[9]=0;   // FTOF
-        eventResetTime_default[10]=0;  // FTTRK
-        eventResetTime_default[11]=0;  // HTTC
-        eventResetTime_default[12]=0;  // LTTC
-        eventResetTime_default[13]=0;  // RICH
-        eventResetTime_default[14]=0;  // RECONN
-        eventResetTime_default[15]=0;  // RF
-        eventResetTime_default[16]=0;  // HEL
-        eventResetTime_default[17]=0;  // Faraday Cup
-        eventResetTime_default[18]=0;  // Trigger
+        eventResetTime_default[7]=10000000;   // FTCAL
+        eventResetTime_default[8]=10000000;   // FTHODO
+        eventResetTime_default[9]=10000000;   // FTOF
+        eventResetTime_default[10]=10000000;  // FTTRK
+        eventResetTime_default[11]=10000000;  // HTTC
+        eventResetTime_default[12]=10000000;  // LTTC
+        eventResetTime_default[13]=10000000;  // RICH
+        eventResetTime_default[14]=10000000;  // RECONN
+        eventResetTime_default[15]=10000000;  // RF
+        eventResetTime_default[16]=10000000;  // HEL
+        eventResetTime_default[17]=10000000;  // Faraday Cup
+        eventResetTime_default[18]=10000000;  // Trigger
      
         for (int i=0; i<19; i++){
             eventResetTime_current[i]=eventResetTime_default[i];
@@ -221,16 +221,17 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         bS5 = new JRadioButton("Sector 5"); buttonPane.add(bS5); bS5.setActionCommand("5"); bS5.addActionListener(this);  
         bS6 = new JRadioButton("Sector 6"); buttonPane.add(bS6); bS6.setActionCommand("6"); bS6.addActionListener(this); 
         bG1.add(bS1);bG1.add(bS2);bG1.add(bS3);bG1.add(bS4);bG1.add(bS5);bG1.add(bS6);
-        tbBtn = new JCheckBox("TrigBit");
-        tbBtn.addItemListener(new ItemListener() {
-            public void itemStateChanged(ItemEvent e) {
-            	  isTB = e.getStateChange()==ItemEvent.SELECTED;
-            }
-        });         
-        tbBtn.setSelected(false);        
-        buttonPane.add(tbBtn);       
+        //tbBtn = new JCheckBox("TrigBit");
+        //tbBtn.addItemListener(new ItemListener() {
+        //    public void itemStateChanged(ItemEvent e) {
+        //    	  isTB = e.getStateChange()==ItemEvent.SELECTED;
+        //    }
+        //});         
+        //tbBtn.setSelected(false);        
+        //buttonPane.add(tbBtn);       
         return buttonPane;
     } 
+    
     public Boolean isGoodTrigger(int is) {return (isTB)? is==bitsec:true;}
     
     public void actionPerformed(ActionEvent e) {

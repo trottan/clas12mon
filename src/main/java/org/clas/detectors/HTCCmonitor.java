@@ -176,6 +176,11 @@ public class HTCCmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[11] && super.eventResetTime_current[11] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
         if(event.hasBank("HTCC::adc")==true){
 	    DataBank bank = event.getBank("HTCC::adc");

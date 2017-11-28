@@ -112,6 +112,11 @@ public class FTCALmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[7] && super.eventResetTime_current[7] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
         if(event.hasBank("FTCAL::adc")==true){
 	    DataBank bank = event.getBank("FTCAL::adc");

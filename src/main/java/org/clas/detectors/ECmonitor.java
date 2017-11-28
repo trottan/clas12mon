@@ -143,6 +143,10 @@ public class ECmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[5] && super.eventResetTime_current[5] > 0){
+            resetEventListener();
+        }
     	   
     	    double[] pcsum = new double[6];
     	    double[] ecsum = new double[6];

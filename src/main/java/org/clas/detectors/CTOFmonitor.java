@@ -109,6 +109,11 @@ public class CTOFmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[3] && super.eventResetTime_current[3] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
         if(event.hasBank("CTOF::adc")==true){
 	    DataBank bank = event.getBank("CTOF::adc");

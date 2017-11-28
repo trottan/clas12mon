@@ -183,6 +183,11 @@ public class RFmonitor extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
+        
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[15] && super.eventResetTime_current[15] > 0){
+            resetEventListener();
+        }
+        
         // process event info and save into data group
         ArrayList<Integer> rf1 = new ArrayList();
         ArrayList<Integer> rf2 = new ArrayList();
