@@ -293,10 +293,12 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 
         tabbedpane.add(splitPanel,"Summary");
         tabbedpane.addChangeListener(this);
+        
        
         for(int k =0; k<this.monitors.length; k++) {
                 this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName());
         	        this.monitors[k].getDetectorView().getView().addDetectorListener(this);
+                        
         }
         
         this.tabbedpane.add(new Contact(),"Contacts");
@@ -307,7 +309,6 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         this.setCanvasUpdate(canvasUpdateTime);
         this.plotSummaries();
-        
         
     }
       
