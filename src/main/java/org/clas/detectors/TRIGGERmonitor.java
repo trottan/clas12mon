@@ -15,7 +15,9 @@ import org.jlab.io.base.DataEvent;
 
 public class TRIGGERmonitor extends DetectorMonitor {
     
-
+	int trigger=0;
+    int trigFC=0 ;
+    int trigCD=0 ;
     
     public TRIGGERmonitor(String name) {
         super(name);
@@ -40,8 +42,8 @@ public class TRIGGERmonitor extends DetectorMonitor {
         H1F trig = new H1F("trigger_beam","trigger_beam", 32,0.5,32.5);
         trig.setTitleX("trigger beam");
         trig.setTitleY("Counts");
-        H1F trig_cos = new H1F("trigger_cosmic","trigger_cosmic", 5,0.5,5.5);
-        trig_cos.setTitleX("trigger cosmic (1 = FD, 2 = SVT, 3 = CTOF, 4 = CND, 5 = MVT)");
+        H1F trig_cos = new H1F("trigger_cosmic","trigger_cosmic", 6,0.5,6.5);
+        trig_cos.setTitleX("trigger cosmic (1=FD  2=HTCC  3=SVT  4=CTOF  5=CND  6=MVT)");
         trig_cos.setTitleY("Counts");
         
 
@@ -211,58 +213,24 @@ public class TRIGGERmonitor extends DetectorMonitor {
         // process event info and save into data group
         
         if(event.hasBank("RUN::config")==true){
-	    DataBank bank = event.getBank("RUN::config");
+        	
+	        DataBank bank = event.getBank("RUN::config");
+                        
+            trigger  = bank.getInt("trigger", 0);
             
+            trigFC = getFCTrigger(); //Forward Carriage and HTCC
+            trigCD = getCDTrigger(); //Central Detector
             
-	    int rows = bank.rows();
-            
-	    for(int loop = 0; loop < rows; loop++){
-                
-                int trigger  = bank.getInt("trigger", loop);
-
-                if(trigger == 1) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(1);
-                if(trigger == 2) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(2);
-                if(trigger == 3) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(3);
-                if(trigger == 4) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(4);
-                if(trigger == 5) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(5);
-                if(trigger == 6) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(6);
-                if(trigger == 7) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(7);
-                if(trigger == 8) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(8);
-                if(trigger == 9) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(9);
-                if(trigger == 10) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(10);
-                if(trigger == 11) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(11);
-                if(trigger == 12) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(12);
-                if(trigger == 13) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(13);
-                if(trigger == 14) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(14);
-                if(trigger == 15) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(15);
-                if(trigger == 16) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(16);
-                if(trigger == 17) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(17);
-                if(trigger == 18) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(18);
-                if(trigger == 19) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(19);
-                if(trigger == 20) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(20);
-                if(trigger == 21) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(21);
-                if(trigger == 22) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(22);
-                if(trigger == 23) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(23);
-                if(trigger == 24) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(24);
-                if(trigger == 25) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(25);
-                if(trigger == 26) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(26);
-                if(trigger == 27) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(27);
-                if(trigger == 28) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(28);
-                if(trigger == 29) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(29);
-                if(trigger == 30) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(30);
-                if(trigger == 31) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(31);
-                if(trigger == 32) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(32);
-                
-                if(trigger == 31428) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(1);  // forward carriage   0x3F000000
-                if(trigger == 256) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(2);    // SVT  0x00000100
-                if(trigger == 512) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(3);    // CTOF 0x00000200
-                if(trigger == 1024) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(4);   // CND  0x00000400
-                if(trigger == 2048) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(5);   // MVT  0x00000800
-                
-            }
-	}
-        
-        
+//            for (int i=1; i<33; i++) if(trigger==i) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(i);
+                           
+            if(isGoodFC())  this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(1);  
+            if(isGoodHTCC())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(2);
+            if(isGoodSVT()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(3);   
+            if(isGoodCTOF())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(4);   
+            if(isGoodCND()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(5);   
+            if(isGoodMVT()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(6);   
+                          
+	    }       
         
         for(int sec=1; sec<=6; sec++) {
             if (isGoodTrigger(sec)) {
@@ -284,7 +252,43 @@ public class TRIGGERmonitor extends DetectorMonitor {
               
          
     }
-
+    public boolean isGoodFC() {
+    	return (this.trigFC>=256&&this.trigFC<=8196);
+    }
+    
+    public boolean isGoodHTCC() {
+    	return (this.trigFC==1);
+    }
+    
+    public boolean isGoodSVT() {
+    	return (this.trigCD==256);
+    }
+    
+    public boolean isGoodCTOF() {
+    	return (this.trigCD==512);
+    }
+    
+    public boolean isGoodCND() {
+    	return (this.trigCD==1024);
+    }
+    
+    public boolean isGoodMVT() {
+    	return (this.trigCD==2048);
+    }
+    
+    public int getFCTriggerSector() {  	    
+	    return (int) ((this.trigFC >= 256) ? Math.log10(this.trigFC>>8)/0.301+1:0);
+    }
+    
+    
+    public int getFCTrigger() {    	    
+	    return (this.trigger>>16)&0x0000ffff;
+    }
+      
+    public int getCDTrigger() {
+	    return this.trigger&0x00000fff;
+    } 
+    
     @Override
     public void timerUpdate() {
 
