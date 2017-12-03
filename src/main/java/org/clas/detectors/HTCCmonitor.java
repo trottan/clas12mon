@@ -52,27 +52,27 @@ public class HTCCmonitor  extends DetectorMonitor {
         occTDC.setTitleX("sector");
         occTDC.setTitle("TDC Occupancy");
         
-        H2F adc1 = new H2F("adc_s1", "adc_s1", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc1 = new H2F("adc_s1", "adc_s1", 100, 0, 2000, 8, 0.5, 8.5);
         adc1.setTitleX("ADC - value");
         adc1.setTitleY("PMT");
         adc1.setTitle("sector 1");
-        H2F adc2 = new H2F("adc_s2", "adc_s2", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc2 = new H2F("adc_s2", "adc_s2", 100, 0, 2000, 8, 0.5, 8.5);
         adc2.setTitleX("ADC - value");
         adc2.setTitleY("PMT");
         adc2.setTitle("sector 2");
-        H2F adc3 = new H2F("adc_s3", "adc_s3", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc3 = new H2F("adc_s3", "adc_s3", 100, 0, 2000, 8, 0.5, 8.5);
         adc3.setTitleX("ADC - value");
         adc3.setTitleY("PMT");
         adc3.setTitle("sector 3");
-        H2F adc4 = new H2F("adc_s4", "adc_s4", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc4 = new H2F("adc_s4", "adc_s4", 100, 0, 2000, 8, 0.5, 8.5);
         adc4.setTitleX("ADC - value");
         adc4.setTitleY("PMT");
         adc4.setTitle("sector 4");
-        H2F adc5 = new H2F("adc_s5", "adc_s5", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc5 = new H2F("adc_s5", "adc_s5", 100, 0, 2000, 8, 0.5, 8.5);
         adc5.setTitleX("ADC - value");
         adc5.setTitleY("PMT");
         adc5.setTitle("sector 5");
-        H2F adc6 = new H2F("adc_s6", "adc_s6", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc6 = new H2F("adc_s6", "adc_s6", 100, 0, 2000, 8, 0.5, 8.5);
         adc6.setTitleX("ADC - value");
         adc6.setTitleY("PMT");
         adc6.setTitle("sector 6");
@@ -180,6 +180,8 @@ public class HTCCmonitor  extends DetectorMonitor {
         if (this.getNumberOfEvents() >= super.eventResetTime_current[11] && super.eventResetTime_current[11] > 0){
             resetEventListener();
         }
+        
+        if(!isGoodHTCCTrigger()) return;
         
         // process event info and save into data group
         if(event.hasBank("HTCC::adc")==true){

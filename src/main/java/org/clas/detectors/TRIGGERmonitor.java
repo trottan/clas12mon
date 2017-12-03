@@ -15,15 +15,12 @@ import org.jlab.io.base.DataEvent;
 
 public class TRIGGERmonitor extends DetectorMonitor {
     
-	int trigger=0;
-    int trigFC=0 ;
-    int trigCD=0 ;
-    
     public TRIGGERmonitor(String name) {
         super(name);
         this.setDetectorTabNames("Trigger beam", "Trigger cosmic", "EC peak trigger", "EC cluster trigger", "HTCC cluster trigger", "FTOF Cluster trigger");
         this.useSectorButtons(true);
         this.init(false);
+        this.testTrigger = true;
     }
 
     
@@ -42,9 +39,14 @@ public class TRIGGERmonitor extends DetectorMonitor {
         H1F trig = new H1F("trigger_beam","trigger_beam", 32,0.5,32.5);
         trig.setTitleX("trigger beam");
         trig.setTitleY("Counts");
-        H1F trig_cos = new H1F("trigger_cosmic","trigger_cosmic", 6,0.5,6.5);
+        H1F trig_cos = new H1F("trigger_cosmic","trigger_cosmic", 6,0.5,6.5); 
+        trig_cos.setFillColor(4);
         trig_cos.setTitleX("trigger cosmic (1=FD  2=HTCC  3=SVT  4=CTOF  5=CND  6=MVT)");
         trig_cos.setTitleY("Counts");
+        H1F trig_fcsect = new H1F("trigger_cosmic_fcsect","trigger_cosmic_fcsect", 6,0.5,6.5); 
+        trig_fcsect.setFillColor(4);
+        trig_fcsect.setTitleX("EC Sector");
+        trig_fcsect.setTitleY("Counts");
         
 
         DataGroup dg = new DataGroup(4,3);
@@ -127,6 +129,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
         
         dg.addDataSet(trig, 10);
         dg.addDataSet(trig_cos, 11);
+        dg.addDataSet(trig_fcsect, 12);
 
         this.getDataGroup().add(dg, 0,0,0);
     }
@@ -148,11 +151,13 @@ public class TRIGGERmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Trigger beam").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam"));
         this.getDetectorCanvas().getCanvas("Trigger beam").update();
         
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").divide(1, 1);
+        this.getDetectorCanvas().getCanvas("Trigger cosmic").divide(2, 1);
         this.getDetectorCanvas().getCanvas("Trigger cosmic").setGridX(false);
         this.getDetectorCanvas().getCanvas("Trigger cosmic").setGridY(false);
         this.getDetectorCanvas().getCanvas("Trigger cosmic").cd(0);
         this.getDetectorCanvas().getCanvas("Trigger cosmic").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic"));
+        this.getDetectorCanvas().getCanvas("Trigger cosmic").cd(1);
+        this.getDetectorCanvas().getCanvas("Trigger cosmic").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic_fcsect"));
         this.getDetectorCanvas().getCanvas("Trigger cosmic").update();
         
         this.getDetectorCanvas().getCanvas("EC peak trigger").divide(3, 1);
@@ -208,32 +213,20 @@ public class TRIGGERmonitor extends DetectorMonitor {
 
         if (this.getNumberOfEvents() >= super.eventResetTime_current[18] && super.eventResetTime_current[18] > 0){
             resetEventListener();
-        }
-        
-        // process event info and save into data group
-        
-        if(event.hasBank("RUN::config")==true){
-        	
-	        DataBank bank = event.getBank("RUN::config");
-                        
-            trigger  = bank.getInt("trigger", 0);
-            
-            trigFC = getFCTrigger(); //Forward Carriage and HTCC
-            trigCD = getCDTrigger(); //Central Detector
+        }        
             
 //            for (int i=1; i<33; i++) if(trigger==i) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(i);
                            
-            if(isGoodFC())  this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(1);  
-            if(isGoodHTCC())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(2);
-            if(isGoodSVT()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(3);   
-            if(isGoodCTOF())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(4);   
-            if(isGoodCND()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(5);   
-            if(isGoodMVT()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(6);   
-                          
-	    }       
-        
+        if(isGoodFD())  this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(1);  
+        if(isGoodHTCC())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(2);
+        if(isGoodBST()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(3);   
+        if(isGoodCTOF())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(4);   
+        if(isGoodCND()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(5);   
+        if(isGoodBMT()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(6);   
+        if(isGoodFD())  this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic_fcsect").fill(getFDTriggerSector());  
+     
         for(int sec=1; sec<=6; sec++) {
-            if (isGoodTrigger(sec)) {
+            if (isGoodFDTrigger(sec)) {
                 this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_energy"+sec).fill(0);
                 this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_time"+sec).fill(0);
                 this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_coord"+sec).fill(0);
@@ -249,45 +242,9 @@ public class TRIGGERmonitor extends DetectorMonitor {
                 this.getDataGroup().getItem(sec,0,0).getH1F("ftof_cluster_mask_low"+sec).fill(0);
             }
         }
-              
-         
+                       
     }
-    public boolean isGoodFC() {
-    	return (this.trigFC>=256&&this.trigFC<=8196);
-    }
-    
-    public boolean isGoodHTCC() {
-    	return (this.trigFC==1);
-    }
-    
-    public boolean isGoodSVT() {
-    	return (this.trigCD==256);
-    }
-    
-    public boolean isGoodCTOF() {
-    	return (this.trigCD==512);
-    }
-    
-    public boolean isGoodCND() {
-    	return (this.trigCD==1024);
-    }
-    
-    public boolean isGoodMVT() {
-    	return (this.trigCD==2048);
-    }
-    
-    public int getFCTriggerSector() {  	    
-	    return (int) ((this.trigFC >= 256) ? Math.log10(this.trigFC>>8)/0.301+1:0);
-    }
-    
-    
-    public int getFCTrigger() {    	    
-	    return (this.trigger>>16)&0x0000ffff;
-    }
-      
-    public int getCDTrigger() {
-	    return this.trigger&0x00000fff;
-    } 
+
     
     @Override
     public void timerUpdate() {

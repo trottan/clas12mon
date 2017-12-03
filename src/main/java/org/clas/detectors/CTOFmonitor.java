@@ -114,7 +114,8 @@ public class CTOFmonitor  extends DetectorMonitor {
             resetEventListener();
         }
         
-        // process event info and save into data group
+        if(!isGoodCTOFTrigger()) return;
+        
         if(event.hasBank("CTOF::adc")==true){
 	    DataBank bank = event.getBank("CTOF::adc");
 	    int rows = bank.rows();

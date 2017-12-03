@@ -174,6 +174,8 @@ public class BSTmonitor extends DetectorMonitor {
 	    resetEventListener();
         }
         
+        if (!isGoodBSTTrigger()) return;
+        
         // process event info and save into data group
         if(event.hasBank("BST::adc")==true){
             DataBank  bank = event.getBank("BST::adc");
