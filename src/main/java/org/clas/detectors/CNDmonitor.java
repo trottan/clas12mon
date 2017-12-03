@@ -129,7 +129,9 @@ public class CNDmonitor  extends DetectorMonitor {
         if (this.getNumberOfEvents() >= super.eventResetTime_current[2] && super.eventResetTime_current[2] > 0){
             resetEventListener();
         }
-                        
+             
+        if (!isGoodCNDTrigger()) return;
+        
         // process event info and save into data group
         if(event.hasBank("CND::adc")==true){
 	    DataBank bank = event.getBank("CND::adc");

@@ -46,12 +46,16 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     private JRadioButton bS1,bS2,bS3,bS4,bS5,bS6;
     private JCheckBox        tbBtn;
     
-    public  int bitsec = 0;
+    public int bitsec = 0;
+    public int trigger = 0;
+    public long triggerPhase = 0;
+    public int trigFD = 0;
+    public int trigCD = 0;
+    
+    public boolean testTrigger = false;
     
     public int eventResetTime_current[]=new int[19];
-    public int eventResetTime_default[]=new int[19];
-    
-    
+    public int eventResetTime_default[]=new int[19];    
     
     public DetectorMonitor(String name){
         GStyle.getAxisAttributesX().setTitleFontSize(18);
@@ -138,6 +142,46 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public void drawDetector() {
     
     }
+    
+    public void setTriggerPhase(long phase) {
+    	   this.triggerPhase = phase;
+    }
+    
+    public long getTriggerPhase() {
+    	    return this.triggerPhase;
+    }
+    
+    public void setTriggerWord(int trig) {
+    	   this.trigger = trig;
+    	   this.trigFD = getFDTrigger();
+    	   this.trigCD = getCDTrigger();
+    }
+    
+    public void setTestTrigger(boolean test) {
+    	   this.testTrigger = test;
+    }
+    
+    public boolean isGoodFDTrigger(int is) {return (testTrigger)? is==getFDTriggerSector():true;}    
+    public boolean isGoodCDTrigger()       {return (testTrigger)? isGoodCD():true;}  
+    public boolean isGoodHTCCTrigger()     {return (testTrigger)? isGoodHTCC():true;}
+    public boolean isGoodFTOFTrigger()     {return (testTrigger)? isGoodFTOF():true;}
+    public boolean isGoodBSTTrigger()      {return (testTrigger)? isGoodBST():true;}
+    public boolean isGoodCTOFTrigger()     {return (testTrigger)? isGoodCTOF():true;}
+    public boolean isGoodCNDTrigger()      {return (testTrigger)? isGoodCND():true;}
+    public boolean isGoodBMTTrigger()      {return (testTrigger)? isGoodBMT():true;}
+    
+    public boolean isGoodFD()              {return  this.trigFD>=256&&this.trigFD<=8196;}    
+    public boolean isGoodCD()              {return  isGoodBST()||isGoodCTOF()||isGoodCND()||isGoodBMT();}
+    public boolean isGoodHTCC()            {return  this.trigFD==1;}    
+    public boolean isGoodFTOF()            {return  isGoodFD();}   
+    public boolean isGoodBST()             {return  this.trigCD==256;}    
+    public boolean isGoodCTOF()            {return  this.trigCD==512;}
+    public boolean isGoodCND()             {return  this.trigCD==1024;}   
+    public boolean isGoodBMT()             {return  this.trigCD==2048;}   
+    
+    public int     getFDTriggerSector()    {return (int) (isGoodFD() ? Math.log10(this.trigFD>>8)/0.301+1:0);}       
+    public int     getFDTrigger()          {return (this.trigger>>16)&0x0000ffff;}      
+    public int     getCDTrigger()          {return this.trigger&0x00000fff;} 
     
     public EmbeddedCanvasTabbed getDetectorCanvas() {
         return detectorCanvas;
@@ -231,8 +275,6 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         //buttonPane.add(tbBtn);       
         return buttonPane;
     } 
-    
-    public Boolean isGoodTrigger(int is) {return (isTB)? is==bitsec:true;}
     
     public void actionPerformed(ActionEvent e) {
         // TODO Auto-generated method stub

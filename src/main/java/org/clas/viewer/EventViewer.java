@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -63,10 +66,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     List<DetectorPane2D> DetectorPanels   	= new ArrayList<DetectorPane2D>();
     JTabbedPane tabbedpane           		= null;
-    JPanel mainPanel 				= null;
-    JMenuBar menuBar                            = null;
+    JPanel mainPanel 				        = null;
+    JMenuBar menuBar                         = null;
     DataSourceProcessorPane processorPane 	= null;
-    EmbeddedCanvasTabbed CLAS12Canvas           = null;
+    EmbeddedCanvasTabbed CLAS12Canvas        = null;
     //EmbeddedCanvasTabbed CLAS12CDCanvas         = null;
     
     CodaEventDecoder               decoder = new CodaEventDecoder();
@@ -239,10 +242,86 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         menuBar.add(reset);
         
-  
+        JMenu trigBits = new JMenu("TrigBits");
+        trigBits.getAccessibleContext().setAccessibleDescription("Test Trigger Bits");
+        
+        JCheckBoxMenuItem cb1 = new JCheckBoxMenuItem("EC");    
+        cb1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                  	monitors[5].setTestTrigger(true);
+                } else {
+                 	monitors[5].setTestTrigger(false);
+                };
+            }
+        });         
+        trigBits.add(cb1); 
+        
+        JCheckBoxMenuItem cb2 = new JCheckBoxMenuItem("HTCC");
+        cb2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                  	monitors[11].setTestTrigger(true);
+                } else {
+                 	monitors[11].setTestTrigger(false);
+                };
+            }
+        });         
+        trigBits.add(cb2); 
+        
+        JCheckBoxMenuItem cb3 = new JCheckBoxMenuItem("BST");
+        cb3.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                  	monitors[1].setTestTrigger(true);
+                } else {
+                 	monitors[1].setTestTrigger(false);
+                };
+            }
+        });         
+        trigBits.add(cb3); 
+        
+        JCheckBoxMenuItem cb4 = new JCheckBoxMenuItem("CTOF");
+        cb4.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                  	monitors[3].setTestTrigger(true);
+                } else {
+                 	monitors[3].setTestTrigger(false);
+                };
+            }
+        });         
+        trigBits.add(cb4); 
+        
+        JCheckBoxMenuItem cb5 = new JCheckBoxMenuItem("MVT");
+        cb5.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                  	monitors[0].setTestTrigger(true);
+                } else {
+                 	monitors[0].setTestTrigger(false);
+                };
+            }
+        });         
+        trigBits.add(cb5); 
+        
+        JCheckBoxMenuItem cb6 = new JCheckBoxMenuItem("FTOF");
+        cb6.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                  	monitors[9].setTestTrigger(true);
+                } else {
+                 	monitors[9].setTestTrigger(false);
+                };
+            }
+        });         
+        trigBits.add(cb6); 
+               
+        menuBar.add(trigBits);
+        
         // create main panel
         mainPanel = new JPanel();	
-	mainPanel.setLayout(new BorderLayout());
+        mainPanel.setLayout(new BorderLayout());
         
       	tabbedpane 	= new JTabbedPane();
 
@@ -431,6 +510,18 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         return mainPanel;
     }
     
+    public int getTriggerWord(DataEvent event) {    	
+ 	    DataBank bank = event.getBank("RUN::config");	        
+        return bank.getInt("trigger", 0);
+    }
+    
+    public long getTriggerPhase(DataEvent event) {    	
+ 	    DataBank bank = event.getBank("RUN::config");	        
+        long timestamp = bank.getLong("timestamp",0);    
+        int phase_offset = 1;
+        return ((timestamp%6)+phase_offset)%6; // TI derived phase correction due to TDC and FADC clock differences 
+    }
+    
     private int getRunNumber(DataEvent event) {
         int rNum = this.runNumber;
         DataBank bank = event.getBank("RUN::config");
@@ -447,31 +538,35 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         //decodedEvent.show();
         		
         HipoDataEvent hipo = null;
-	if(event!=null ){
-//            event.show();
+        
+	    if(event!=null ){
+            //event.show();
 
             if (event.getType() == DataEventType.EVENT_START) {
                 this.runNumber = this.getRunNumber(event);
             }
+            
             if(this.runNumber != this.getRunNumber(event)) {
 //                this.saveToFile("mon12_histo_run_" + runNumber + ".hipo");
                 this.runNumber = this.getRunNumber(event);
                 resetEventListener();
             }
+            
             if(event instanceof EvioDataEvent){
              	hipo = (HipoDataEvent) clasDecoder.getDataEvent(event);
                 DataBank   header = clasDecoder.createHeaderBank(hipo, 0, 0, (float) 0, (float) 0);
                 hipo.appendBanks(header);
             } 
             else {
-                hipo = (HipoDataEvent) event;
-                
+                hipo = (HipoDataEvent) event;    
             }
             
             for(int k=0; k<this.monitors.length; k++) {
+        	    this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
+        	    this.monitors[k].setTriggerWord(getTriggerWord(hipo));
                 this.monitors[k].dataEventAction(hipo);
             }      
-	}
+	    }
     }
 
     public void loadHistosFromFile(String fileName) {
@@ -988,5 +1083,6 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         
     }
+
    
 }

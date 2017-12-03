@@ -151,18 +151,6 @@ public class ECmonitor  extends DetectorMonitor {
     	    double[] pcsum = new double[6];
     	    double[] ecsum = new double[6];
     	        
-    	    long timestamp = 0;
-    	    long phase = 0;
-    	        
-    	    if(event.hasBank("RUN::config")){
-    	        DataBank bank = event.getBank("RUN::config");
-    	        timestamp = bank.getLong("timestamp",0);
-    	        int trigger    = bank.getInt("trigger",0);      
-    	        int phase_offset = 1;
-    	        phase = ((timestamp%6)+phase_offset)%6; // TI derived phase correction due to TDC and FADC clock differences 
-    	        bitsec = (int) (Math.log10(trigger>>24)/0.301+1); // triggered sector
-    	    }
-    	        
     	    if(event.hasBank("ECAL::adc")==true){        	
         	DataBank bank = event.getBank("ECAL::adc");
 	    int rows = bank.rows();
@@ -172,7 +160,7 @@ public class ECmonitor  extends DetectorMonitor {
                 int comp   = bank.getShort("component", loop);
                 int adc    = bank.getInt("ADC", loop);
                 float time = bank.getFloat("time",loop);
-                if(adc>0 && time>=0  && isGoodTrigger(sector)) {
+                if(adc>0 && time>=0  && isGoodFDTrigger(sector)) {
                   	this.getDataGroup().getItem(0,layer,0).getH2F("occADC"+layer).fill(sector*1.0, comp*1.0);
                   	this.getDataGroup().getItem(sector,layer,0).getH2F("datADC"+layer+sector).fill(adc,comp*1.0);
                 }
@@ -186,11 +174,8 @@ public class ECmonitor  extends DetectorMonitor {
 	    }
     	    }   
         
-            // System.out.println("bitsec " + bitsec);
-    	    // Plot only sector events in which the sector was in the trigger
-             if(bitsec>0) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
-    	     //if(isGoodTrigger(bitsec)) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
-             // TriggerBit check removed (has influence on other detector moniors --> are not filles any more)
+    	    int bitsec = getFDTriggerSector();
+        if(bitsec>0) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
                 
         if(event.hasBank("ECAL::tdc")==true){
             DataBank  bank = event.getBank("ECAL::tdc");
@@ -201,9 +186,9 @@ public class ECmonitor  extends DetectorMonitor {
                 int      comp = bank.getShort("component",i);
                 int       TDC = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); 
-                if(TDC>0 && isGoodTrigger(sector)) {
+                if(TDC>0 && isGoodFDTrigger(sector)) {
                     this.getDataGroup().getItem(0,layer,0).getH2F("occTDC"+layer).fill(sector*1.0, comp*1.0);
-                    this.getDataGroup().getItem(sector,layer,0).getH2F("datTDC"+layer+sector).fill(TDC*0.02345-phase*4,comp*1.0);
+                    this.getDataGroup().getItem(sector,layer,0).getH2F("datTDC"+layer+sector).fill(TDC*0.02345-triggerPhase*4,comp*1.0);
                 }
 //                if(layer==1)      this.getDetectorSummary().getH1F("sumPCAL").fill(sector*1.0);
 //                else if (layer==2)this.getDetectorSummary().getH1F("sumECin").fill(sector*1.0);

@@ -192,23 +192,8 @@ public class FTOFmonitor  extends DetectorMonitor {
         if (this.getNumberOfEvents() >= super.eventResetTime_current[9] && super.eventResetTime_current[9] > 0){
             resetEventListener();
         }
-        
-        // process event info and save into data group
-    	
-	    long timestamp = 0;
-	    long phase = 0;
-	    bitsec = 0;
 	    
 	    clear(0); clear(1); clear(2);
-	    
-	    if(event.hasBank("RUN::config")){
-	        DataBank bank = event.getBank("RUN::config");
-	        timestamp = bank.getLong("timestamp",0);
-	        int trigger    = bank.getInt("trigger",0);      
-	        int phase_offset = 1;
-	        phase = ((timestamp%6)+phase_offset)%6; // TI derived phase correction due to TDC and FADC clock differences 
-	        bitsec = (int) (Math.log10(trigger>>24)/0.301+1); // triggered sector
-	    }
     	
         if(event.hasBank("FTOF::adc")==true){
             DataBank  bank = event.getBank("FTOF::adc");
@@ -222,7 +207,7 @@ public class FTOFmonitor  extends DetectorMonitor {
                 int     order = bank.getByte("order",i);  
                 
                 int lay=layer-1; int ord=order-0;
-                if(ADC>0 && isGoodTrigger(sector)) {
+                if(ADC>0 && isGoodFDTrigger(sector)) {
                 	  this.getDataGroup().getItem(0,lay,0).getH2F("occADC"+lay+ord).fill(sector*1.0,paddle*1.0);
                 	  this.getDataGroup().getItem(sector,lay,0).getH2F("datADC"+sector+lay+ord).fill(ADC,paddle*1.0);
                 	  if(layer == 1) this.getDetectorSummary().getH2F("sum_p1").fill(sector-0.25, order*1.0);
@@ -243,16 +228,16 @@ public class FTOFmonitor  extends DetectorMonitor {
                 int     order = bank.getByte("order",i); 
                 
                 int lay=layer-1; int ord=order-2;
-                if(TDC>0 && isGoodTrigger(sector)) {
+                if(TDC>0 && isGoodFDTrigger(sector)) {
                 	   this.getDataGroup().getItem(0,lay,0).getH2F("occTDC"+lay+ord).fill(sector*1.0,paddle*1.0);
-                	   this.getDataGroup().getItem(sector,lay,0).getH2F("datTDC"+sector+lay+ord).fill(TDC*0.02345-phase*4,paddle*1.0);
-                   storeTDCHits(lay,sector-1,ord,paddle,(float)(TDC*0.02345-phase*4));
+                	   this.getDataGroup().getItem(sector,lay,0).getH2F("datTDC"+sector+lay+ord).fill(TDC*0.02345-triggerPhase*4,paddle*1.0);
+                   storeTDCHits(lay,sector-1,ord,paddle,(float)(TDC*0.02345-triggerPhase*4));
                 }
             }
         }
         
         for(int sec=1; sec<7; sec++) {
-          	if (isGoodTrigger(sec)) {
+          	if (isGoodFDTrigger(sec)) {
           	    for(int il=0; il<3; il++) {
         		        getGM(il,sec-1,this.getDataGroup().getItem(sec,il,0).getH2F("GMEAN"+sec+il));
         		        getTD(il,sec-1,this.getDataGroup().getItem(sec,il,0).getH2F("TDIF"+sec+il));

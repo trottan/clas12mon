@@ -52,52 +52,52 @@ public class HTCCmonitor  extends DetectorMonitor {
         occTDC.setTitleX("sector");
         occTDC.setTitle("TDC Occupancy");
         
-        H2F adc1 = new H2F("adc_s1", "adc_s1", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc1 = new H2F("adc_s1", "adc_s1", 100, 0, 2000, 8, 0.5, 8.5);
         adc1.setTitleX("ADC - value");
         adc1.setTitleY("PMT");
         adc1.setTitle("sector 1");
-        H2F adc2 = new H2F("adc_s2", "adc_s2", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc2 = new H2F("adc_s2", "adc_s2", 100, 0, 2000, 8, 0.5, 8.5);
         adc2.setTitleX("ADC - value");
         adc2.setTitleY("PMT");
         adc2.setTitle("sector 2");
-        H2F adc3 = new H2F("adc_s3", "adc_s3", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc3 = new H2F("adc_s3", "adc_s3", 100, 0, 2000, 8, 0.5, 8.5);
         adc3.setTitleX("ADC - value");
         adc3.setTitleY("PMT");
         adc3.setTitle("sector 3");
-        H2F adc4 = new H2F("adc_s4", "adc_s4", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc4 = new H2F("adc_s4", "adc_s4", 100, 0, 2000, 8, 0.5, 8.5);
         adc4.setTitleX("ADC - value");
         adc4.setTitleY("PMT");
         adc4.setTitle("sector 4");
-        H2F adc5 = new H2F("adc_s5", "adc_s5", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc5 = new H2F("adc_s5", "adc_s5", 100, 0, 2000, 8, 0.5, 8.5);
         adc5.setTitleX("ADC - value");
         adc5.setTitleY("PMT");
         adc5.setTitle("sector 5");
-        H2F adc6 = new H2F("adc_s6", "adc_s6", 100, 0, 5000, 8, 0.5, 8.5);
+        H2F adc6 = new H2F("adc_s6", "adc_s6", 100, 0, 2000, 8, 0.5, 8.5);
         adc6.setTitleX("ADC - value");
         adc6.setTitleY("PMT");
         adc6.setTitle("sector 6");
         
-        H2F tdc1 = new H2F("tdc_s1", "tdc_s1", 50, 0, 250, 8, 1, 8.5);
+        H2F tdc1 = new H2F("tdc_s1", "tdc_s1", 50, 0, 400, 8, 1, 8.5);
         tdc1.setTitleX("ADC timing");
         tdc1.setTitleY("PMT");
         tdc1.setTitle("sector 1");
-        H2F tdc2 = new H2F("tdc_s2", "tdc_s2", 50, 0, 250, 8, 1, 8.5);
+        H2F tdc2 = new H2F("tdc_s2", "tdc_s2", 50, 0, 400, 8, 1, 8.5);
         tdc2.setTitleX("ADC timing");
         tdc2.setTitleY("PMT");
         tdc2.setTitle("sector 2");
-        H2F tdc3 = new H2F("tdc_s3", "tdc_s3", 50, 0, 250, 8, 1, 8.5);
+        H2F tdc3 = new H2F("tdc_s3", "tdc_s3", 50, 0, 400, 8, 1, 8.5);
         tdc3.setTitleX("ADC timing");
         tdc3.setTitleY("PMT");
         tdc3.setTitle("sector 3");
-        H2F tdc4 = new H2F("tdc_s4", "tdc_s4", 50, 0, 250, 8, 1, 8.5);
+        H2F tdc4 = new H2F("tdc_s4", "tdc_s4", 50, 0, 400, 8, 1, 8.5);
         tdc4.setTitleX("ADC timing");
         tdc4.setTitleY("PMT");
         tdc4.setTitle("sector 4");
-        H2F tdc5 = new H2F("tdc_s5", "tdc_s5", 50, 0, 250, 8, 1, 8.5);
+        H2F tdc5 = new H2F("tdc_s5", "tdc_s5", 50, 0, 400, 8, 1, 8.5);
         tdc5.setTitleX("ADC timing");
         tdc5.setTitleY("PMT");
         tdc5.setTitle("sector 5");
-        H2F tdc6 = new H2F("tdc_s6", "tdc_s6", 50, 0, 250, 8, 1, 8.5);
+        H2F tdc6 = new H2F("tdc_s6", "tdc_s6", 50, 0, 400, 8, 1, 8.5);
         tdc6.setTitleX("ADC timing");
         tdc6.setTitleY("PMT");
         tdc6.setTitle("sector 6");
@@ -180,6 +180,8 @@ public class HTCCmonitor  extends DetectorMonitor {
         if (this.getNumberOfEvents() >= super.eventResetTime_current[11] && super.eventResetTime_current[11] > 0){
             resetEventListener();
         }
+        
+        if(!isGoodHTCCTrigger()) return;
         
         // process event info and save into data group
         if(event.hasBank("HTCC::adc")==true){
