@@ -122,7 +122,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         // initialize canvas and create histograms
     }
     
-   // @Override
+    @Override
     public void dataEventAction(DataEvent event) {
         
         this.setNumberOfEvents(this.getNumberOfEvents()+1);
@@ -303,7 +303,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         }
     }
     
-    //@Override
+    @Override
     public void resetEventListener() {
         System.out.println("Resetting " + this.getDetectorName() + " histogram");
         this.createHistos();
@@ -336,7 +336,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         this.numberOfEvents = numberOfEvents;
     }
 
-   // @Override
+    @Override
     public void timerUpdate() {
         
     }

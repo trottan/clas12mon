@@ -531,7 +531,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         return rNum;
     }
     
-    //@Override
+    @Override
     public void dataEventAction(DataEvent event) {
     	
        // EvioDataEvent decodedEvent = deco.DecodeEvent(event, decoder, table);
@@ -540,7 +540,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         HipoDataEvent hipo = null;
         
 	    if(event!=null ){
-//            event.show();
+            //event.show();
 
             if (event.getType() == DataEventType.EVENT_START) {
                 this.runNumber = this.getRunNumber(event);
@@ -557,14 +557,13 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 DataBank   header = clasDecoder.createHeaderBank(hipo, 0, 0, (float) 0, (float) 0);
                 hipo.appendBanks(header);
             } 
-            else 
-            {
+            else {
                 hipo = (HipoDataEvent) event;    
             }
             
             for(int k=0; k<this.monitors.length; k++) {
-        	        this.monitors[k].setTriggerPhase(getTriggerPhase(event));
-        	        this.monitors[k].setTriggerWord(getTriggerWord(event));
+        	    this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
+        	    this.monitors[k].setTriggerWord(getTriggerWord(hipo));
                 this.monitors[k].dataEventAction(hipo);
             }      
 	    }
@@ -723,12 +722,12 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     
 
-    //@Override
+    @Override
     public void processShape(DetectorShape2D shape) {
         System.out.println("SHAPE SELECTED = " + shape.getDescriptor());
     }
     
-    //@Override
+    @Override
     public void resetEventListener() {
         for(int k=0; k<this.monitors.length; k++) {
             this.monitors[k].resetEventListener();
@@ -765,7 +764,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         this.timerUpdate();
     }
     
-    //@Override
+    @Override
     public void timerUpdate() {
 //        System.out.println("Time to update ...");
         for(int k=0; k<this.monitors.length; k++) {
