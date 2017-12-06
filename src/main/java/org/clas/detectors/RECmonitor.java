@@ -323,8 +323,10 @@ public class RECmonitor extends DetectorMonitor {
             DataBank bankTBTracks = event.getBank("TimeBasedTrkg::TBTracks");
             int rows = bankTBTracks.rows();
             int sector;
+            int ndf;
             for(int i = 0; i < rows; i++){
                 sector = bankTBTracks.getByte("sector",i);
+                ndf = bankTBTracks.getByte("ndf",i);
 
                 Vector3 momentum = new Vector3();
 		momentum.setXYZ(bankTBTracks.getFloat("p0_x", i), bankTBTracks.getFloat("p0_y", i),bankTBTracks.getFloat("p0_z", i));
@@ -332,10 +334,7 @@ public class RECmonitor extends DetectorMonitor {
                 this.getDataGroup().getItem(sector,0,0).getH1F("cd_momentum_sec" + sector).fill(momentum.mag()); 
                 this.getDataGroup().getItem(sector,0,0).getH1F("cd_theta_sec" + sector).fill(momentum.theta());   
                 this.getDataGroup().getItem(sector,0,0).getH1F("cd_trk_ev_sec" + sector).fill(rows); 
-
-                DataBank bankTBHits = event.getBank("TimeBasedTrkg::TBHits");
-                int hits = bankTBHits.rows();
-                this.getDataGroup().getItem(sector,0,0).getH1F("cd_hits_per_trk_sec" + sector).fill(hits/rows);
+                this.getDataGroup().getItem(sector,0,0).getH1F("cd_hits_per_trk_sec" + sector).fill(ndf+5);
                 
             }
                 
