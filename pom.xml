@@ -19,7 +19,6 @@
          <type>jar</type>
       </dependency>
     </dependencies> 
-
     <repositories>
       <repository>
         <id>clas12maven</id>
