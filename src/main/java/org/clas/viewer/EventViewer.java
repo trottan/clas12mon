@@ -55,9 +55,9 @@ import org.jlab.io.evio.EvioDataEvent;
 import org.jlab.io.hipo.HipoDataEvent;
 import org.jlab.io.task.DataSourceProcessorPane;
 import org.jlab.io.task.IDataEventListener;
-//import org.jlab.elog.LogEntry;
-
-
+//import org.jlab.elog.jlog;
+//import org.jlab.elog.LogEntry 
+        
 /**
  *
  * @author ziegler
@@ -468,7 +468,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 this.monitors[k].printCanvas(data);
             }
             
-            LogEntry entry = new LogEntry("All online monitoring histograms for run number " + this.runNumber, "TLOG");
+            LogEntry entry = new LogEntry("All online monitoring histograms for run number " + this.runNumber, "TLOG");  // change to HBLOG
          
             entry.addAttachment(data+"/BMT_canvas0.png", "BMT occupancies");
             entry.addAttachment(data+"/BMT_canvas1.png", "BMT occupancies c");
@@ -562,7 +562,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 this.monitors[k].printCanvas(data);
             }
             
-            LogEntry entry = new LogEntry("Occupancy online monitoring histograms for run number " + this.runNumber, "TLOG");
+            LogEntry entry = new LogEntry("Occupancy online monitoring histograms for run number " + this.runNumber, "TLOG");     // change to HBLOG
          
             entry.addAttachment(data+"/BMT_canvas0.png", "BMT occupancies");
             entry.addAttachment(data+"/BMT_canvas1.png", "BMT occupancies c");
