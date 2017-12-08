@@ -215,7 +215,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
             resetEventListener();
         }        
             
-//            for (int i=1; i<33; i++) if(trigger==i) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(i);
+        for (int i=1; i<33; i++) if(trigger==i) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(i);
                            
         if(isGoodFD())  this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(1);  
         if(isGoodHTCC())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(2);

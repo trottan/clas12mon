@@ -56,7 +56,8 @@ import org.jlab.io.hipo.HipoDataEvent;
 import org.jlab.io.task.DataSourceProcessorPane;
 import org.jlab.io.task.IDataEventListener;
 //import org.jlab.elog.jlog;
-//import org.jlab.elog.LogEntry 
+//import org.jlab.elog.LogEntry; 
+        
         
 /**
  *
@@ -246,8 +247,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         menuBar.add(reset);
         
-        JMenu trigBits = new JMenu("TrigBits");
-        trigBits.getAccessibleContext().setAccessibleDescription("Test Trigger Bits");
+        JMenu trigBits = new JMenu("TrigBitsCosmic");
+        trigBits.getAccessibleContext().setAccessibleDescription("Test Trigger Bits for cosmic runs");
         
         JCheckBoxMenuItem cb1 = new JCheckBoxMenuItem("EC");    
         cb1.addItemListener(new ItemListener() {
@@ -323,6 +324,526 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                
         menuBar.add(trigBits);
         
+        
+        
+        JMenu trigBitsBeam = new JMenu("TrigBitsBeam");
+        trigBitsBeam.getAccessibleContext().setAccessibleDescription("Test Trigger Bits for beam runs");
+        
+        JCheckBoxMenuItem bb1 = new JCheckBoxMenuItem("bit 1");    
+        bb1.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam1(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam1(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb1); 
+        
+        JCheckBoxMenuItem bb2 = new JCheckBoxMenuItem("bit 2");    
+        bb2.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam2(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam2(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb2); 
+        
+        JCheckBoxMenuItem bb3 = new JCheckBoxMenuItem("bit 3");    
+        bb3.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam3(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam3(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb3); 
+        
+        JCheckBoxMenuItem bb4 = new JCheckBoxMenuItem("bit 4");    
+        bb4.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam4(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam4(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb4); 
+        
+        JCheckBoxMenuItem bb5 = new JCheckBoxMenuItem("bit 5");    
+        bb5.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam5(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam5(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb5); 
+        
+        JCheckBoxMenuItem bb6 = new JCheckBoxMenuItem("bit 6");    
+        bb6.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam6(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam6(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb6); 
+        
+        JCheckBoxMenuItem bb7 = new JCheckBoxMenuItem("bit 7");    
+        bb7.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam7(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam7(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb7); 
+        
+        JCheckBoxMenuItem bb8 = new JCheckBoxMenuItem("bit 8");    
+        bb8.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam8(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam8(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb8); 
+        
+        JCheckBoxMenuItem bb9 = new JCheckBoxMenuItem("bit 9");    
+        bb9.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam9(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam9(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb9); 
+        
+        JCheckBoxMenuItem bb10 = new JCheckBoxMenuItem("bit 10");    
+        bb10.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam10(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam10(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb10); 
+        
+        JCheckBoxMenuItem bb11 = new JCheckBoxMenuItem("bit 11");    
+        bb11.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam11(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam11(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb11); 
+        
+        JCheckBoxMenuItem bb12 = new JCheckBoxMenuItem("bit 12");    
+        bb12.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam12(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam12(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb12); 
+        
+        JCheckBoxMenuItem bb13 = new JCheckBoxMenuItem("bit 13");    
+        bb13.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam13(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam13(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb13); 
+        
+        JCheckBoxMenuItem bb14 = new JCheckBoxMenuItem("bit 14");    
+        bb14.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam14(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam14(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb14); 
+        
+        JCheckBoxMenuItem bb15 = new JCheckBoxMenuItem("bit 15");    
+        bb15.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam15(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam15(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb15); 
+        
+        JCheckBoxMenuItem bb16 = new JCheckBoxMenuItem("bit 16");    
+        bb16.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam16(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam16(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb16); 
+        
+        JCheckBoxMenuItem bb17 = new JCheckBoxMenuItem("bit 17");    
+        bb17.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam17(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam17(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb17); 
+        
+        JCheckBoxMenuItem bb18 = new JCheckBoxMenuItem("bit 18");    
+        bb18.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam18(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam18(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb18); 
+        
+        JCheckBoxMenuItem bb19 = new JCheckBoxMenuItem("bit 19");    
+        bb19.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam19(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam19(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb19); 
+        
+        JCheckBoxMenuItem bb20 = new JCheckBoxMenuItem("bit 20");    
+        bb20.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam20(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam20(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb20); 
+        
+        JCheckBoxMenuItem bb21 = new JCheckBoxMenuItem("bit 21");    
+        bb21.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam21(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam21(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb21); 
+        
+        JCheckBoxMenuItem bb22 = new JCheckBoxMenuItem("bit 22");    
+        bb22.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam22(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam22(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb22); 
+        
+        JCheckBoxMenuItem bb23 = new JCheckBoxMenuItem("bit 23");    
+        bb23.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam23(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam23(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb23); 
+        
+        JCheckBoxMenuItem bb24 = new JCheckBoxMenuItem("bit 24");    
+        bb24.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam24(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam24(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb24); 
+        
+        JCheckBoxMenuItem bb25 = new JCheckBoxMenuItem("bit 25");    
+        bb25.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam25(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam25(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb25); 
+        
+        JCheckBoxMenuItem bb26 = new JCheckBoxMenuItem("bit 26");    
+        bb26.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam26(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam26(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb26); 
+        
+        JCheckBoxMenuItem bb27 = new JCheckBoxMenuItem("bit 27");    
+        bb27.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam27(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam27(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb27); 
+        
+        JCheckBoxMenuItem bb28 = new JCheckBoxMenuItem("bit 28");    
+        bb28.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam28(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam28(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb28); 
+        
+        JCheckBoxMenuItem bb29 = new JCheckBoxMenuItem("bit 29");    
+        bb29.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam29(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam29(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb29); 
+        
+        JCheckBoxMenuItem bb30 = new JCheckBoxMenuItem("bit 30");    
+        bb30.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam30(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam30(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb30); 
+        
+        JCheckBoxMenuItem bb31 = new JCheckBoxMenuItem("bit 31");    
+        bb31.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam31(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam31(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb31); 
+        
+        JCheckBoxMenuItem bb32 = new JCheckBoxMenuItem("bit 32");    
+        bb32.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED) {
+                    for(int k=0; k<15; k++) {
+                  	monitors[k].setTriggerBeam32(true);
+                    }
+                } else {
+                    for(int k=0; k<15; k++) {
+                 	monitors[k].setTriggerBeam32(false);
+                    }
+                };
+            }
+        });         
+        trigBitsBeam.add(bb32); 
+
+        menuBar.add(trigBitsBeam);
+        
+
         // create main panel
         mainPanel = new JPanel();	
         mainPanel.setLayout(new BorderLayout());
