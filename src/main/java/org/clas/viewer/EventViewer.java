@@ -55,9 +55,8 @@ import org.jlab.io.evio.EvioDataEvent;
 import org.jlab.io.hipo.HipoDataEvent;
 import org.jlab.io.task.DataSourceProcessorPane;
 import org.jlab.io.task.IDataEventListener;
-//import org.jlab.elog.jlog;
-//import org.jlab.elog.LogEntry; 
-        
+import org.jlab.elog.LogEntry; 
+
         
 /**
  *
@@ -965,7 +964,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         }
         
         if(e.getActionCommand()=="Upload all histos to the logbook") {   
-            /* 
+            
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
             String data = System.getProperty("user.dir") + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
             File theDir = new File(data);
@@ -990,8 +989,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
             
             LogEntry entry = new LogEntry("All online monitoring histograms for run number " + this.runNumber, "TLOG");  // change to HBLOG
-         
-            entry.addAttachment(data+"/BMT_canvas0.png", "BMT occupancies");
+            
+            //entry.addAttachment(data+"/BMT_canvas0.png", "BMT occupancies");
+            /*
             entry.addAttachment(data+"/BMT_canvas1.png", "BMT occupancies c");
             entry.addAttachment(data+"/BMT_canvas2.png", "BMT occupancies z");
             entry.addAttachment(data+"/BMT_canvas3.png", "BMT time of max");
@@ -1058,7 +1058,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         
         if(e.getActionCommand()=="Upload occupancy histos to the logbook") {   
-            /*     
+                
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
             String data = System.getProperty("user.dir") + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
             File theDir = new File(data);
@@ -1084,7 +1084,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
             
             LogEntry entry = new LogEntry("Occupancy online monitoring histograms for run number " + this.runNumber, "TLOG");     // change to HBLOG
-         
+            /*
             entry.addAttachment(data+"/BMT_canvas0.png", "BMT occupancies");
             entry.addAttachment(data+"/BMT_canvas1.png", "BMT occupancies c");
             entry.addAttachment(data+"/BMT_canvas2.png", "BMT occupancies z");
