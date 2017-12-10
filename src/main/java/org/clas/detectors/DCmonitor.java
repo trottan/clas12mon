@@ -149,16 +149,8 @@ public class DCmonitor extends DetectorMonitor {
             resetEventListener();
         }
         
-        if(   !isGoodTrigger1() && !isGoodTrigger2() && !isGoodTrigger3() && !isGoodTrigger4() 
-           && !isGoodTrigger5() && !isGoodTrigger6() && !isGoodTrigger7() && !isGoodTrigger8()
-           && !isGoodTrigger9() && !isGoodTrigger10() && !isGoodTrigger11() && !isGoodTrigger12()  
-           && !isGoodTrigger13() && !isGoodTrigger14() && !isGoodTrigger15() && !isGoodTrigger16()  
-           && !isGoodTrigger17() && !isGoodTrigger18() && !isGoodTrigger19() && !isGoodTrigger20()
-           && !isGoodTrigger21() && !isGoodTrigger22() && !isGoodTrigger23() && !isGoodTrigger24()
-           && !isGoodTrigger25() && !isGoodTrigger26() && !isGoodTrigger27() && !isGoodTrigger28()  
-           && !isGoodTrigger29() && !isGoodTrigger30() && !isGoodTrigger31() && !isGoodTrigger32()) return;
-        
-        
+		if (!testTriggerMask()) return;
+                
         // process event info and save into data group
         if(event.hasBank("DC::tdc")==true){
             DataBank  bank = event.getBank("DC::tdc");

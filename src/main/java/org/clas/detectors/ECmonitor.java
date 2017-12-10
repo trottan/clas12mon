@@ -148,28 +148,22 @@ public class ECmonitor  extends DetectorMonitor {
             resetEventListener();
         }
         
-        if(   !isGoodTrigger1() && !isGoodTrigger2() && !isGoodTrigger3() && !isGoodTrigger4() 
-           && !isGoodTrigger5() && !isGoodTrigger6() && !isGoodTrigger7() && !isGoodTrigger8()
-           && !isGoodTrigger9() && !isGoodTrigger10() && !isGoodTrigger11() && !isGoodTrigger12()  
-           && !isGoodTrigger13() && !isGoodTrigger14() && !isGoodTrigger15() && !isGoodTrigger16()  
-           && !isGoodTrigger17() && !isGoodTrigger18() && !isGoodTrigger19() && !isGoodTrigger20()
-           && !isGoodTrigger21() && !isGoodTrigger22() && !isGoodTrigger23() && !isGoodTrigger24()
-           && !isGoodTrigger25() && !isGoodTrigger26() && !isGoodTrigger27() && !isGoodTrigger28()  
-           && !isGoodTrigger29() && !isGoodTrigger30() && !isGoodTrigger31() && !isGoodTrigger32()) return;
+		if (!testTriggerMask()) return;
+
     	   
-    	    double[] pcsum = new double[6];
-    	    double[] ecsum = new double[6];
+        double[] pcsum = new double[6];
+        double[] ecsum = new double[6];
     	        
-    	    if(event.hasBank("ECAL::adc")==true){        	
+        if(event.hasBank("ECAL::adc")==true){        	
         	DataBank bank = event.getBank("ECAL::adc");
-	    int rows = bank.rows();
-	    for(int loop = 0; loop < rows; loop++){
+	        int rows = bank.rows();
+            for(int loop = 0; loop < rows; loop++){
                 int sector = bank.getByte("sector", loop);
                 int layer  = bank.getByte("layer", loop);
                 int comp   = bank.getShort("component", loop);
                 int adc    = bank.getInt("ADC", loop);
                 float time = bank.getFloat("time",loop);
-                if(adc>0 && time>=0  && isGoodFDTrigger(sector)) {
+                if(adc>0 && time>=0  && isGoodECALTrigger(sector)) {
                   	this.getDataGroup().getItem(0,layer,0).getH2F("occADC"+layer).fill(sector*1.0, comp*1.0);
                   	this.getDataGroup().getItem(sector,layer,0).getH2F("datADC"+layer+sector).fill(adc,comp*1.0);
                 }
@@ -183,7 +177,7 @@ public class ECmonitor  extends DetectorMonitor {
 	    }
     	    }   
         
-    	int bitsec = getFDTriggerSector();
+    	int bitsec = getECALTriggerSector();
         if(bitsec>0) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
                 
         if(event.hasBank("ECAL::tdc")==true){
@@ -195,7 +189,7 @@ public class ECmonitor  extends DetectorMonitor {
                 int      comp = bank.getShort("component",i);
                 int       TDC = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); 
-                if(TDC>0 && isGoodFDTrigger(sector)) {
+                if(TDC>0 && isGoodECALTrigger(sector)) {
                     this.getDataGroup().getItem(0,layer,0).getH2F("occTDC"+layer).fill(sector*1.0, comp*1.0);
                     this.getDataGroup().getItem(sector,layer,0).getH2F("datTDC"+layer+sector).fill(TDC*0.02345-triggerPhase*4,comp*1.0);
                 }

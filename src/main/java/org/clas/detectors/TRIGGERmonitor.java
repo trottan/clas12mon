@@ -1,6 +1,7 @@
 package org.clas.detectors;
 
 import java.util.ArrayList;
+
 import org.clas.viewer.DetectorMonitor;
 import org.jlab.detector.base.DetectorType;
 import org.jlab.detector.view.DetectorShape2D;
@@ -12,12 +13,11 @@ import org.jlab.groot.math.F1D;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
-
 public class TRIGGERmonitor extends DetectorMonitor {
     
     public TRIGGERmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("Trigger beam", "Trigger cosmic", "EC peak trigger", "EC cluster trigger", "HTCC cluster trigger", "FTOF Cluster trigger");
+        this.setDetectorTabNames("Trigger Bits", "EC peak trigger", "EC cluster trigger", "HTCC cluster trigger", "FTOF Cluster trigger");
         this.useSectorButtons(true);
         this.init(false);
         this.testTrigger = true;
@@ -29,6 +29,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
         // create histograms
         this.setNumberOfEvents(0);
         H1F summary = new H1F("summary","summary",100,0.5,10000);
+        summary.setFillColor(4);
         summary.setTitleX("trigger");
         summary.setTitleY("counts");
         summary.setFillColor(33);
@@ -36,22 +37,13 @@ public class TRIGGERmonitor extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H1F trig = new H1F("trigger_beam","trigger_beam", 32,0.5,32.5);
-        trig.setTitleX("trigger beam");
+        H1F trig = new H1F("trigger_bits","trigger_bits", 33,-0.5,32.5);
+        trig.setFillColor(4);
+        trig.setTitleX("Trigger Bits: ECAL.PCAL.HTCC(0)    ECAL.PCAL.HTCC(1-6)    HTCC(7-12)    PCAL(13-18)    ECAL(19-24)    1K Pulser(31)");
         trig.setTitleY("Counts");
-        H1F trig_cos = new H1F("trigger_cosmic","trigger_cosmic", 6,0.5,6.5); 
-        trig_cos.setFillColor(4);
-        trig_cos.setTitleX("trigger cosmic (1=FD  2=HTCC  3=SVT  4=CTOF  5=CND  6=MVT)");
-        trig_cos.setTitleY("Counts");
-        H1F trig_fcsect = new H1F("trigger_cosmic_fcsect","trigger_cosmic_fcsect", 6,0.5,6.5); 
-        trig_fcsect.setFillColor(4);
-        trig_fcsect.setTitleX("EC Sector");
-        trig_fcsect.setTitleY("Counts");
         
-
         DataGroup dg = new DataGroup(4,3);
-        
-        
+               
         for(int sec=1; sec <= 6; sec++) {
             
             /// ECAL peak
@@ -128,8 +120,6 @@ public class TRIGGERmonitor extends DetectorMonitor {
         }
         
         dg.addDataSet(trig, 10);
-        dg.addDataSet(trig_cos, 11);
-        dg.addDataSet(trig_fcsect, 12);
 
         this.getDataGroup().add(dg, 0,0,0);
     }
@@ -144,21 +134,12 @@ public class TRIGGERmonitor extends DetectorMonitor {
     @Override
     public void plotHistos() {
         // initialize canvas and plot histograms
-        this.getDetectorCanvas().getCanvas("Trigger beam").divide(1, 1);
-        this.getDetectorCanvas().getCanvas("Trigger beam").setGridX(false);
-        this.getDetectorCanvas().getCanvas("Trigger beam").setGridY(false);
-        this.getDetectorCanvas().getCanvas("Trigger beam").cd(0);
-        this.getDetectorCanvas().getCanvas("Trigger beam").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam"));
-        this.getDetectorCanvas().getCanvas("Trigger beam").update();
-        
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").divide(2, 1);
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").setGridX(false);
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").setGridY(false);
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").cd(0);
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic"));
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").cd(1);
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic_fcsect"));
-        this.getDetectorCanvas().getCanvas("Trigger cosmic").update();
+        this.getDetectorCanvas().getCanvas("Trigger Bits").divide(1, 1);
+        this.getDetectorCanvas().getCanvas("Trigger Bits").setGridX(false);
+        this.getDetectorCanvas().getCanvas("Trigger Bits").setGridY(false);
+        this.getDetectorCanvas().getCanvas("Trigger Bits").cd(0);
+        this.getDetectorCanvas().getCanvas("Trigger Bits").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_bits"));
+        this.getDetectorCanvas().getCanvas("Trigger Bits").update();
         
         this.getDetectorCanvas().getCanvas("EC peak trigger").divide(3, 1);
         this.getDetectorCanvas().getCanvas("EC peak trigger").setGridX(false);
@@ -213,20 +194,14 @@ public class TRIGGERmonitor extends DetectorMonitor {
 
         if (this.getNumberOfEvents() >= super.eventResetTime_current[18] && super.eventResetTime_current[18] > 0){
             resetEventListener();
-        }        
-            
-        for (int i=1; i<33; i++) if(trigger==i) this.getDataGroup().getItem(0,0,0).getH1F("trigger_beam").fill(i);
-                           
-        if(isGoodFD())  this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(1);  
-        if(isGoodHTCC())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(2);
-        if(isGoodBST()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(3);   
-        if(isGoodCTOF())this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(4);   
-        if(isGoodCND()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(5);   
-        if(isGoodBMT()) this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic").fill(6);   
-        if(isGoodFD())  this.getDataGroup().getItem(0,0,0).getH1F("trigger_cosmic_fcsect").fill(getFDTriggerSector());  
-     
+        }  
+        
+		if (!testTriggerMask()) return;
+        
+        for (int i=1; i<33; i++) if(isTrigBitSet(i)) this.getDataGroup().getItem(0,0,0).getH1F("trigger_bits").fill(i);
+    
         for(int sec=1; sec<=6; sec++) {
-            if (isGoodFDTrigger(sec)) {
+            if (isGoodECALTrigger(sec)) {
                 this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_energy"+sec).fill(0);
                 this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_time"+sec).fill(0);
                 this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_coord"+sec).fill(0);
