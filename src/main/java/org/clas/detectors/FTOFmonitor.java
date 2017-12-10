@@ -193,14 +193,7 @@ public class FTOFmonitor  extends DetectorMonitor {
             resetEventListener();
         }
         
-        if(   !isGoodTrigger1() && !isGoodTrigger2() && !isGoodTrigger3() && !isGoodTrigger4() 
-           && !isGoodTrigger5() && !isGoodTrigger6() && !isGoodTrigger7() && !isGoodTrigger8()
-           && !isGoodTrigger9() && !isGoodTrigger10() && !isGoodTrigger11() && !isGoodTrigger12()  
-           && !isGoodTrigger13() && !isGoodTrigger14() && !isGoodTrigger15() && !isGoodTrigger16()  
-           && !isGoodTrigger17() && !isGoodTrigger18() && !isGoodTrigger19() && !isGoodTrigger20()
-           && !isGoodTrigger21() && !isGoodTrigger22() && !isGoodTrigger23() && !isGoodTrigger24()
-           && !isGoodTrigger25() && !isGoodTrigger26() && !isGoodTrigger27() && !isGoodTrigger28()  
-           && !isGoodTrigger29() && !isGoodTrigger30() && !isGoodTrigger31() && !isGoodTrigger32()) return;
+		if (!testTriggerMask()) return;
 	    
 	    clear(0); clear(1); clear(2);
     	
@@ -216,7 +209,7 @@ public class FTOFmonitor  extends DetectorMonitor {
                 int     order = bank.getByte("order",i);  
                 
                 int lay=layer-1; int ord=order-0;
-                if(ADC>0 && isGoodFDTrigger(sector)) {
+                if(ADC>0 && isGoodECALTrigger(sector)) {
                 	  this.getDataGroup().getItem(0,lay,0).getH2F("occADC"+lay+ord).fill(sector*1.0,paddle*1.0);
                 	  this.getDataGroup().getItem(sector,lay,0).getH2F("datADC"+sector+lay+ord).fill(ADC,paddle*1.0);
                 	  if(layer == 1) this.getDetectorSummary().getH2F("sum_p1").fill(sector-0.25, order*1.0);
@@ -237,7 +230,7 @@ public class FTOFmonitor  extends DetectorMonitor {
                 int     order = bank.getByte("order",i); 
                 
                 int lay=layer-1; int ord=order-2;
-                if(TDC>0 && isGoodFDTrigger(sector)) {
+                if(TDC>0 && isGoodECALTrigger(sector)) {
                 	   this.getDataGroup().getItem(0,lay,0).getH2F("occTDC"+lay+ord).fill(sector*1.0,paddle*1.0);
                 	   this.getDataGroup().getItem(sector,lay,0).getH2F("datTDC"+sector+lay+ord).fill(TDC*0.02345-triggerPhase*4,paddle*1.0);
                    storeTDCHits(lay,sector-1,ord,paddle,(float)(TDC*0.02345-triggerPhase*4));
@@ -246,7 +239,7 @@ public class FTOFmonitor  extends DetectorMonitor {
         }
         
         for(int sec=1; sec<7; sec++) {
-          	if (isGoodFDTrigger(sec)) {
+          	if (isGoodECALTrigger(sec)) {
           	    for(int il=0; il<3; il++) {
         		        getGM(il,sec-1,this.getDataGroup().getItem(sec,il,0).getH2F("GMEAN"+sec+il));
         		        getTD(il,sec-1,this.getDataGroup().getItem(sec,il,0).getH2F("TDIF"+sec+il));
