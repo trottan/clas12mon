@@ -156,14 +156,47 @@ public class DCmonitor extends DetectorMonitor {
             DataBank  bank = event.getBank("DC::tdc");
             this.getDetectorOccupancy().addTDCBank(bank);
             int rows = bank.rows();
+            int sec1_check = 0;
+            int sec2_check = 0;
+            int sec3_check = 0;
+            int sec4_check = 0;
+            int sec5_check = 0;
+            int sec6_check = 0;
+            
             for(int i = 0; i < rows; i++){
                 int    sector = bank.getByte("sector",i);
                 int     layer = bank.getByte("layer",i);
                 int      wire = bank.getShort("component",i);
                 int       TDC = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); 
+                
                 this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector).fill(wire*1.0,layer*1.0);
-                this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+
+                if(sector == 1 && sec1_check == 0){
+                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+                    sec1_check += 1;
+                }
+                if(sector == 2 && sec2_check == 0){
+                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+                    sec2_check += 1;
+                }
+                if(sector == 3 && sec3_check == 0){
+                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+                    sec3_check += 1;
+                }
+                if(sector == 4 && sec4_check == 0){
+                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+                    sec4_check += 1;
+                }
+                if(sector == 5 && sec5_check == 0){
+                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+                    sec5_check += 1;
+                }
+                if(sector == 6 && sec6_check == 0){
+                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+                    sec6_check += 1;
+                }
+                
                 if(TDC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
             }
        }       

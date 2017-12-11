@@ -174,10 +174,10 @@ public class FMTmonitor extends DetectorMonitor {
         
 		if (event.hasBank("FMT::adc") == true) {
 			DataBank bank = event.getBank("FMT::adc");
+                        
+                        this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
+                        
 			for (int i = 0; i < bank.rows(); i++) {
-				
-                                this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
-                            
 				int sectorNb = bank.getByte("sector", i);
 				int layerNb = bank.getByte("layer", i);
 				int strip = bank.getShort("component", i);
