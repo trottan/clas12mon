@@ -424,11 +424,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                         
         }
         
-        this.tabbedpane.add(new Contact(),"Contacts");
         this.processorPane.addEventListener(this);
         
+        this.tabbedpane.add(new Contact(),"Contacts");        
         this.tabbedpane.add(new Acronyms(),"Acronyms");
-        this.processorPane.addEventListener(this);
         
         this.setCanvasUpdate(canvasUpdateTime);
         this.plotSummaries();
@@ -802,6 +801,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             for(int k=0; k<this.monitors.length; k++) {
         	    this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
         	    this.monitors[k].setTriggerWord(getTriggerWord(hipo));
+        	    System.out.println("Loop over monitors"+k);
                 this.monitors[k].dataEventAction(hipo);
             }      
 	    }
