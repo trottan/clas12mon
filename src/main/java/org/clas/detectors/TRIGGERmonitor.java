@@ -199,7 +199,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
 		if (!testTriggerMask()) return;
         
         for (int i=1; i<33; i++) if(isTrigBitSet(i)) this.getDataGroup().getItem(0,0,0).getH1F("trigger_bits").fill(i);
-    
+        
         for(int sec=1; sec<=6; sec++) {
             if (isGoodECALTrigger(sec)) {
                 this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_energy"+sec).fill(0);
