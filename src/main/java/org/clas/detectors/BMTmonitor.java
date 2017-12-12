@@ -220,12 +220,14 @@ public class BMTmonitor extends DetectorMonitor {
             
 		if (event.hasBank("BMT::adc") == true) {
 			DataBank bank = event.getBank("BMT::adc");
+                        
+                        this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
+                        
 			for (int i = 0; i < bank.rows(); i++) {
 				int sector = bank.getByte("sector", i);
 				int layer = bank.getByte("layer", i);
 				int strip = bank.getShort("component", i);
 				float timeOfMax = bank.getFloat("time", i);
-                                this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
                                 
 				if (strip < 0 || !mask[sector][layer][strip]){
 					continue;

@@ -181,6 +181,9 @@ public class BSTmonitor extends DetectorMonitor {
             DataBank  bank = event.getBank("BST::adc");
             this.getDetectorOccupancy().addTDCBank(bank);
             int rows = bank.rows();
+            
+            this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(rows);
+            
             for(int i = 0; i < rows; i++){
                 int    sector = bank.getByte("sector",i);
                 int     layer = bank.getByte("layer",i);
@@ -190,7 +193,6 @@ public class BSTmonitor extends DetectorMonitor {
                 int     order = bank.getByte("order",i);
              
                 if(ADC > 0){
-                    this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(rows);
                     
                     if(layer == 1){ 
                         this.getDataGroup().getItem(0,0,0).getH2F("occ_reg1_l1").fill(comp, sector);
