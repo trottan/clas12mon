@@ -67,10 +67,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     List<DetectorPane2D> DetectorPanels   	= new ArrayList<DetectorPane2D>();
     JTabbedPane tabbedpane           		= null;
-    JPanel mainPanel 				= null;
-    JMenuBar menuBar                            = null;
+    JPanel mainPanel 				        = null;
+    JMenuBar menuBar                        = null;
     DataSourceProcessorPane processorPane 	= null;
-    EmbeddedCanvasTabbed CLAS12Canvas           = null;
+    EmbeddedCanvasTabbed CLAS12Canvas       = null;
     //EmbeddedCanvasTabbed CLAS12CDCanvas         = null;
     
     CodaEventDecoder               decoder = new CodaEventDecoder();
@@ -800,8 +800,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
             
             for(int k=0; k<this.monitors.length; k++) {
-        	this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
-        	this.monitors[k].setTriggerWord(getTriggerWord(hipo));
+        	    this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
+        	    this.monitors[k].setTriggerWord(getTriggerWord(hipo));
                 this.monitors[k].dataEventAction(hipo);
             }      
 	    }
