@@ -47,7 +47,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     private JCheckBox        tbBtn;
     
     public int bitsec = 0;
-    public int trigger = 0;
+    public long trigger = 0;
     public long triggerPhase = 0;
     public int trigFD = 0;
     public int trigCD = 0;
@@ -152,7 +152,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     	    return this.triggerPhase;
     }
     
-    public void setTriggerWord(int trig) {
+    public void setTriggerWord(long trig) {
     	   this.trigger = trig;
     }
     
@@ -179,17 +179,17 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public int     getCDTrigger()          {return this.trigger&0x00000fff;} 
 */
     
-    public int     getFDTrigger()          {return this.trigger;}
-    
-    public boolean isGoodFD()                {return  this.trigger>0;}    
+    public int     getFDTrigger()            {return (int)(this.trigger)&0x000000000ffffffff;}
+    public int     getCDTrigger()            {return (int)(this.trigger>>32)&0x00000000ffffffff;}
+    public boolean isGoodFD()                {return  getFDTrigger()>0;}    
     public boolean isTrigBitSet(int bit)     {int mask=0; mask |= 1<<bit; return isTrigMaskSet(mask);}
     public boolean isTrigMaskSet(int mask)   {return (getFDTrigger()&mask)!=0;}
     public boolean isGoodECALTrigger(int is) {return (testTrigger)? is==getECALTriggerSector():true;}    
-    public int           getElecTrigger()    {return this.trigger&0x1;}
-    public int     getElecTriggerSector()    {return (int) (isGoodFD() ? Math.log10(this.trigger>>1)/0.301+1:0);} 
-    public int     getECALTriggerSector()    {return (int) (isGoodFD() ? Math.log10(this.trigger>>19)/0.301+1:0);}       
-    public int     getPCALTriggerSector()    {return (int) (isGoodFD() ? Math.log10(this.trigger>>13)/0.301+1:0);}       
-    public int     getHTCCTriggerSector()    {return (int) (isGoodFD() ? Math.log10(this.trigger>>7)/0.301+1:0);} 
+    public int           getElecTrigger()    {return getFDTrigger()&0x1;}
+    public int     getElecTriggerSector()    {return (int) (isGoodFD() ? Math.log10(getFDTrigger()>>1)/0.301+1:0);} 
+    public int     getECALTriggerSector()    {return (int) (isGoodFD() ? Math.log10(getFDTrigger()>>19)/0.301+1:0);}       
+    public int     getPCALTriggerSector()    {return (int) (isGoodFD() ? Math.log10(getFDTrigger()>>13)/0.301+1:0);}       
+    public int     getHTCCTriggerSector()    {return (int) (isGoodFD() ? Math.log10(getFDTrigger()>>7)/0.301+1:0);} 
     
     public int    getTriggerMask()        {return this.TriggerMask;}
     public void   setTriggerMask(int bit) {this.TriggerMask|=(1<<bit);}  

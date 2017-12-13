@@ -747,9 +747,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         return mainPanel;
     }
     
-    public int getTriggerWord(DataEvent event) {    	
+    public long getTriggerWord(DataEvent event) {    	
  	    DataBank bank = event.getBank("RUN::config");	        
-        return bank.getInt("trigger", 0);
+        return bank.getLong("trigger", 0);
     }
     
     public long getTriggerPhase(DataEvent event) {    	
@@ -800,8 +800,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             
             for(int k=0; k<this.monitors.length; k++) {
         	    this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
-        	    this.monitors[k].setTriggerWord(getTriggerWord(hipo));
-        	    System.out.println("Loop over monitors"+k);
+        	    this.monitors[k].setTriggerWord(getTriggerWord(hipo));        	    
                 this.monitors[k].dataEventAction(hipo);
             }      
 	    }
