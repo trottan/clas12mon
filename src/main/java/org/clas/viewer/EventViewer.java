@@ -532,7 +532,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("CTOF plots uploaded");
               entry.addAttachment(data+"/DC_canvas0.png", "DC occupancies raw");
               entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized");
-              entry.addAttachment(data+"/DC_canvas2.png", "DC hit multiplicity");
+              entry.addAttachment(data+"/DC_canvas2.png", "DC TDC raw value distribution");
+              entry.addAttachment(data+"/DC_canvas3.png", "DC hit multiplicity");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1.png", "ECAL TDC occupancies");
