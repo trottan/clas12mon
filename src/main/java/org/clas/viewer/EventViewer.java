@@ -81,6 +81,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     private int analysisUpdateTime = 100;
     private int runNumber  = 0;
     
+    public String outPath = "/home/clasrun/CLAS12MON";
+    
     // detector monitors
     DetectorMonitor[] monitors = {
         
@@ -481,7 +483,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(e.getActionCommand()=="Upload all histos to the logbook") {   
             
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
-            String data = System.getProperty("user.dir") + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
+            String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
             File theDir = new File(data);
             // if the directory does not exist, create it
             if (!theDir.exists()) {
@@ -505,7 +507,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 this.monitors[k].printCanvas(data);
             }
             
-            LogEntry entry = new LogEntry("All online monitoring histograms for run number " + this.runNumber, "TLOG");  // change to HBLOG
+            LogEntry entry = new LogEntry("All online monitoring histograms for run number " + this.runNumber, "HBLOG");  // change to HBLOG
             
             System.out.println("Starting to upload all monitoring plots");
             
@@ -603,7 +605,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(e.getActionCommand()=="Upload occupancy histos to the logbook") {   
                 
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
-            String data = System.getProperty("user.dir") + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
+            String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
             File theDir = new File(data);
             // if the directory does not exist, create it
             if (!theDir.exists()) {
@@ -627,7 +629,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 this.monitors[k].printCanvas(data);
             }
             
-            LogEntry entry = new LogEntry("Occupancy online monitoring histograms for run number " + this.runNumber, "TLOG");     // change to HBLOG
+            LogEntry entry = new LogEntry("Occupancy online monitoring histograms for run number " + this.runNumber, "HBLOG");     // change to HBLOG
             
             System.out.println("Starting to upload the occupancy plots");
             
@@ -902,7 +904,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     public void printHistosToFile() {
         DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
-        String data = System.getProperty("user.dir") + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
+        String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
         File theDir = new File(data);
         // if the directory does not exist, create it
         if (!theDir.exists()) {
