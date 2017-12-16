@@ -75,7 +75,7 @@ public class FCUPmonitor extends DetectorMonitor {
                 int fcg  = bank.getByte("fcg", loop);
 
                 this.getDataGroup().getItem(0,0,0).getH1F("fcup").fill(fc);
-                this.getDataGroup().getItem(0,0,0).getH1F("fcup_gated").fill(fc);
+                this.getDataGroup().getItem(0,0,0).getH1F("fcup_gated").fill(fcg);
                 
                 this.getDetectorSummary().getH1F("summary").fill(fc);
             }
