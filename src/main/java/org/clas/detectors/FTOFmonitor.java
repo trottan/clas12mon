@@ -19,7 +19,7 @@ public class FTOFmonitor  extends DetectorMonitor {
     public FTOFmonitor(String name) {
         super(name);
         
-        this.setDetectorTabNames("ADC Occupancies", "TDC Occupancies","ADC Histograms", "TDC Histograms","GMEAN");
+        this.setDetectorTabNames("ADC Occupancies", "TDC Occupancies","ADC Histograms", "FADC timing", "TDC Histograms","GMEAN");
         this.useSectorButtons(true);
         this.init(false);   // set to true for picture on left side
         ftofHits[0] = new FTOFHits("PANEL1A");
@@ -40,6 +40,9 @@ public class FTOFmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC Histograms").divide(2, 3);
         this.getDetectorCanvas().getCanvas("ADC Histograms").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC Histograms").setGridY(false);
+        this.getDetectorCanvas().getCanvas("FADC timing").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("FADC timing").setGridX(false);
+        this.getDetectorCanvas().getCanvas("FADC timing").setGridY(false);
         this.getDetectorCanvas().getCanvas("TDC Histograms").divide(2, 3);
         this.getDetectorCanvas().getCanvas("TDC Histograms").setGridX(false);
         this.getDetectorCanvas().getCanvas("TDC Histograms").setGridY(false);
@@ -83,29 +86,34 @@ public class FTOFmonitor  extends DetectorMonitor {
         
         for(int sec=1; sec < 7; sec++) {
         for(int lay=0; lay < 3; lay++) {
-            DataGroup dg = new DataGroup(2,2);
+            DataGroup dg = new DataGroup(2,3);
         	for(int ord=0; ord < 2; ord++) {
             H2F datADC = new H2F("datADC"+sec+lay+ord, "sec/lay/ord "+sec+lay+ord+" ADC", 100, 0., 4000., npaddles[lay], 1, npaddles[lay]+1);
             datADC.setTitleY(stacks[lay] + " " + views[ord] + " PMTS");
             datADC.setTitleX("ADC Channel");
             datADC.setTitle("Sector "+sec);
+            H2F timeFADC = new H2F("timeFADC"+sec+lay+ord, "sec/lay/ord "+sec+lay+ord+" FADC", 80, 0., 400., npaddles[lay], 1, npaddles[lay]+1);
+            timeFADC.setTitleY(stacks[lay] + " " + views[ord] + " PMTS");
+            timeFADC.setTitleX("FADC timing");
+            timeFADC.setTitle("Sector "+sec);
             H2F datTDC = new H2F("datTDC"+sec+lay+ord, "sec/lay/ord "+sec+lay+ord+" TDC", 100, 450., 850., npaddles[lay], 1, npaddles[lay]+1);
             datTDC.setTitleY(stacks[lay] + " " + views[ord] + " PMTS");
             datTDC.setTitleX("TDC Channel");
             datTDC.setTitle("Sector "+sec);
             dg.addDataSet(datADC, 0);
-            dg.addDataSet(datTDC, 1);
+            dg.addDataSet(timeFADC, 1);
+            dg.addDataSet(datTDC, 2);
         }
             H2F GMEAN = new H2F("GMEAN"+sec+lay, "sec/lay"+sec+lay+" GMEAN", 100, 0., 6000.,this.npaddles[lay], 1, npaddles[lay]+1 );
             GMEAN.setTitleY(stacks[lay] +" PMTS");
             GMEAN.setTitleX("GMEAN");
             GMEAN.setTitle("Sector "+sec);
-            dg.addDataSet(GMEAN, 2);
+            dg.addDataSet(GMEAN, 3);
             H2F TDIF = new H2F("TDIF"+sec+lay, "sec/lay"+sec+lay+" TDIF", 100, -40., 40.,this.npaddles[lay], 1, npaddles[lay]+1 );
             TDIF.setTitleY(stacks[lay] +" PMTS");
             TDIF.setTitleX("TLeft-TRight");
             TDIF.setTitle("Sector "+sec);
-            dg.addDataSet(TDIF, 3);
+            dg.addDataSet(TDIF, 4);
             this.getDataGroup().add(dg,sec,lay,0);
         }
         }
@@ -162,6 +170,9 @@ public class FTOFmonitor  extends DetectorMonitor {
                    this.getDetectorCanvas().getCanvas("ADC Histograms").cd(lay*2+ord);
                    this.getDetectorCanvas().getCanvas("ADC Histograms").getPad(lay*2+ord).getAxisZ().setLog(getLogZ());
                    this.getDetectorCanvas().getCanvas("ADC Histograms").draw(this.getDataGroup().getItem(sec,lay,0).getH2F("datADC"+sec+lay+ord));
+                   this.getDetectorCanvas().getCanvas("FADC timing").cd(lay*2+ord);
+                   this.getDetectorCanvas().getCanvas("FADC timing").getPad(lay*2+ord).getAxisZ().setLog(getLogZ());
+                   this.getDetectorCanvas().getCanvas("FADC timing").draw(this.getDataGroup().getItem(sec,lay,0).getH2F("timeFADC"+sec+lay+ord));
                    this.getDetectorCanvas().getCanvas("TDC Histograms").cd(lay*2+ord);
                    this.getDetectorCanvas().getCanvas("TDC Histograms").getPad(lay*2+ord).getAxisZ().setLog(getLogZ());
                    this.getDetectorCanvas().getCanvas("TDC Histograms").draw(this.getDataGroup().getItem(sec,lay,0).getH2F("datTDC"+sec+lay+ord));
@@ -212,6 +223,7 @@ public class FTOFmonitor  extends DetectorMonitor {
                 if(ADC>0 && isGoodECALTrigger(sector)) {
                 	  this.getDataGroup().getItem(0,lay,0).getH2F("occADC"+lay+ord).fill(sector*1.0,paddle*1.0);
                 	  this.getDataGroup().getItem(sector,lay,0).getH2F("datADC"+sector+lay+ord).fill(ADC,paddle*1.0);
+                          this.getDataGroup().getItem(sector,lay,0).getH2F("timeFADC"+sector+lay+ord).fill(time,paddle*1.0);
                 	  if(layer == 1) this.getDetectorSummary().getH2F("sum_p1").fill(sector-0.25, order*1.0);
                           if(layer == 2) this.getDetectorSummary().getH2F("sum_p1").fill(sector+0.25, order*1.0); 
                           this.getDetectorSummary().getH2F("sum_p2").fill(sector*1.0, order*1.0); 

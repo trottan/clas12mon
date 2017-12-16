@@ -18,7 +18,7 @@ public class ECmonitor  extends DetectorMonitor {
     public ECmonitor(String name) {
         super(name);
 
-        this.setDetectorTabNames("ADC Occupancies","TDC Occupancies", "ADC Histograms", "TDC Histograms", "ADC sum");
+        this.setDetectorTabNames("ADC Occupancies","TDC Occupancies", "ADC Histograms", "FADC timing", "TDC Histograms", "ADC sum");
         this.useSectorButtons(true);
         this.init(false);
     }
@@ -36,6 +36,9 @@ public class ECmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC Histograms").divide(3, 3);
         this.getDetectorCanvas().getCanvas("ADC Histograms").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC Histograms").setGridY(false);
+        this.getDetectorCanvas().getCanvas("FADC timing").divide(3, 3);
+        this.getDetectorCanvas().getCanvas("FADC timing").setGridX(false);
+        this.getDetectorCanvas().getCanvas("FADC timing").setGridY(false);
         this.getDetectorCanvas().getCanvas("TDC Histograms").divide(3, 3);
         this.getDetectorCanvas().getCanvas("TDC Histograms").setGridX(false);
         this.getDetectorCanvas().getCanvas("TDC Histograms").setGridY(false);
@@ -89,13 +92,18 @@ public class ECmonitor  extends DetectorMonitor {
             datADC.setTitleY(stacks[stack-1] + " " + views[view-1] + " strip");
             datADC.setTitleX("ADC Channel");
             datADC.setTitle("Sector "+sector);
+            H2F timeFADC = new H2F("timeFADC"+layer+sector, "lay/sec " + layer + sector+" FADC", 80, 0., 400., this.npaddles[layer-1], 1, npaddles[layer-1]+1);
+            timeFADC.setTitleY(stacks[stack-1] + " " + views[view-1] + " strip");
+            timeFADC.setTitleX("FADC timing");
+            datADC.setTitle("Sector "+sector);
             H2F datTDC = new H2F("datTDC"+layer+sector, "lay/sec " + layer + sector+" TDC", 100, 450., 850., this.npaddles[layer-1], 1, npaddles[layer-1]+1);
             datTDC.setTitleY(stacks[stack-1] + " " + views[view-1] + " strip");
             datTDC.setTitleX("TDC Channel");
             datTDC.setTitle("Sector "+sector);
-            DataGroup dg = new DataGroup(2,2);
+            DataGroup dg = new DataGroup(2,3);
             dg.addDataSet(datADC, 0);
-            dg.addDataSet(datTDC, 0);
+            dg.addDataSet(timeFADC, 1);
+            dg.addDataSet(datTDC, 2);
             this.getDataGroup().add(dg,sector,layer,0);
         }
             DataGroup dg = new DataGroup(1,1);      
@@ -130,6 +138,9 @@ public class ECmonitor  extends DetectorMonitor {
                    this.getDetectorCanvas().getCanvas("ADC Histograms").cd((layer-1)+0);
                    this.getDetectorCanvas().getCanvas("ADC Histograms").getPad((layer-1)).getAxisZ().setLog(getLogZ());
                    this.getDetectorCanvas().getCanvas("ADC Histograms").draw(this.getDataGroup().getItem(sector,layer,0).getH2F("datADC"+layer+sector));
+                   this.getDetectorCanvas().getCanvas("FADC timing").cd((layer-1)+0);
+                   this.getDetectorCanvas().getCanvas("FADC timing").getPad((layer-1)).getAxisZ().setLog(getLogZ());
+                   this.getDetectorCanvas().getCanvas("FADC timing").draw(this.getDataGroup().getItem(sector,layer,0).getH2F("timeFADC"+layer+sector));
                    this.getDetectorCanvas().getCanvas("TDC Histograms").cd((layer-1)+0);
                    this.getDetectorCanvas().getCanvas("TDC Histograms").getPad((layer-1)).getAxisZ().setLog(getLogZ());
                    this.getDetectorCanvas().getCanvas("TDC Histograms").draw(this.getDataGroup().getItem(sector,layer,0).getH2F("datTDC"+layer+sector));
@@ -166,6 +177,7 @@ public class ECmonitor  extends DetectorMonitor {
                 if(adc>0 && time>=0  && isGoodECALTrigger(sector)) {
                   	this.getDataGroup().getItem(0,layer,0).getH2F("occADC"+layer).fill(sector*1.0, comp*1.0);
                   	this.getDataGroup().getItem(sector,layer,0).getH2F("datADC"+layer+sector).fill(adc,comp*1.0);
+                        if(time > 1) this.getDataGroup().getItem(sector,layer,0).getH2F("timeFADC"+layer+sector).fill(time,comp*1.0);
                 }
                 if (layer<4) pcsum[sector-1]+=adc; //raw ADC sum in PCAL
                 if (layer>3) ecsum[sector-1]+=adc; //raw ADC sum in EC

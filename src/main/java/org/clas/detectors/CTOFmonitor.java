@@ -48,6 +48,12 @@ public class CTOFmonitor  extends DetectorMonitor {
         H2F adcR = new H2F("adcR", "adcR", 50, 0, 5000, 48, 0.5, 48.5);
         adcR.setTitleX("ADC Downstream - amplitude");
         adcR.setTitleY("PMT Downstream");   
+        H2F fadcL_time = new H2F("fadcL_time", "fadcL_time", 80, 0, 400, 48, 0.5, 48.5);
+        fadcL_time.setTitleX("FADC Upstream - timing");
+        fadcL_time.setTitleY("PMT Upstream");
+        H2F fadcR_time = new H2F("fadcR_time", "fadcR_time", 80, 0, 400, 48, 0.5, 48.5);
+        fadcR_time.setTitleX("FADC Downstream - timing");
+        fadcR_time.setTitleY("PMT Downstream");  
         H1F occTDCL = new H1F("occTDCL", "occTDCL", 48, 0.5, 48.5);
         occTDCL.setTitleX("PMT Upstream");
         occTDCL.setTitleY("Counts");
@@ -62,22 +68,25 @@ public class CTOFmonitor  extends DetectorMonitor {
         H2F tdcR = new H2F("tdcR", "tdcR", 50, 0, 50000, 48, 0.5, 48.5);
         tdcR.setTitleX("TDC Downstream - amplitude");
         tdcR.setTitleY("PMT Downstream"); 
-        DataGroup dg = new DataGroup(2,4);
+        
+        DataGroup dg = new DataGroup(2,5);
         dg.addDataSet(occADCL, 0);
         dg.addDataSet(occADCR, 1);
         dg.addDataSet(adcL, 2);
         dg.addDataSet(adcR, 3);
-        dg.addDataSet(occTDCL, 4);
-        dg.addDataSet(occTDCR, 5);
-        dg.addDataSet(tdcL, 6);
-        dg.addDataSet(tdcR, 7);
+        dg.addDataSet(fadcL_time, 4);
+        dg.addDataSet(fadcR_time, 5);
+        dg.addDataSet(occTDCL, 6);
+        dg.addDataSet(occTDCR, 7);
+        dg.addDataSet(tdcL, 8);
+        dg.addDataSet(tdcR, 9);
         this.getDataGroup().add(dg,0,0,0);
     }
         
     @Override
     public void plotHistos() {        
         // plotting histos
-        this.getDetectorCanvas().getCanvas("ADC Occupancies").divide(2, 2);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").divide(2, 3);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").setGridY(false);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").divide(2, 2);
@@ -93,6 +102,12 @@ public class CTOFmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(3);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcR"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(4);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(4).getAxisZ().setLog(getLogZ());
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadcL_time"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(5);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(5).getAxisZ().setLog(getLogZ());
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").update();
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(0);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occTDCL"));
@@ -132,10 +147,12 @@ public class CTOFmonitor  extends DetectorMonitor {
                     if(order==0) {
                         this.getDataGroup().getItem(0,0,0).getH1F("occADCL").fill(comp*1.0);
                         this.getDataGroup().getItem(0,0,0).getH2F("adcL").fill(adc*1.0,comp*1.0);
+                        if(time > 1) this.getDataGroup().getItem(0,0,0).getH2F("fadcL_time").fill(time*1.0,comp*1.0);
                     }
                     else if(order==1) {
                         this.getDataGroup().getItem(0,0,0).getH1F("occADCR").fill(comp*1.0);
                         this.getDataGroup().getItem(0,0,0).getH2F("adcR").fill(adc*1.0,comp*1.0);
+                        if(time > 1) this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time").fill(time*1.0,comp*1.0);
                     }
                     
                     this.getDetectorSummary().getH1F("summary").fill((order*48+comp)*1.0); 

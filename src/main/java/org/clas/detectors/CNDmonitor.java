@@ -43,13 +43,21 @@ public class CNDmonitor  extends DetectorMonitor {
         
         H2F adcL = new H2F("adcL", "adcL", 50, 0, 5000, 72, 0.5, 72.5);
         adcL.setTitleX("ADC left - amplitude");
-        adcL.setTitleY("PMT left (all layers combined)");
+        adcL.setTitleY("PMT left (lay. comb.)");
         //adcL.setTitle("Left ADC amplitude distribution");
         
         H2F adcR = new H2F("adcR", "adcR", 50, 0, 5000, 72, 0.5, 72.5);
         adcR.setTitleX("ADC right - amplitude");
-        adcR.setTitleY("PMT right (all layers combined)"); 
+        adcR.setTitleY("PMT right (lay. comb.)"); 
         //adcR.setTitle("Right ADC amplitude distribution");
+        
+        H2F fadcL_time = new H2F("fadcL_time", "adcL_time", 80, 0, 400, 72, 0.5, 72.5);
+        fadcL_time.setTitleX("FADC left time");
+        fadcL_time.setTitleY("PMT left (lay. comb.)");
+        
+        H2F fadcR_time = new H2F("fadcR_time", "fadcR_time", 80, 0, 400, 72, 0.5, 72.5);
+        fadcR_time.setTitleX("FADC right time");
+        fadcR_time.setTitleY("PMT right (lay. comb.)"); 
             
         H2F occTDCL = new H2F("occTDC_left", "Occupancy TDC left vs layer", 24, 1, 25, 3, 0.5, 3.5);
         occTDCL.setTitleX("PMT left");
@@ -71,15 +79,17 @@ public class CNDmonitor  extends DetectorMonitor {
         tdcR.setTitleY("PMT right (all layers combined)");
         //tdcR.setTitle("Right TDC amplitude distribution");
         
-        DataGroup dg = new DataGroup(2,4);
+        DataGroup dg = new DataGroup(2,5);
         dg.addDataSet(occADCL, 0);
         dg.addDataSet(occADCR, 1);
         dg.addDataSet(adcL, 2);
         dg.addDataSet(adcR, 3);
-        dg.addDataSet(occTDCL, 4);
-        dg.addDataSet(occTDCR, 5);
-        dg.addDataSet(tdcL, 6);
-        dg.addDataSet(tdcR, 7);
+        dg.addDataSet(fadcL_time, 4);
+        dg.addDataSet(fadcR_time, 5);
+        dg.addDataSet(occTDCL, 6);
+        dg.addDataSet(occTDCR, 7);
+        dg.addDataSet(tdcL, 8);
+        dg.addDataSet(tdcR, 9);
         this.getDataGroup().add(dg, 0, 0, 0);
       
     }
@@ -87,7 +97,7 @@ public class CNDmonitor  extends DetectorMonitor {
     @Override
     public void plotHistos() {        
         // plotting histos
-        this.getDetectorCanvas().getCanvas("ADC Occupancies").divide(2,2);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").divide(2,3);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").setGridY(false);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").divide(2,2);
@@ -106,6 +116,12 @@ public class CNDmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(3);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcR"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(4);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(4).getAxisZ().setLog(getLogZ());
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadcL_time"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(5);
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(5).getAxisZ().setLog(getLogZ());
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").update();
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(0);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").getPad(0).getAxisZ().setLog(getLogZ());
@@ -149,10 +165,12 @@ public class CNDmonitor  extends DetectorMonitor {
                     if(order==0) {
                         this.getDataGroup().getItem(0,0,0).getH2F("occADC_left").fill(sector,layer);
                         this.getDataGroup().getItem(0,0,0).getH2F("adcL").fill(adc*1.0,((sector-1)*3 + layer)*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH2F("fadcL_time").fill(time*1.0,((sector-1)*3 + layer)*1.0);
                     }
                     else if(order==1) {
                         this.getDataGroup().getItem(0,0,0).getH2F("occADC_right").fill(sector,layer);
                         this.getDataGroup().getItem(0,0,0).getH2F("adcR").fill(adc*1.0,((sector-1)*3 + layer)*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time").fill(time*1.0,((sector-1)*3 + layer)*1.0);
                     }
                    
                     this.getDetectorSummary().getH1F("summary").fill((sector-1)*3+layer);

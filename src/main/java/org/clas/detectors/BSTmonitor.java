@@ -90,7 +90,7 @@ public class BSTmonitor extends DetectorMonitor {
         occ_reg3l21d.setTitleY("hits");
         occ_reg3l21d.setTitle("region 3 - top layer");
         
-        H1F multi = new H1F("multi", "multi", 100, -0.5, 99.5);
+        H1F multi = new H1F("multi", "multi", 200, -0.5, 199.5);
         multi.setTitleX("hit multiplicity");
         multi.setTitleY("counts");
         multi.setTitle("Multiplicity of BST channels");

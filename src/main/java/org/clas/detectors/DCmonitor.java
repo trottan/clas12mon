@@ -23,7 +23,7 @@ public class DCmonitor extends DetectorMonitor {
 
     public DCmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("Raw Occupancies","Normalized Occupancies", "TDC raw spectra", "Hit Multiplicity");
+        this.setDetectorTabNames("Raw Occupancies","Normalized Occupancies", "Region Occupancies", "TDC raw spectra", "Hit Multiplicity");
         this.init(false);
     }
 
@@ -52,6 +52,11 @@ public class DCmonitor extends DetectorMonitor {
             occ.setTitleY("layer");
             occ.setTitle("sector "+sector);
             
+            H1F reg_occ = new H1F("reg_occ_sec" + sector, "Sector " + sector + " region Occupancy", 3, 0.5, 3.5);
+            reg_occ.setTitleX("region");
+            reg_occ.setTitleY("counts");
+            reg_occ.setTitle("sector "+sector);
+            
             H2F tdc_raw = new H2F("tdc_raw" + sector, "Sector " + sector + " TDC raw distribution", 1025, 0, 2050, 36, 0.5, 36.5);
             tdc_raw.setTitleX("tdc raw");
             tdc_raw.setTitleY("layer");
@@ -62,11 +67,12 @@ public class DCmonitor extends DetectorMonitor {
             mult.setTitleY("counts");
             mult.setTitle("multiplicity sector " + sector);
             
-            DataGroup dg = new DataGroup(4,1);
+            DataGroup dg = new DataGroup(5,1);
             dg.addDataSet(raw, 0);
             dg.addDataSet(occ, 1);
-            dg.addDataSet(tdc_raw, 2);
-            dg.addDataSet(mult, 3);
+            dg.addDataSet(reg_occ, 2);
+            dg.addDataSet(tdc_raw, 3);
+            dg.addDataSet(mult, 4);
             this.getDataGroup().add(dg, sector,0,0);
         }
         
@@ -125,6 +131,9 @@ public class DCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Raw Occupancies").divide(2, 3);
         this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridY(false);
+        this.getDetectorCanvas().getCanvas("Region Occupancies").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("Region Occupancies").setGridX(false);
+        this.getDetectorCanvas().getCanvas("Region Occupancies").setGridY(false);
         this.getDetectorCanvas().getCanvas("TDC raw spectra").divide(2, 3);
         this.getDetectorCanvas().getCanvas("TDC raw spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("TDC raw spectra").setGridY(false);
@@ -133,13 +142,15 @@ public class DCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridY(false);
         
         for(int sector=1; sector <=6; sector++) {
-            this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setRange(0.01, 10.);
-            this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
+            //this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setRange(0.01, 10.);
+            //this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("occ_sec"+sector));
             this.getDetectorCanvas().getCanvas("Raw Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("Raw Occupancies").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Raw Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector));
+            this.getDetectorCanvas().getCanvas("Region Occupancies").cd(sector-1);
+            this.getDetectorCanvas().getCanvas("Region Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector));
             this.getDetectorCanvas().getCanvas("TDC raw spectra").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("TDC raw spectra").cd(sector-1);
             this.getDetectorCanvas().getCanvas("TDC raw spectra").draw(this.getDataGroup().getItem(sector,0,0).getH2F("tdc_raw" + sector));
@@ -151,6 +162,7 @@ public class DCmonitor extends DetectorMonitor {
         
         this.getDetectorCanvas().getCanvas("Normalized Occupancies").update();
         this.getDetectorCanvas().getCanvas("Raw Occupancies").update();
+        this.getDetectorCanvas().getCanvas("Region Occupancies").update();
         this.getDetectorCanvas().getCanvas("TDC raw spectra").update();
         this.getDetectorCanvas().getCanvas("Hit Multiplicity").update();
         
@@ -185,6 +197,11 @@ public class DCmonitor extends DetectorMonitor {
                 int     order = bank.getByte("order",i); 
                 
                 this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector).fill(wire*1.0,layer*1.0);
+                
+                if(layer <= 12) this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector).fill(1);
+                if(layer > 12 && layer <= 24) this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector).fill(2);
+                if(layer > 24) this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector).fill(3);
+                
                 this.getDataGroup().getItem(sector,0,0).getH2F("tdc_raw"+sector).fill(TDC,layer*1.0);
 
                 if(sector == 1 && sec1_check == 0){
@@ -214,7 +231,9 @@ public class DCmonitor extends DetectorMonitor {
                 
                 if(TDC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
             }
-       }       
+
+            
+       }   
     }
 
     @Override
@@ -228,6 +247,14 @@ public class DCmonitor extends DetectorMonitor {
                 }
             }
         }
+        /*
+        if(this.getNumberOfEvents()>0) {
+            for(int sector=1; sector <=6; sector++) {
+                this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector).normalize(this.getNumberOfEvents());
+            }
+        }
+       */
+        
     }
 
 }

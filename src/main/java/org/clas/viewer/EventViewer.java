@@ -507,7 +507,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 this.monitors[k].printCanvas(data);
             }
             
-            LogEntry entry = new LogEntry("All online monitoring histograms for run number " + this.runNumber, "HBLOG");  // change to HBLOG
+            LogEntry entry = new LogEntry("All online monitoring histograms", "HBLOG");  // for run number " + this.runNumber, "HBLOG");
             
             System.out.println("Starting to upload all monitoring plots");
             
@@ -526,22 +526,24 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/BST_canvas1.png", "BST occupancies 1D");
               entry.addAttachment(data+"/BST_canvas2.png", "BST multiplicity"); 
               System.out.println("BST plots uploaded");
-              entry.addAttachment(data+"/CND_canvas0.png", "CND ADC occupancies");
-              entry.addAttachment(data+"/CND_canvas1.png", "CND TDC occupancies");
+              entry.addAttachment(data+"/CND_canvas0.png", "CND ADC occupancies and spectra");
+              entry.addAttachment(data+"/CND_canvas1.png", "CND TDC occupancies and spectra");
               System.out.println("CND plots uploaded");
-              entry.addAttachment(data+"/CTOF_canvas0.png", "CTOF ADC occupancies");
-              entry.addAttachment(data+"/CTOF_canvas1.png", "CTOF TDC occupancies");
+              entry.addAttachment(data+"/CTOF_canvas0.png", "CTOF ADC occupancies and spectra");
+              entry.addAttachment(data+"/CTOF_canvas1.png", "CTOF TDC occupancies and spectra");
               System.out.println("CTOF plots uploaded");
               entry.addAttachment(data+"/DC_canvas0.png", "DC occupancies raw");
               entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized");
-              entry.addAttachment(data+"/DC_canvas2.png", "DC TDC raw value distribution");
-              entry.addAttachment(data+"/DC_canvas3.png", "DC hit multiplicity");
+              entry.addAttachment(data+"/DC_canvas2.png", "DC region occupancies");
+              entry.addAttachment(data+"/DC_canvas3.png", "DC TDC raw value distribution");
+              entry.addAttachment(data+"/DC_canvas4.png", "DC hit multiplicity");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1.png", "ECAL TDC occupancies");
               entry.addAttachment(data+"/ECAL_canvas2.png", "ECAL ADC histograms");
-              entry.addAttachment(data+"/ECAL_canvas3.png", "ECAL TDC histograms");
-              entry.addAttachment(data+"/ECAL_canvas4.png", "ECAL ADC sum");
+              entry.addAttachment(data+"/ECAL_canvas3.png", "ECAL FADC timing");
+              entry.addAttachment(data+"/ECAL_canvas4.png", "ECAL TDC histograms");
+              entry.addAttachment(data+"/ECAL_canvas5.png", "ECAL ADC sum");
               System.out.println("ECAL plots uploaded");
               entry.addAttachment(data+"/Faraday Cup_canvas0.png", "Faraday Cup");
               System.out.println("Farady Cup plots uploaded");
@@ -558,8 +560,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/FTOF_canvas0.png", "FTOF ADC occupancies");
               entry.addAttachment(data+"/FTOF_canvas1.png", "FTOF TDC occupancies");
               entry.addAttachment(data+"/FTOF_canvas2.png", "FTOF ADC histograms");
-              entry.addAttachment(data+"/FTOF_canvas3.png", "FTOF TDC histograms");
-              entry.addAttachment(data+"/FTOF_canvas4.png", "FTOF GMEAN");
+              entry.addAttachment(data+"/FTOF_canvas3.png", "FTOF FADC timing");
+              entry.addAttachment(data+"/FTOF_canvas4.png", "FTOF TDC histograms");
+              entry.addAttachment(data+"/FTOF_canvas5.png", "FTOF GMEAN");
               System.out.println("FTOF plots uploaded");
               entry.addAttachment(data+"/FTTRK_canvas0.png", "FTTRK occupancies 2D");
               entry.addAttachment(data+"/FTTRK_canvas1.png", "FTTRK occupancies 1D");
@@ -570,10 +573,12 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("Helicity plot uploaded");
               entry.addAttachment(data+"/HTCC_canvas0.png", "HTCC occupancies");
               entry.addAttachment(data+"/HTCC_canvas1.png", "HTCC ADC spectra");
-              entry.addAttachment(data+"/HTCC_canvas2.png", "HTCC timing spectra");
+              entry.addAttachment(data+"/HTCC_canvas2.png", "HTCC FADC timing spectra");
+              //entry.addAttachment(data+"/HTCC_canvas3.png", "HTCC TDC spectra");
               System.out.println("HTCC plots uploaded");
-              entry.addAttachment(data+"/LTCC_canvas0.png", "LTCC occupancies");
-              entry.addAttachment(data+"/LTCC_canvas1.png", "LTCC occupancies normalized");
+              entry.addAttachment(data+"/LTCC_canvas0.png", "LTCC ADC occupancies and spectra");
+              entry.addAttachment(data+"/LTCC_canvas1.png", "LTCC FADC timing");
+              //entry.addAttachment(data+"/LTCC_canvas2.png", "LTCC TDC occupancies and spectra");
               System.out.println("LTTC plots uploaded");
               entry.addAttachment(data+"/RECON_canvas0.png", "RECON CVT cosmic");
               entry.addAttachment(data+"/RECON_canvas1.png", "RECON CVT positive tracks");
@@ -629,7 +634,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 this.monitors[k].printCanvas(data);
             }
             
-            LogEntry entry = new LogEntry("Occupancy online monitoring histograms for run number " + this.runNumber, "HBLOG");     // change to HBLOG
+            LogEntry entry = new LogEntry("Occupancy online monitoring histograms", "HBLOG");    // for run number " + this.runNumber, "HBLOG");
             
             System.out.println("Starting to upload the occupancy plots");
             
@@ -645,14 +650,15 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/BST_canvas0.png", "BST occupancies 2D");
               entry.addAttachment(data+"/BST_canvas1.png", "BST occupancies 1D"); 
               System.out.println("BST plots uploaded");
-              entry.addAttachment(data+"/CND_canvas0.png", "CND ADC occupancies");
-              entry.addAttachment(data+"/CND_canvas1.png", "CND TDC occupancies");
+              entry.addAttachment(data+"/CND_canvas0.png", "CND ADC occupancies and spectra");
+              entry.addAttachment(data+"/CND_canvas1.png", "CND TDC occupancies and spectra");
               System.out.println("CND plots uploaded");
-              entry.addAttachment(data+"/CTOF_canvas0.png", "CTOF ADC occupancies");
-              entry.addAttachment(data+"/CTOF_canvas1.png", "CTOF TDC occupancies");
+              entry.addAttachment(data+"/CTOF_canvas0.png", "CTOF ADC occupancies and spectra");
+              entry.addAttachment(data+"/CTOF_canvas1.png", "CTOF TDC occupancies and spectra");
               System.out.println("CTOF plots uploaded");
               entry.addAttachment(data+"/DC_canvas0.png", "DC occupancies raw");
               entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized");
+              entry.addAttachment(data+"/DC_canvas2.png", "DC region occupancies");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1.png", "ECAL TDC occupancies");
@@ -672,8 +678,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("FTTRK plots uploaded");
               entry.addAttachment(data+"/HTCC_canvas0.png", "HTCC occupancies");
               System.out.println("HTCC plot uploaded");
-              entry.addAttachment(data+"/LTCC_canvas0.png", "LTCC occupancies");
-              entry.addAttachment(data+"/LTCC_canvas1.png", "LTCC occupancies normalized");
+              entry.addAttachment(data+"/LTCC_canvas0.png", "LTCC occupancies and spectra");
               System.out.println("LTCC plots uploaded");
               entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
               System.out.println("RICH plot uploaded");
