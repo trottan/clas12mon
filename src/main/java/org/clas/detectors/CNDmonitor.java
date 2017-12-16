@@ -165,12 +165,12 @@ public class CNDmonitor  extends DetectorMonitor {
                     if(order==0) {
                         this.getDataGroup().getItem(0,0,0).getH2F("occADC_left").fill(sector,layer);
                         this.getDataGroup().getItem(0,0,0).getH2F("adcL").fill(adc*1.0,((sector-1)*3 + layer)*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH2F("fadcL_time").fill(time*1.0,((sector-1)*3 + layer)*1.0);
+                        if(time > 1) this.getDataGroup().getItem(0,0,0).getH2F("fadcL_time").fill(time*1.0,((sector-1)*3 + layer)*1.0);
                     }
                     else if(order==1) {
                         this.getDataGroup().getItem(0,0,0).getH2F("occADC_right").fill(sector,layer);
                         this.getDataGroup().getItem(0,0,0).getH2F("adcR").fill(adc*1.0,((sector-1)*3 + layer)*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time").fill(time*1.0,((sector-1)*3 + layer)*1.0);
+                        if(time > 1)this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time").fill(time*1.0,((sector-1)*3 + layer)*1.0);
                     }
                    
                     this.getDetectorSummary().getH1F("summary").fill((sector-1)*3+layer);

@@ -223,7 +223,7 @@ public class FTOFmonitor  extends DetectorMonitor {
                 if(ADC>0 && isGoodECALTrigger(sector)) {
                 	  this.getDataGroup().getItem(0,lay,0).getH2F("occADC"+lay+ord).fill(sector*1.0,paddle*1.0);
                 	  this.getDataGroup().getItem(sector,lay,0).getH2F("datADC"+sector+lay+ord).fill(ADC,paddle*1.0);
-                          this.getDataGroup().getItem(sector,lay,0).getH2F("timeFADC"+sector+lay+ord).fill(time,paddle*1.0);
+                	  if(time > 1) this.getDataGroup().getItem(sector,lay,0).getH2F("timeFADC"+sector+lay+ord).fill(time,paddle*1.0);
                 	  if(layer == 1) this.getDetectorSummary().getH2F("sum_p1").fill(sector-0.25, order*1.0);
                           if(layer == 2) this.getDetectorSummary().getH2F("sum_p1").fill(sector+0.25, order*1.0); 
                           this.getDetectorSummary().getH2F("sum_p2").fill(sector*1.0, order*1.0); 

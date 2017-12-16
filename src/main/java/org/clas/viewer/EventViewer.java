@@ -507,7 +507,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 this.monitors[k].printCanvas(data);
             }
             
-            LogEntry entry = new LogEntry("All online monitoring histograms", "HBLOG");  // for run number " + this.runNumber, "HBLOG");
+            LogEntry entry = new LogEntry("All online monitoring histograms for run number " + this.runNumber, "HBLOG");
             
             System.out.println("Starting to upload all monitoring plots");
             
@@ -550,7 +550,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/FMT_canvas0.png", "FMT occupancies 2D");
               entry.addAttachment(data+"/FMT_canvas1.png", "FMT Time of Max");
               entry.addAttachment(data+"/FMT_canvas2.png", "FMT occupancies 1D");
-              entry.addAttachment(data+"/FMT_canvas3.png", "FMT Mulriplicity");
+              entry.addAttachment(data+"/FMT_canvas3.png", "FMT Multiplicity");
               System.out.println("FMT plots uploaded");
               entry.addAttachment(data+"/FTCAL_canvas0.png", "FTCAL");
               System.out.println("FTCAL plot uploaded");
@@ -580,24 +580,24 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/LTCC_canvas1.png", "LTCC FADC timing");
               //entry.addAttachment(data+"/LTCC_canvas2.png", "LTCC TDC occupancies and spectra");
               System.out.println("LTTC plots uploaded");
-              entry.addAttachment(data+"/RECON_canvas0.png", "RECON CVT cosmic");
-              entry.addAttachment(data+"/RECON_canvas1.png", "RECON CVT positive tracks");
-              entry.addAttachment(data+"/RECON_canvas2.png", "RECON CVT negative tracks");
-              entry.addAttachment(data+"/RECON_canvas3.png", "RECON DC tracks per event");
-              entry.addAttachment(data+"/RECON_canvas4.png", "RECON DC hits per track");
-              entry.addAttachment(data+"/RECON_canvas5.png", "RECON DC momentum");
-              entry.addAttachment(data+"/RECON_canvas6.png", "RECON DC theta angle");
-              System.out.println("RECON plots uploaded");
+              //entry.addAttachment(data+"/RECON_canvas0.png", "RECON CVT cosmic");
+              //entry.addAttachment(data+"/RECON_canvas1.png", "RECON CVT positive tracks");
+              //entry.addAttachment(data+"/RECON_canvas2.png", "RECON CVT negative tracks");
+              //entry.addAttachment(data+"/RECON_canvas3.png", "RECON DC tracks per event");
+              //entry.addAttachment(data+"/RECON_canvas4.png", "RECON DC hits per track");
+              //entry.addAttachment(data+"/RECON_canvas5.png", "RECON DC momentum");
+              //entry.addAttachment(data+"/RECON_canvas6.png", "RECON DC theta angle");
+              //System.out.println("RECON plots uploaded");
               entry.addAttachment(data+"/RF_canvas0.png", "RF canvas 1");
               entry.addAttachment(data+"/RF_canvas1.png", "RF canvas 2");
               System.out.println("RF plots uploaded");
-              entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
-              System.out.println("RICH plot uploaded");
+              //entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
+              //System.out.println("RICH plot uploaded");
               entry.addAttachment(data+"/Trigger_canvas0.png", "Trigger bits");
-              entry.addAttachment(data+"/Trigger_canvas1.png", "Trigger EC peak");
-              entry.addAttachment(data+"/Trigger_canvas2.png", "Trigger EC cluster");
-              entry.addAttachment(data+"/Trigger_canvas3.png", "Trigger HTCC cluster");
-              entry.addAttachment(data+"/Trigger_canvas4.png", "Trigger FTOF cluster");
+              //entry.addAttachment(data+"/Trigger_canvas1.png", "Trigger EC peak");
+              //entry.addAttachment(data+"/Trigger_canvas2.png", "Trigger EC cluster");
+              //entry.addAttachment(data+"/Trigger_canvas3.png", "Trigger HTCC cluster");
+              //entry.addAttachment(data+"/Trigger_canvas4.png", "Trigger FTOF cluster");
               System.out.println("Trigger plots uploaded");
 
               long lognumber = entry.submitNow();
@@ -634,7 +634,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 this.monitors[k].printCanvas(data);
             }
             
-            LogEntry entry = new LogEntry("Occupancy online monitoring histograms", "HBLOG");    // for run number " + this.runNumber, "HBLOG");
+            LogEntry entry = new LogEntry("Occupancy online monitoring histograms for run number " + this.runNumber, "HBLOG");
             
             System.out.println("Starting to upload the occupancy plots");
             
@@ -680,8 +680,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("HTCC plot uploaded");
               entry.addAttachment(data+"/LTCC_canvas0.png", "LTCC occupancies and spectra");
               System.out.println("LTCC plots uploaded");
-              entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
-              System.out.println("RICH plot uploaded");
+              //entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
+              //System.out.println("RICH plot uploaded");
             
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
