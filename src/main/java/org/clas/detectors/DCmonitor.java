@@ -62,7 +62,7 @@ public class DCmonitor extends DetectorMonitor {
             raw_reg_occ.setTitleY("counts");
             raw_reg_occ.setTitle("sector "+sector);
             
-            H2F tdc_raw = new H2F("tdc_raw" + sector, "Sector " + sector + " TDC raw distribution", 1025, 0, 2050, 36, 0.5, 36.5);
+            H2F tdc_raw = new H2F("tdc_raw" + sector, "Sector " + sector + " TDC raw distribution", 404, 0, 2020, 36, 0.5, 36.5);
             tdc_raw.setTitleX("tdc raw");
             tdc_raw.setTitleY("layer");
             tdc_raw.setTitle("sector "+sector);
@@ -148,7 +148,7 @@ public class DCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridY(false);
         
         for(int sector=1; sector <=6; sector++) {
-            this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setRange(0.01, 10.);
+            this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setRange(0.01, 13.);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("occ_sec"+sector));
