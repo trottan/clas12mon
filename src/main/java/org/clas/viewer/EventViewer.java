@@ -545,8 +545,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/ECAL_canvas4.png", "ECAL TDC histograms");
               entry.addAttachment(data+"/ECAL_canvas5.png", "ECAL ADC sum");
               System.out.println("ECAL plots uploaded");
-              entry.addAttachment(data+"/Faraday Cup_canvas0.png", "Faraday Cup");
-              System.out.println("Farady Cup plots uploaded");
+              //entry.addAttachment(data+"/Faraday Cup_canvas0.png", "Faraday Cup");
+              //System.out.println("Farady Cup plots uploaded");
               entry.addAttachment(data+"/FMT_canvas0.png", "FMT occupancies 2D");
               entry.addAttachment(data+"/FMT_canvas1.png", "FMT Time of Max");
               entry.addAttachment(data+"/FMT_canvas2.png", "FMT occupancies 1D");
@@ -569,8 +569,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/FTTRK_canvas2.png", "FTTRK average time maximum");
               entry.addAttachment(data+"/FTTRK_canvas3.png", "FTTRK ADC and time spectra");
               System.out.println("FTTRK plots uploaded");
-              entry.addAttachment(data+"/HEL_canvas0.png", "Helicity");
-              System.out.println("Helicity plot uploaded");
+              //entry.addAttachment(data+"/HEL_canvas0.png", "Helicity");
+              //System.out.println("Helicity plot uploaded");
               entry.addAttachment(data+"/HTCC_canvas0.png", "HTCC occupancies");
               entry.addAttachment(data+"/HTCC_canvas1.png", "HTCC ADC spectra");
               entry.addAttachment(data+"/HTCC_canvas2.png", "HTCC FADC timing spectra");
@@ -682,6 +682,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("LTCC plots uploaded");
               //entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
               //System.out.println("RICH plot uploaded");
+              entry.addAttachment(data+"/Trigger_canvas0.png", "Trigger bits");
+              System.out.println("Trigger plots uploaded");
             
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
