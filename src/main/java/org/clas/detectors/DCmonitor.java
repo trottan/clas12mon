@@ -54,7 +54,7 @@ public class DCmonitor extends DetectorMonitor {
             
             H1F reg_occ = new H1F("reg_occ_sec" + sector, "Sector " + sector + " region Occupancy", 3, 0.5, 3.5);
             reg_occ.setTitleX("region");
-            reg_occ.setTitleY("counts");
+            reg_occ.setTitleY("occupancy %");
             reg_occ.setTitle("sector "+sector);
             
             H1F raw_reg_occ = new H1F("raw_reg_occ_sec" + sector, "Sector " + sector + " region Occupancy", 3, 0.5, 3.5);
@@ -255,12 +255,17 @@ public class DCmonitor extends DetectorMonitor {
         }
         
         if(this.getNumberOfEvents()>0) {
+        	int entries = 0;
+        	for(int sector=1; sector <=6; sector++) {
+            	H1F raw_check = this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector);
+                entries += raw_check.getEntries();
+             }
             for(int sector=1; sector <=6; sector++) {
             	H1F raw = this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector);
                 H1F ave = this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector);
-                if(raw.getEntries()>0) {
+                if(entries>0) {
                 for(int loop = 0; loop < 3; loop++){
-                    ave.setBinContent(loop, raw.getBinContent(loop)/raw.getEntries());
+                    ave.setBinContent(loop, 100*raw.getBinContent(loop)/entries);
                 }
                 }
              }
