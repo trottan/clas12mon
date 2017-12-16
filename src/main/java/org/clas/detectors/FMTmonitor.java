@@ -77,7 +77,7 @@ public class FMTmonitor extends DetectorMonitor {
 		H2F occupancyHisto = new H2F("Occupancies","Occupancies",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
 		occupancyHisto.setTitleX("strips");
 		occupancyHisto.setTitleY("detector");
-                H1F histmulti = new H1F("multi", "multi", 100, -0.5, 99.5);
+                H1F histmulti = new H1F("multi", "multi", 150, -0.5, 149.5);
                 histmulti.setTitleX("hit multiplicity");
                 histmulti.setTitleY("counts");
                 histmulti.setTitle("Multiplicity of BMT channels"); 
