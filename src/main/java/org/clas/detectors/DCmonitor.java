@@ -181,7 +181,7 @@ public class DCmonitor extends DetectorMonitor {
             resetEventListener();
         }
         
-		if (!testTriggerMask()) return;
+//		if (!testTriggerMask()) return;
                 
         // process event info and save into data group
         if(event.hasBank("DC::tdc")==true){
@@ -265,7 +265,7 @@ public class DCmonitor extends DetectorMonitor {
                 H1F ave = this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector);
                 if(entries>0) {
                 for(int loop = 0; loop < 3; loop++){
-                    ave.setBinContent(loop, 100*raw.getBinContent(loop)/entries);
+                    ave.setBinContent(loop, 100*raw.getBinContent(loop)/this.getNumberOfEvents()/112/12);
                 }
                 }
              }

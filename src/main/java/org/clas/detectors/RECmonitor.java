@@ -328,7 +328,7 @@ public class RECmonitor extends DetectorMonitor {
             int ndf;
             for(int i = 0; i < rows; i++){
                 sector = bankTBTracks.getByte("sector",i);
-                ndf = bankTBTracks.getByte("ndf",i);
+                ndf = bankTBTracks.getShort("ndf",i);
 
                 Vector3 momentum = new Vector3();
 		momentum.setXYZ(bankTBTracks.getFloat("p0_x", i), bankTBTracks.getFloat("p0_y", i),bankTBTracks.getFloat("p0_z", i));

@@ -126,6 +126,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     
     @Override
     public void dataEventAction(DataEvent event) {
+        if (!testTriggerMask()) return;
         this.setNumberOfEvents(this.getNumberOfEvents()+1);
         if (event.getType() == DataEventType.EVENT_START) {
 //            resetEventListener();

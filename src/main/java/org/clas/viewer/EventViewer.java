@@ -809,11 +809,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
             
             for(int k=0; k<this.monitors.length; k++) {
-        	    this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
-        	    this.monitors[k].setTriggerWord(getTriggerWord(hipo));        	    
+                this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
+                this.monitors[k].setTriggerWord(getTriggerWord(hipo));        	    
                 this.monitors[k].dataEventAction(hipo);
             }      
-	    }
+	}
     }
 
     public void loadHistosFromFile(String fileName) {
