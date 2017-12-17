@@ -51,19 +51,19 @@ public class FTCALmonitor  extends DetectorMonitor {
         
         H2F occFADC2D = new H2F("occFADC_2D", "occFADC_2D", 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2, 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2);
         occFADC2D.setTitleX("Crystal -X");
-        occFADC2D.setTitleY("Crystal -Y");
+        occFADC2D.setTitleY("Crystal Y");
         
         H2F pedFADC2D = new H2F("pedFADC_2D", "pedFADC2D", 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2, 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2);
         pedFADC2D.setTitleX("Crystal -X");
-        pedFADC2D.setTitleY("Crystal -Y");
+        pedFADC2D.setTitleY("Crystal Y");
         
         H2F pedFADC2Dtmp1 = new H2F("pedFADC_2Dtmp1", "pedFADC_2Dtmp1", 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2, 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2);
         pedFADC2Dtmp1.setTitleX("Crystal -X");
-        pedFADC2Dtmp1.setTitleY("Crystal -Y");
+        pedFADC2Dtmp1.setTitleY("Crystal Y");
         
         H2F pedFADC2Dtmp2 = new H2F("pedFADC_2Dtmp2", "pedFADC_2Dtmp2", 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2, 22, -crystalWidth*nCrystal/2, crystalWidth*nCrystal/2);
         pedFADC2Dtmp2.setTitleX("Crystal -X");
-        pedFADC2Dtmp2.setTitleY("Crystal -Y");
+        pedFADC2Dtmp2.setTitleY("Crystal Y");
         
         H1F occFADC = new H1F("occFADC", "occFADC", 332, 0.5, 332.5);
         occFADC.setTitleX("Crystal");
@@ -139,9 +139,9 @@ public class FTCALmonitor  extends DetectorMonitor {
              //   System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
               //        " ADC = " + adc + " TIME = " + time); 
                 if(adc>0) {
-                        this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D").fill(-x,-y);
-                        this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp1").fill(-x,-y,ped);
-                        this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp2").fill(-x,-y,ped*ped);
+                        this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D").fill(-x,y);
+                        this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp1").fill(-x,y,ped);
+                        this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp2").fill(-x,y,ped*ped);
                         this.getDataGroup().getItem(0,0,0).getH1F("occFADC").fill(crystals.get(1, 1, comp));
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc").fill(adc*1.0,crystals.get(1, 1, comp));
                         this.getDataGroup().getItem(0,0,0).getH2F("fadc_time").fill(time*1.0,crystals.get(1, 1, comp));

@@ -46,7 +46,7 @@ public class FTHODOmonitor extends DetectorMonitor {
         for (int ilayer = 1; ilayer <= 2; ilayer++) {
             H2F occFADC2D = new H2F("occFADC_2D_l" + ilayer, "occFADC_2D_l" + ilayer, 24, -12 * tileWidth, 12 * tileWidth, 24, -12 * tileWidth, 12 * tileWidth);
             occFADC2D.setTitleX("Tile -X");
-            occFADC2D.setTitleY("Tile -Y");
+            occFADC2D.setTitleY("Tile Y");
             occFADC2D.setTitle("layer " + ilayer);
 
             H1F occFADC = new H1F("occFADC_l" + ilayer, "occFADC_l" + ilayer, 116, 0.5, 116.5);
@@ -128,7 +128,7 @@ public class FTHODOmonitor extends DetectorMonitor {
 //             " ADC = " + adc + " TIME = " + time); 
                 if (adc > 0) {
 
-                    this.fillTile2D(this.getDataGroup().getItem(0, layer, 0).getH2F("occFADC_2D_l" + layer), -x, -y, w);
+                    this.fillTile2D(this.getDataGroup().getItem(0, layer, 0).getH2F("occFADC_2D_l" + layer), -x, y, w);
 
                     this.getDataGroup().getItem(0, layer, 0).getH1F("occFADC_l" + layer).fill(tile);
                     this.getDataGroup().getItem(0, layer, 0).getH2F("fadc_l" + layer).fill(adc * 1.0, tile);
