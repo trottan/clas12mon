@@ -1055,7 +1055,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     private void setDCRange(String actionCommand) {
     
         System.out.println("Set normalized DC occuopancy range maximum");
-        String  DC_scale = (String) JOptionPane.showInputDialog(null, "Set normalized DC occuopancy range maximum to ", " ", JOptionPane.PLAIN_MESSAGE, null, null, "22");
+        String  DC_scale = (String) JOptionPane.showInputDialog(null, "Set normalized DC occuopancy range maximum to ", " ", JOptionPane.PLAIN_MESSAGE, null, null, "15");
         
         if (DC_scale != null) { 
             int DC_scale_max= 0;
