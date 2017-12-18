@@ -261,7 +261,7 @@ public class RECmonitor extends DetectorMonitor {
             resetEventListener();
         }
         
-		if (!testTriggerMask()) return;
+		//if (!testTriggerMask()) return;
         
         // process event info and save into data group
                 

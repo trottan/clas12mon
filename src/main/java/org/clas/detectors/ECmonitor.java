@@ -159,7 +159,7 @@ public class ECmonitor  extends DetectorMonitor {
             resetEventListener();
         }
         
-		if (!testTriggerMask()) return;
+		//if (!testTriggerMask()) return;
 
     	   
         double[] pcsum = new double[6];

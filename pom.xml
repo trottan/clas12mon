@@ -31,7 +31,7 @@
         <url>https://clasweb.jlab.org/clas12maven</url>
       </repository>
     </repositories>
-    <name>KPP-Monitoring</name>
+    <name>clas12mon</name>
 
     
 </project>

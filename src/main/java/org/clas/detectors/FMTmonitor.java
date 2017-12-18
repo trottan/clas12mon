@@ -170,7 +170,7 @@ public class FMTmonitor extends DetectorMonitor {
 		    resetEventListener();
 		}
             	
-        if (!testTriggerMask()) return;
+        //if (!testTriggerMask()) return;
         
 		if (event.hasBank("FMT::adc") == true) {
 			DataBank bank = event.getBank("FMT::adc");

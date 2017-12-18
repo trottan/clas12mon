@@ -129,7 +129,7 @@ public class CTOFmonitor  extends DetectorMonitor {
             resetEventListener();
         }
         
-		if (!testTriggerMask()) return;
+		//if (!testTriggerMask()) return;
                 
         if(event.hasBank("CTOF::adc")==true){
 	    DataBank bank = event.getBank("CTOF::adc");

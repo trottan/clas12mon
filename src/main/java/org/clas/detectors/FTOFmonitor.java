@@ -204,7 +204,7 @@ public class FTOFmonitor  extends DetectorMonitor {
             resetEventListener();
         }
         
-		if (!testTriggerMask()) return;
+		//if (!testTriggerMask()) return;
 	    
 	    clear(0); clear(1); clear(2);
     	

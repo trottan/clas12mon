@@ -157,6 +157,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         menuItem.getAccessibleContext().setAccessibleDescription("Set global z-axis lin scale");
         menuItem.addActionListener(this);
         settings.add(menuItem);
+        menuItem = new JMenuItem("Set DC occupancy scale max");
+        menuItem.getAccessibleContext().setAccessibleDescription("Set DC occupancy scale max");
+        menuItem.addActionListener(this);
+        settings.add(menuItem);
         menuBar.add(settings);
          
         JMenu upload = new JMenu("Upload");
@@ -447,6 +451,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(e.getActionCommand()=="Set global z-axis lin scale") {
            for(int k=0; k<this.monitors.length; k++) {this.monitors[k].setLogZ(false);this.monitors[k].plotHistos();}
         }
+        if(e.getActionCommand()=="Set DC occupancy scale max") {
+           setDCRange(e.getActionCommand());
+        }
+        
+
         if(e.getActionCommand()=="Open histograms file") {
             String fileName = null;
             JFileChooser fc = new JFileChooser();
@@ -533,10 +542,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/CTOF_canvas1.png", "CTOF TDC occupancies and spectra");
               System.out.println("CTOF plots uploaded");
               entry.addAttachment(data+"/DC_canvas0.png", "DC occupancies raw");
-              entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized");
-              entry.addAttachment(data+"/DC_canvas2.png", "DC region occupancies");
-              entry.addAttachment(data+"/DC_canvas3.png", "DC TDC raw value distribution");
-              entry.addAttachment(data+"/DC_canvas4.png", "DC hit multiplicity");
+              entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized logarithmic scale");
+              entry.addAttachment(data+"/DC_canvas2.png", "DC occupancies normalized linear scale");
+              entry.addAttachment(data+"/DC_canvas3.png", "DC region occupancies");
+              entry.addAttachment(data+"/DC_canvas4.png", "DC TDC raw value distribution");
+              entry.addAttachment(data+"/DC_canvas5.png", "DC hit multiplicity");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1.png", "ECAL TDC occupancies");
@@ -657,8 +667,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/CTOF_canvas1.png", "CTOF TDC occupancies and spectra");
               System.out.println("CTOF plots uploaded");
               entry.addAttachment(data+"/DC_canvas0.png", "DC occupancies raw");
-              entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized");
-              entry.addAttachment(data+"/DC_canvas2.png", "DC region occupancies");
+              entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized logarithmic scale");
+              entry.addAttachment(data+"/DC_canvas2.png", "DC occupancies normalized linear scale");
+              entry.addAttachment(data+"/DC_canvas3.png", "DC region occupancies");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1.png", "ECAL TDC occupancies");
@@ -1039,6 +1050,23 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         frame.setSize(1400, 800);
         frame.setVisible(true);
     }
+    
+    
+    private void setDCRange(String actionCommand) {
+    
+        System.out.println("Set normalized DC occuopancy range maximum");
+        String  DC_scale = (String) JOptionPane.showInputDialog(null, "Set normalized DC occuopancy range maximum to ", " ", JOptionPane.PLAIN_MESSAGE, null, null, "22");
+        
+        if (DC_scale != null) { 
+            int DC_scale_max= 0;
+            try {DC_scale_max = Integer.parseInt(DC_scale);} 
+            catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
+            if (DC_scale_max > 0){ this.monitors[4].DC_max_occ = DC_scale_max;} 
+            else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
+        }
+        
+    }
+    
     
 
     private void resetHistograms(String actionCommand) {

@@ -216,7 +216,7 @@ public class BMTmonitor extends DetectorMonitor {
 		    resetEventListener();
 		}
         
-		if (!testTriggerMask()) return;
+		//if (!testTriggerMask()) return;
             
 		if (event.hasBank("BMT::adc") == true) {
 			DataBank bank = event.getBank("BMT::adc");
