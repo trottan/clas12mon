@@ -177,7 +177,7 @@ public class ECmonitor  extends DetectorMonitor {
                 if(adc>0 && time>=0  && isGoodECALTrigger(sector)) {
                   	this.getDataGroup().getItem(0,layer,0).getH2F("occADC"+layer).fill(sector*1.0, comp*1.0);
                   	this.getDataGroup().getItem(sector,layer,0).getH2F("datADC"+layer+sector).fill(adc,comp*1.0);
-                        if(time > 1) this.getDataGroup().getItem(sector,layer,0).getH2F("timeFADC"+layer+sector).fill(time,comp*1.0);
+                    if(time > 1) this.getDataGroup().getItem(sector,layer,0).getH2F("timeFADC"+layer+sector).fill(time,comp*1.0);
                 }
                 if (layer<4) pcsum[sector-1]+=adc; //raw ADC sum in PCAL
                 if (layer>3) ecsum[sector-1]+=adc; //raw ADC sum in EC
@@ -189,8 +189,8 @@ public class ECmonitor  extends DetectorMonitor {
 	    }
     	    }   
         
-    	int bitsec = getECALTriggerSector();
-        if(bitsec>0) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
+    	int bitsec = getECALTriggerSector(); 
+        if(bitsec>0&&bitsec<7) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
                 
         if(event.hasBank("ECAL::tdc")==true){
             DataBank  bank = event.getBank("ECAL::tdc");

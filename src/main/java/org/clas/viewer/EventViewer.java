@@ -348,11 +348,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 public void itemStateChanged(ItemEvent e) {
                 	
                     if(e.getStateChange() == ItemEvent.SELECTED) {
-                        for(int k=0; k<19; k++) {
+                        for(int k=0; k<monitors.length; k++) {
                       	monitors[k].setTriggerMask(bit);
                         }
                     } else {
-                        for(int k=0; k<19; k++) {
+                        for(int k=0; k<monitors.length; k++) {
                      	monitors[k].clearTriggerMask(bit);
                         }
                     };
@@ -703,13 +703,13 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
          
          
          if (e.getActionCommand()=="Default for all"){
-            for (int k=0;k<19;k++){
+            for (int k=0;k<monitors.length;k++){
                 this.monitors[k].eventResetTime_current[k] = this.monitors[k].eventResetTime_default[k];
             }
         }
          
          if (e.getActionCommand()=="Disable histogram reset"){
-            for (int k=0;k<19;k++){
+            for (int k=0;k<monitors.length;k++){
                 this.monitors[k].eventResetTime_current[k] = 0;
             }
         }
@@ -821,7 +821,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             
             for(int k=0; k<this.monitors.length; k++) {
                 this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
-                this.monitors[k].setTriggerWord(getTriggerWord(hipo));        	    
+                this.monitors[k].setTriggerWord(getTriggerWord(hipo));   
                 this.monitors[k].dataEventAction(hipo);
             }      
 	}
