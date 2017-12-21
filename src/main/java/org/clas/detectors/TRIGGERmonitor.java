@@ -14,7 +14,9 @@ import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
 public class TRIGGERmonitor extends DetectorMonitor {
-    
+	
+	String tbit = "Trigger Bits: ECAL.PCAL.HTCC(0)    ECAL.PCAL.HTCC(1-6)    HTCC(7-12)    PCAL(13-18)    ECAL(19-24)   HT.PC(25)   HT.EC(26)   PC.EC(27)   FTOF.PC(28)    1K Pulser(31)";
+	
     public TRIGGERmonitor(String name) {
         super(name);
         this.setDetectorTabNames("Trigger Bits", "EC peak trigger", "EC cluster trigger", "HTCC cluster trigger", "FTOF Cluster trigger");
@@ -37,9 +39,9 @@ public class TRIGGERmonitor extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H1F trig = new H1F("trigger_bits","trigger_bits", 33,-0.5,32.5);
-        trig.setFillColor(4);
-        trig.setTitleX("Trigger Bits: ECAL.PCAL.HTCC(0)    ECAL.PCAL.HTCC(1-6)    HTCC(7-12)    PCAL(13-18)    ECAL(19-24)    1K Pulser(31)");
+        H1F trig = new H1F(tbit,tbit, 32,-0.5,31.5);
+        trig.setFillColor(4);      
+        trig.setTitleX("Trigger Bits");
         trig.setTitleY("Counts");
         
         DataGroup dg = new DataGroup(4,3);
@@ -138,7 +140,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Trigger Bits").setGridX(false);
         this.getDetectorCanvas().getCanvas("Trigger Bits").setGridY(false);
         this.getDetectorCanvas().getCanvas("Trigger Bits").cd(0);
-        this.getDetectorCanvas().getCanvas("Trigger Bits").draw(this.getDataGroup().getItem(0,0,0).getH1F("trigger_bits"));
+        this.getDetectorCanvas().getCanvas("Trigger Bits").draw(this.getDataGroup().getItem(0,0,0).getH1F(tbit));
         this.getDetectorCanvas().getCanvas("Trigger Bits").update();
         
         this.getDetectorCanvas().getCanvas("EC peak trigger").divide(3, 1);
@@ -198,7 +200,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
         
 		//if (!testTriggerMask()) return;
         
-        for (int i=1; i<33; i++) if(isTrigBitSet(i)) this.getDataGroup().getItem(0,0,0).getH1F("trigger_bits").fill(i);
+        for (int i=0; i<32; i++) if(isTrigBitSet(i)) this.getDataGroup().getItem(0,0,0).getH1F(tbit).fill(i);
         
         for(int sec=1; sec<=6; sec++) {
             if (isGoodECALTrigger(sec)) {

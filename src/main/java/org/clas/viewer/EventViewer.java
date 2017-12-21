@@ -334,7 +334,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         		        "HTCC S1","HTCC S2","HTCC S3","HTCC S4","HTCC S5","HTCC S6",
         		        "PCAL S1","PCAL S2","PCAL S3","PCAL S4","PCAL S5","PCAL S6",
         		        "ECAL S1","ECAL S2","ECAL S3","ECAL S4","ECAL S5","ECAL S6",
-        		        "Unused","Unused","Unused","Unused","Unused","Unused",
+        		        "HT.PC","HT.EC","PC.EC","FTOF.PC","Unused","Unused",
         		        "1K Pulser"};
         		             
         JMenu trigBitsBeam = new JMenu("TriggerBits");
