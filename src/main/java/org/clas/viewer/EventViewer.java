@@ -65,21 +65,21 @@ import org.jlab.elog.LogEntry;
 
 public class EventViewer implements IDataEventListener, DetectorListener, ActionListener, ChangeListener {
     
-    List<DetectorPane2D> DetectorPanels   	= new ArrayList<DetectorPane2D>();
-    JTabbedPane tabbedpane           		= null;
-    JPanel mainPanel 				        = null;
+    List<DetectorPane2D> DetectorPanels     = new ArrayList<DetectorPane2D>();
+    JTabbedPane tabbedpane           	    = null;
+    JPanel mainPanel 			    = null;
     JMenuBar menuBar                        = null;
-    DataSourceProcessorPane processorPane 	= null;
+    JTextPane clas12Textinfo                = new JTextPane();
+    DataSourceProcessorPane processorPane   = null;
     EmbeddedCanvasTabbed CLAS12Canvas       = null;
     //EmbeddedCanvasTabbed CLAS12CDCanvas         = null;
     
-    CodaEventDecoder               decoder = new CodaEventDecoder();
     CLASDecoder                clasDecoder = new CLASDecoder();
-    DetectorEventDecoder   detectorDecoder = new DetectorEventDecoder();
            
     private int canvasUpdateTime   = 2000;
     private int analysisUpdateTime = 100;
-    private int runNumber  = 2284;
+    private int runNumber     = 2284;
+    private int ccdbRunNumber = 0;
     
     public String outPath = "/home/clasrun/CLAS12MON";
     
@@ -407,10 +407,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         splitPanel.setRightComponent(CLAS12Canvas);
         JTextPane clas12Text   = new JTextPane();
         clas12Text.setText("CLAS12\n monitoring plots\n V2.0\n");
-        clas12Text.setEditable(false);
-        JTextPane clas12Textinfo  = new JTextPane();
-        clas12Textinfo.setText("\nrun number: "+this.runNumber + "\nmode:" + "\nfile:" + "\n");
-        clas12Textinfo.setEditable(false);
+        clas12Text.setEditable(false);       
+        this.clas12Textinfo.setEditable(false);
         StyledDocument styledDoc = clas12Text.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
@@ -805,21 +803,21 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
 	    if(event!=null ){
             //event.show();
-
-            if (event.getType() == DataEventType.EVENT_START) {
-                this.runNumber = this.getRunNumber(event);
-            }
-            
-            if(this.runNumber != this.getRunNumber(event)) {
-//                this.saveToFile("mon12_histo_run_" + runNumber + ".hipo");
-                this.runNumber = this.getRunNumber(event);
-                resetEventListener();
-            }
             
             if(event instanceof EvioDataEvent){
              	hipo = (HipoDataEvent) clasDecoder.getDataEvent(event);
-                DataBank   header = clasDecoder.createHeaderBank(hipo, 0, 0, (float) 0, (float) 0);
+                DataBank   header = clasDecoder.createHeaderBank(hipo, this.ccdbRunNumber, 0, (float) 0, (float) 0);
+                DataBank  trigger = clasDecoder.createTriggerBank(hipo);
                 hipo.appendBanks(header);
+                hipo.appendBank(trigger);
+                if(this.runNumber != this.getRunNumber(hipo)) {
+//                this.saveToFile("mon12_histo_run_" + runNumber + ".hipo");
+                    this.runNumber = this.getRunNumber(hipo);
+                    System.out.println("Setting run number to: " +this.runNumber);
+                    resetEventListener();
+                    this.clas12Textinfo.setText("\nrun number: "+this.runNumber + "\nmode:" + "\nfile:" + "\n");
+//                    this.clas12Textinfo.updateUI();
+                }
             } 
             else {
                 hipo = (HipoDataEvent) event;    
@@ -1075,14 +1073,21 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     private void setRunNumber(String actionCommand) {
     
-        System.out.println("Set run number");
+        System.out.println("Set run number for CCDB access");
         String  RUN_number = (String) JOptionPane.showInputDialog(null, "Set run number to ", " ", JOptionPane.PLAIN_MESSAGE, null, null, "2284");
         
         if (RUN_number != null) { 
-            int cur_runNumber= 2284;
-            try {cur_runNumber = Integer.parseInt(RUN_number);} 
-            catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-            if (cur_runNumber > 0){ this.runNumber = cur_runNumber;} 
+            int cur_runNumber= this.runNumber;
+            try {
+                cur_runNumber = Integer.parseInt(RUN_number);
+            } 
+            catch (
+                NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");
+            }
+            if (cur_runNumber > 0){ 
+                this.ccdbRunNumber = cur_runNumber;
+                clasDecoder.setRunNumber(cur_runNumber,true);
+            } 
             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
         }
         
