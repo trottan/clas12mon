@@ -79,7 +79,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
            
     private int canvasUpdateTime   = 2000;
     private int analysisUpdateTime = 100;
-    private int runNumber  = 0;
+    private int runNumber  = 2284;
     
     public String outPath = "/home/clasrun/CLAS12MON";
     
@@ -159,6 +159,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         settings.add(menuItem);
         menuItem = new JMenuItem("Set DC occupancy scale max");
         menuItem.getAccessibleContext().setAccessibleDescription("Set DC occupancy scale max");
+        menuItem.addActionListener(this);
+        settings.add(menuItem);
+        menuItem = new JMenuItem("Set run number");
+        menuItem.getAccessibleContext().setAccessibleDescription("Set run number");
         menuItem.addActionListener(this);
         settings.add(menuItem);
         menuBar.add(settings);
@@ -454,7 +458,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(e.getActionCommand()=="Set DC occupancy scale max") {
            setDCRange(e.getActionCommand());
         }
-        
+        if(e.getActionCommand()=="Set run number") {
+           setRunNumber(e.getActionCommand());
+        }
 
         if(e.getActionCommand()=="Open histograms file") {
             String fileName = null;
@@ -1067,7 +1073,20 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
     }
     
+    private void setRunNumber(String actionCommand) {
     
+        System.out.println("Set run number");
+        String  RUN_number = (String) JOptionPane.showInputDialog(null, "Set run number to ", " ", JOptionPane.PLAIN_MESSAGE, null, null, "2284");
+        
+        if (RUN_number != null) { 
+            int cur_runNumber= 2284;
+            try {cur_runNumber = Integer.parseInt(RUN_number);} 
+            catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
+            if (cur_runNumber > 0){ this.runNumber = cur_runNumber;} 
+            else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
+        }
+        
+    }
 
     private void resetHistograms(String actionCommand) {
         
