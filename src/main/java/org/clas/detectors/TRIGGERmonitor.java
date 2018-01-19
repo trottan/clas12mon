@@ -15,7 +15,7 @@ import org.jlab.io.base.DataEvent;
 
 public class TRIGGERmonitor extends DetectorMonitor {
 	
-	String tbit = "Trigger Bits: ECAL.PCAL.HTCC(0)    ECAL.PCAL.HTCC(1-6)    HTCC(7-12)    PCAL(13-18)    ECAL(19-24)   HT.PC(25)   HT.EC(26)   PC.EC(27)   FTOF.PC(28)    1K Pulser(31)";
+	String tbit = "Trigger Bits: ECAL.PCAL.HTCC(0)    ECAL.PCAL.HTCC(1-6)    HTCC(7-12)    PCAL(13-18)    ECAL(19-24)   HT.PC(25)   HT.EC(26)   PC.EC(27)   FTOF.PC(28)  FT100(29)  FT500(30)  1K Pulser(31)";
 	
     public TRIGGERmonitor(String name) {
         super(name);
@@ -140,6 +140,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Trigger Bits").setGridX(false);
         this.getDetectorCanvas().getCanvas("Trigger Bits").setGridY(false);
         this.getDetectorCanvas().getCanvas("Trigger Bits").cd(0);
+        this.getDetectorCanvas().getCanvas("Trigger Bits").getPad().getAxisY().setLog(true);
         this.getDetectorCanvas().getCanvas("Trigger Bits").draw(this.getDataGroup().getItem(0,0,0).getH1F(tbit));
         this.getDetectorCanvas().getCanvas("Trigger Bits").update();
         
