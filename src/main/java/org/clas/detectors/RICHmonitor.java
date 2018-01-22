@@ -43,7 +43,7 @@ public class RICHmonitor  extends DetectorMonitor {
         H2F adc = new H2F("adc", "adc", 250, 0, 50000, 828, 0.5, 26496.5);
         adc.setTitleX("ADC - value");
         adc.setTitleY("PMT");
-        H2F tdc = new H2F("tdc", "tdc", 250, 0, 5000, 828, 0.5, 26496.5);
+        H2F tdc = new H2F("tdc", "tdc", 200, 0, 400, 828, 0.5, 26496.5);
         tdc.setTitleX("TDC - time");
         tdc.setTitleY("PMT");
         

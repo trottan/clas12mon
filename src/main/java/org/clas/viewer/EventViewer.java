@@ -605,8 +605,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/RF_canvas0.png", "RF canvas 1");
               entry.addAttachment(data+"/RF_canvas1.png", "RF canvas 2");
               System.out.println("RF plots uploaded");
-              //entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
-              //System.out.println("RICH plot uploaded");
+              entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
+              System.out.println("RICH plot uploaded");
               entry.addAttachment(data+"/Trigger_canvas0.png", "Trigger bits");
               //entry.addAttachment(data+"/Trigger_canvas1.png", "Trigger EC peak");
               //entry.addAttachment(data+"/Trigger_canvas2.png", "Trigger EC cluster");
@@ -695,8 +695,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("HTCC plot uploaded");
               entry.addAttachment(data+"/LTCC_canvas0.png", "LTCC occupancies and spectra");
               System.out.println("LTCC plots uploaded");
-              //entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
-              //System.out.println("RICH plot uploaded");
+              entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
+              System.out.println("RICH plot uploaded");
               entry.addAttachment(data+"/Trigger_canvas0.png", "Trigger bits");
               System.out.println("Trigger plots uploaded");
             
