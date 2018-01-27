@@ -107,7 +107,7 @@ public class ECmonitor  extends DetectorMonitor {
             this.getDataGroup().add(dg,sector,layer,0);
         }
             DataGroup dg = new DataGroup(1,1);      
-            H2F mipADC = new H2F("mipADC"+sector, "sec" +sector+" MIP", 100, 100., 50000., 100, 100., 50000.);
+            H2F mipADC = new H2F("mipADC"+sector, "sec" +sector+" MIP", 60, 1., 90000., 60, 1., 120000.);
             mipADC.setTitleY("ECin+ECout ADC SUM");
             mipADC.setTitleX("PCAL ADC SUM");
             mipADC.setTitle("Sector "+sector);
@@ -189,7 +189,7 @@ public class ECmonitor  extends DetectorMonitor {
 	    }
     	    }   
         
-    	int bitsec = getECALTriggerSector(); 
+    	int bitsec = getElecTriggerSector(); 
         if(bitsec>0&&bitsec<7) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);
                 
         if(event.hasBank("ECAL::tdc")==true){
