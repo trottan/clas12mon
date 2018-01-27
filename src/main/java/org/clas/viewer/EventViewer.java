@@ -409,6 +409,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         clas12Text.setText("CLAS12\n monitoring plots\n V2.0\n");
         clas12Text.setEditable(false);       
         this.clas12Textinfo.setEditable(false);
+        this.clas12Textinfo.setFont(new Font("Avenir",Font.PLAIN,16));
+        this.clas12Textinfo.setBackground(CLAS12View.getBackground());
         StyledDocument styledDoc = clas12Text.getStyledDocument();
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
@@ -881,10 +883,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         // FTOF:
         this.CLAS12Canvas.getCanvas("FD").cd(7);
         this.CLAS12Canvas.getCanvas("FD").getPad(7).getAxisZ().setLog(true);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH2F("sum_p1"));
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p1"));
         this.CLAS12Canvas.getCanvas("FD").cd(8);
         this.CLAS12Canvas.getCanvas("FD").getPad(8).getAxisZ().setLog(true);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH2F("sum_p2"));
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p2"));
         
         //////////////////////////////////////////////////
         ///  CD:
@@ -1062,11 +1064,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         String  DC_scale = (String) JOptionPane.showInputDialog(null, "Set normalized DC occuopancy range maximum to ", " ", JOptionPane.PLAIN_MESSAGE, null, null, "15");
         
         if (DC_scale != null) { 
-            int DC_scale_max= 0;
-            try {DC_scale_max = Integer.parseInt(DC_scale);} 
+            double DC_scale_max= 0;
+            try {DC_scale_max = Double.parseDouble(DC_scale);} 
             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-            if (DC_scale_max > 0){ this.monitors[4].DC_max_occ = DC_scale_max;} 
-            else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
+            if (DC_scale_max > 0){ this.monitors[4].max_occ = DC_scale_max;} 
+            else {JOptionPane.showMessageDialog(null, "Value must be a positive number!");}   
         }
         
     }

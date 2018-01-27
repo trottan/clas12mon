@@ -126,7 +126,7 @@ public class FTHODOmonitor extends DetectorMonitor {
 
 //             System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
 //             " ADC = " + adc + " TIME = " + time); 
-                if (adc > 0) {
+                if (adc>0 && time>0) {
 
                     this.fillTile2D(this.getDataGroup().getItem(0, layer, 0).getH2F("occFADC_2D_l" + layer), -x, y, w);
 

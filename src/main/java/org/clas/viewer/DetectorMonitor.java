@@ -49,7 +49,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public int bitsec = 0;
     public long trigger = 0;
     public long triggerPhase = 0;
-    public long DC_max_occ = 15;
+    public double max_occ = 4;
     public int trigFD = 0;
     public int trigCD = 0;
     
@@ -61,10 +61,21 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public int eventResetTime_default[]=new int[19];    
     
     public DetectorMonitor(String name){
-        GStyle.getAxisAttributesX().setTitleFontSize(18);
-        GStyle.getAxisAttributesX().setLabelFontSize(14);
-        GStyle.getAxisAttributesY().setTitleFontSize(18);
-        GStyle.getAxisAttributesY().setLabelFontSize(14);
+        GStyle.getAxisAttributesX().setTitleFontSize(24);
+        GStyle.getAxisAttributesX().setLabelFontSize(18);
+        GStyle.getAxisAttributesY().setTitleFontSize(24);
+        GStyle.getAxisAttributesY().setLabelFontSize(18);
+        GStyle.getAxisAttributesZ().setLabelFontSize(14);
+        GStyle.setPalette("kDefault");
+        GStyle.getAxisAttributesX().setLabelFontName("Avenir");
+        GStyle.getAxisAttributesY().setLabelFontName("Avenir");
+        GStyle.getAxisAttributesZ().setLabelFontName("Avenir");
+        GStyle.getAxisAttributesX().setTitleFontName("Avenir");
+        GStyle.getAxisAttributesY().setTitleFontName("Avenir");
+        GStyle.getAxisAttributesZ().setTitleFontName("Avenir");
+        GStyle.setGraphicsFrameLineWidth(1);
+        GStyle.getH1FAttributes().setLineWidth(1);
+
         this.detectorName = name;
         this.detectorPanel  = new JPanel();
         this.detectorCanvas = new EmbeddedCanvasTabbed();

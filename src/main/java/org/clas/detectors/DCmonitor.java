@@ -23,7 +23,8 @@ public class DCmonitor extends DetectorMonitor {
 
     public DCmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("Raw Occupancies","Normalized Occupancies log", "Normalized Occupancies lin", "Region Occupancies", "TDC raw spectra", "Hit Multiplicity");
+        this.setDetectorTabNames("Raw Occupancies","Normalized Occupancies log", "Normalized Occupancies lin", "Region Occupancies", "TDC raw spectra", "TDC spectra per Sector/Superlayer", "Hit Multiplicity");
+        this.useSectorButtons(true);
         this.init(false);
     }
 
@@ -67,7 +68,14 @@ public class DCmonitor extends DetectorMonitor {
             tdc_raw.setTitleY("layer");
             tdc_raw.setTitle("sector "+sector);
             
-            H1F mult = new H1F("multiplicity_sec"+ sector, "Multiplicity sector "+ sector, 1008, 0.5, 4032.5);
+            for(int sl=1; sl<=6; sl++) {
+                H1F tdc_sl_raw = new H1F("tdc_sl_raw" + sector+ sl, "Sector " + sector + " Superlayer " + sl + " TDC spectrum", 404, 0, 2020);
+                DataGroup dg_sl = new DataGroup(1,1);
+                dg_sl.addDataSet(tdc_sl_raw, 0);
+                this.getDataGroup().add(dg_sl, sector, sl, 0);
+            }
+            
+            H1F mult = new H1F("multiplicity_sec"+ sector, "Multiplicity sector "+ sector, 200, 0., 1000);
             mult.setTitleX("hit multiplicity");
             mult.setTitleY("counts");
             mult.setTitle("multiplicity sector " + sector);
@@ -146,16 +154,19 @@ public class DCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("TDC raw spectra").divide(2, 3);
         this.getDetectorCanvas().getCanvas("TDC raw spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("TDC raw spectra").setGridY(false);
+        this.getDetectorCanvas().getCanvas("TDC spectra per Sector/Superlayer").divide(2, 3);
+        this.getDetectorCanvas().getCanvas("TDC spectra per Sector/Superlayer").setGridX(false);
+        this.getDetectorCanvas().getCanvas("TDC spectra per Sector/Superlayer").setGridY(false);
         this.getDetectorCanvas().getCanvas("Hit Multiplicity").divide(2, 3);
         this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridX(false);
         this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridY(false);
         
         for(int sector=1; sector <=6; sector++) {
-            this.getDetectorCanvas().getCanvas("Normalized Occupancies log").getPad(sector-1).getAxisZ().setRange(0.01, DC_max_occ);
+            this.getDetectorCanvas().getCanvas("Normalized Occupancies log").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies log").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("Normalized Occupancies log").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies log").draw(this.getDataGroup().getItem(sector,0,0).getH2F("occ_sec"+sector));
-            this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setRange(0.01, DC_max_occ);
+            this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setLog(!getLogZ());
             this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").draw(this.getDataGroup().getItem(sector,0,0).getH2F("occ_sec"+sector));
@@ -167,12 +178,16 @@ public class DCmonitor extends DetectorMonitor {
             this.getDetectorCanvas().getCanvas("TDC raw spectra").getPad(sector-1).getAxisZ().setLog(getLogZ());
             this.getDetectorCanvas().getCanvas("TDC raw spectra").cd(sector-1);
             this.getDetectorCanvas().getCanvas("TDC raw spectra").draw(this.getDataGroup().getItem(sector,0,0).getH2F("tdc_raw" + sector));
-            this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridX(false);
-            this.getDetectorCanvas().getCanvas("Hit Multiplicity").setGridY(false);
             this.getDetectorCanvas().getCanvas("Hit Multiplicity").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Hit Multiplicity").draw(this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector));
+            if(getActiveSector()==sector) {
+               for(int sl=1; sl <=6; sl++) {
+                   this.getDetectorCanvas().getCanvas("TDC spectra per Sector/Superlayer").cd(sl-1);
+                   this.getDetectorCanvas().getCanvas("TDC spectra per Sector/Superlayer").draw(this.getDataGroup().getItem(sector,sl,0).getH1F("tdc_sl_raw" + sector+ sl));
+               }
+            }
         }
-        
+
         this.getDetectorCanvas().getCanvas("Normalized Occupancies log").update();
         this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").update();
         this.getDetectorCanvas().getCanvas("Raw Occupancies").update();
@@ -196,12 +211,7 @@ public class DCmonitor extends DetectorMonitor {
             DataBank  bank = event.getBank("DC::tdc");
             this.getDetectorOccupancy().addTDCBank(bank);
             int rows = bank.rows();
-            int sec1_check = 0;
-            int sec2_check = 0;
-            int sec3_check = 0;
-            int sec4_check = 0;
-            int sec5_check = 0;
-            int sec6_check = 0;
+            int[] nEventSector = {0,0,0,0,0,0};
             
             for(int i = 0; i < rows; i++){
                 int    sector = bank.getByte("sector",i);
@@ -209,43 +219,43 @@ public class DCmonitor extends DetectorMonitor {
                 int      wire = bank.getShort("component",i);
                 int       TDC = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); 
+                int    region = (int) (layer-1)/12+1;
+                int        sl = (int) (layer-1)/6+1;
                 
-                this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector).fill(wire*1.0,layer*1.0);
-                
-                if(layer <= 12) this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector).fill(1);
-                if(layer > 12 && layer <= 24) this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector).fill(2);
-                if(layer > 24) this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector).fill(3);
-                
+                this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector).fill(wire*1.0,layer*1.0);                
+                this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector).fill(region * 1.0);
                 this.getDataGroup().getItem(sector,0,0).getH2F("tdc_raw"+sector).fill(TDC,layer*1.0);
-
-                if(sector == 1 && sec1_check == 0){
-                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
-                    sec1_check += 1;
-                }
-                if(sector == 2 && sec2_check == 0){
-                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
-                    sec2_check += 1;
-                }
-                if(sector == 3 && sec3_check == 0){
-                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
-                    sec3_check += 1;
-                }
-                if(sector == 4 && sec4_check == 0){
-                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
-                    sec4_check += 1;
-                }
-                if(sector == 5 && sec5_check == 0){
-                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
-                    sec5_check += 1;
-                }
-                if(sector == 6 && sec6_check == 0){
-                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
-                    sec6_check += 1;
-                }
-                
+                this.getDataGroup().getItem(sector,sl,0).getH1F("tdc_sl_raw" + sector+ sl).fill(TDC,layer*1.0);
                 if(TDC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
-            }
 
+                nEventSector[sector-1]++;
+                
+//                if(sector == 1 && sec1_check == 0){
+//                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+//                    sec1_check += 1;
+//                }
+//                if(sector == 2 && sec2_check == 0){
+//                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+//                    sec2_check += 1;
+//                }
+//                if(sector == 3 && sec3_check == 0){
+//                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+//                    sec3_check += 1;
+//                }
+//                if(sector == 4 && sec4_check == 0){
+//                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+//                    sec4_check += 1;
+//                }
+//                if(sector == 5 && sec5_check == 0){
+//                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+//                    sec5_check += 1;
+//                }
+//                if(sector == 6 && sec6_check == 0){
+//                    this.getDataGroup().getItem(sector,0,0).getH1F("multiplicity_sec"+ sector).fill(rows);
+//                    sec6_check += 1;
+//                }              
+            }
+            for(int sec=1; sec<=6; sec++) this.getDataGroup().getItem(sec,0,0).getH1F("multiplicity_sec"+ sec).fill(nEventSector[sec-1]*1.0);
             
        }   
     }
@@ -277,8 +287,8 @@ public class DCmonitor extends DetectorMonitor {
                     ave.setBinContent(loop, 100*raw.getBinContent(loop)/this.getNumberOfEvents()/112/12);
                 }
                 }
-                this.getDetectorCanvas().getCanvas("Normalized Occupancies log").getPad(sector-1).getAxisZ().setRange(0.01, DC_max_occ);
-                this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setRange(0.01, DC_max_occ);
+                this.getDetectorCanvas().getCanvas("Normalized Occupancies log").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
+                this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
              }
  
          }

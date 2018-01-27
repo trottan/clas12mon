@@ -72,7 +72,7 @@ public class FTTRKmonitor  extends DetectorMonitor {
         H2F adc = new H2F("adc", "adc", 50, 0, 1000, nstrip*nlayer,0.5,nstrip*nlayer+0.5);
         adc.setTitleX("ADC - amplitude");
         adc.setTitleY("channel");
-        H2F tdc = new H2F("tdc", "tdc", 50, 0, 1000, nstrip*nlayer,0.5,nstrip*nlayer+0.5);
+        H2F tdc = new H2F("tdc", "tdc", 50, 0, 500, nstrip*nlayer,0.5,nstrip*nlayer+0.5);
         tdc.setTitleX("time");
         tdc.setTitleY("channel");
         

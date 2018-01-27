@@ -21,7 +21,7 @@ public class RICHmonitor  extends DetectorMonitor {
     public void createHistos() {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").divide(2, 2);
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").divide(1, 2);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridY(false);
         H2F summary = new H2F("summary","summary",192, 0.5, 192.5, 138, 0.5, 138.5);  // x = 224   y = 184
@@ -59,17 +59,17 @@ public class RICHmonitor  extends DetectorMonitor {
     @Override
     public void plotHistos() {
         // plotting histos
+//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(0);
+//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(0).getAxisZ().setLog(getLogZ());
+//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADC"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(0);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(0).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADC"));
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDC"));
+//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(2);
+//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(2).getAxisZ().setLog(getLogZ());
+//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(1);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(1).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDC"));
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(2);
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(2).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc"));
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(3);
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(3).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").update();
         
@@ -101,7 +101,6 @@ public class RICHmonitor  extends DetectorMonitor {
 //                      " ADC = " + adc + " TIME = " + time); 
                 if(adc>0) {
                     this.getDataGroup().getItem(0,0,0).getH2F("occADC").fill(comp*1.0,layer*1.0);
-                    this.getDetectorSummary().getH2F("summary").fill(comp*1.0,layer*1.0);
                     this.getDataGroup().getItem(0,0,0).getH2F("adc").fill(adc*1.0, (comp-1)*138+layer);
                     
                 }
@@ -120,6 +119,7 @@ public class RICHmonitor  extends DetectorMonitor {
                 if(tdc>0){ 
                     this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp*1.0,layer*1.0);
                     this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, (comp-1)*138+layer);
+                    this.getDetectorSummary().getH2F("summary").fill(comp*1.0,layer*1.0);
                 }
             }
         }        

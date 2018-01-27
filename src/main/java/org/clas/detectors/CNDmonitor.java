@@ -41,12 +41,12 @@ public class CNDmonitor  extends DetectorMonitor {
         occADCR.setTitleY("layer");
         //occADCR.setTitle("Right PMTs vs layer");
         
-        H2F adcL = new H2F("adcL", "adcL", 400, 0, 40000, 72, 0.5, 72.5);
+        H2F adcL = new H2F("adcL", "adcL", 400, 0, 8000, 72, 0.5, 72.5);
         adcL.setTitleX("ADC left - amplitude");
         adcL.setTitleY("PMT left (lay. comb.)");
         //adcL.setTitle("Left ADC amplitude distribution");
         
-        H2F adcR = new H2F("adcR", "adcR", 400, 0, 40000, 72, 0.5, 72.5);
+        H2F adcR = new H2F("adcR", "adcR", 400, 0, 8000, 72, 0.5, 72.5);
         adcR.setTitleX("ADC right - amplitude");
         adcR.setTitleY("PMT right (lay. comb.)"); 
         //adcR.setTitle("Right ADC amplitude distribution");

@@ -3,12 +3,8 @@ package org.clas.detectors;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-import javax.swing.text.StyledDocument;
 
 
 public class Acronyms  extends JTabbedPane {        
@@ -20,7 +16,7 @@ public class Acronyms  extends JTabbedPane {
         acronymsDefinitions.setText("Detectors:\n\n"
                 + "CND:         Central Neutron Detector \n"
                 + "CTOF:        Central Time of Flight \n"
-                + "DC:            Drift Chambers \n"
+                + "DC:          Drift Chambers \n"
                 + "ECAL:         Electromagnetic Calorimeter \n"
                 + "FMT:           Forward Micromegas Tracker \n"
                 + "FTOF:         Forward Time of Flight \n"

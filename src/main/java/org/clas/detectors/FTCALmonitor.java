@@ -138,7 +138,7 @@ public class FTCALmonitor  extends DetectorMonitor {
                 
              //   System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
               //        " ADC = " + adc + " TIME = " + time); 
-                if(adc>0) {
+                if(adc>0 && time>0) {
                         this.getDataGroup().getItem(0,0,0).getH2F("occFADC_2D").fill(-x,y);
                         this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp1").fill(-x,y,ped);
                         this.getDataGroup().getItem(0,0,0).getH2F("pedFADC_2Dtmp2").fill(-x,y,ped*ped);
