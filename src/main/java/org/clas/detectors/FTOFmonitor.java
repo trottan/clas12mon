@@ -59,7 +59,7 @@ public class FTOFmonitor  extends DetectorMonitor {
         sumStackp1.setTitle("FTOF panel 1b");
         sumStackp1.setFillColor(34);
         H1F sumStackp2 = new H1F("sum_p2","sum_p2",12,0.5,12.5);
-        sumStackp2.setTitleX("sector P1A and P1B");
+        sumStackp2.setTitleX("sector P1A and P2");
         sumStackp2.setTitleY("Counts");
         sumStackp2.setTitle("FTOF panel 1A and 2");
         sumStackp2.setFillColor(39);
