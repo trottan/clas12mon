@@ -32,7 +32,7 @@ public class HELmonitor extends DetectorMonitor {
         H1F rawHel = new H1F("rawHelicity","rawHelicity", 200,0.,4000.);
         rawHel.setTitleX("helicity");
         rawHel.setTitleY("Counts");
-        rawHel.setFillColor(33);
+        rawHel.setFillColor(22);
         H1F rawSync = new H1F("rawSync","rawSync", 200,0.,4000.);
         rawSync.setTitleX("sync");
         rawSync.setTitleY("Counts");
@@ -40,25 +40,38 @@ public class HELmonitor extends DetectorMonitor {
         H1F rawQuartet = new H1F("rawQuartet","rawQuartet", 200,0.,4000.);
         rawQuartet.setTitleX("quartet");
         rawQuartet.setTitleY("Counts");
-        rawQuartet.setFillColor(33);
-        H1F hel = new H1F("helicity","helicity", 20,-0.5,1.5);
+        rawQuartet.setFillColor(44);
+        H1F hel = new H1F("helicity","helicity", 20,-1.5,1.5);
         hel.setTitleX("helicity");
         hel.setTitleY("Counts");
-        hel.setFillColor(33);
-        H1F sync = new H1F("sync","sync", 20,-0.5,1.5);
+        hel.setFillColor(22);
+        H1F sync = new H1F("sync","sync", 20,-1.5,1.5);
         sync.setTitleX("sync");
         sync.setTitleY("Counts");
         sync.setFillColor(33);
-        H1F quartet = new H1F("quartet","quartet", 20,-0.5,1.5);
+        H1F quartet = new H1F("quartet","quartet", 20,-1.5,1.5);
         quartet.setTitleX("quartet");
         quartet.setTitleY("Counts");
-        quartet.setFillColor(33);
+        quartet.setFillColor(44);
         GraphErrors  helSequence = new GraphErrors("helSequence");
         helSequence.setTitle("Helicity Sequence"); //  title
         helSequence.setTitleX("Event Number"); // X axis title
         helSequence.setTitleY("Signals");   // Y axis title
-        helSequence.setMarkerColor(33); // color from 0-9 for given palette
+        helSequence.setMarkerColor(22); // color from 0-9 for given palette
         helSequence.setMarkerSize(5);  // size in points on the screen
+        GraphErrors  syncSequence = new GraphErrors("syncSequence");
+        syncSequence.setTitle("Sync Sequence"); //  title
+        syncSequence.setTitleX("Event Number"); // X axis title
+        syncSequence.setTitleY("Signals");   // Y axis title
+        syncSequence.setMarkerColor(33); // color from 0-9 for given palette
+        syncSequence.setMarkerSize(5);  // size in points on the screen
+        GraphErrors  quartetSequence = new GraphErrors("quartetSequence");
+        quartetSequence.setTitle("Quartet Sequence"); //  title
+        quartetSequence.setTitleX("Event Number"); // X axis title
+        quartetSequence.setTitleY("Signals");   // Y axis title
+        quartetSequence.setMarkerColor(44); // color from 0-9 for given palette
+        quartetSequence.setMarkerSize(5);  // size in points on the screen
+
 //        helSequence.addPoint(0, 0, 1, 1);
 //        helSequence.addPoint(1, 1, 1, 1);
         DataGroup dg = new DataGroup(2,4);
@@ -69,6 +82,8 @@ public class HELmonitor extends DetectorMonitor {
         dg.addDataSet(sync,        5);
         dg.addDataSet(quartet,     6);
         dg.addDataSet(helSequence, 7);
+        dg.addDataSet(syncSequence, 7);
+        dg.addDataSet(quartetSequence, 7);
 
         this.getDataGroup().add(dg, 0,0,0);
     }
@@ -101,6 +116,8 @@ public class HELmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Raw Signals").getPad(3).getAxisY().setRange(-1, 2);
         if(this.getDataGroup().getItem(0,0,0).getGraph("helSequence").getVectorX().size()>1) {
             this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getGraph("helSequence"));
+            this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getGraph("syncSequence"),"same");
+            this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getGraph("quartetSequence"),"same");
         }
         this.getDetectorCanvas().getCanvas("Helicity").update();
         
@@ -145,6 +162,10 @@ public class HELmonitor extends DetectorMonitor {
                     quartet=value;
                 }
             }
+            if(hel==-1 || sync == -1 || quartet == -1) {
+                System.out.println("Helicity info not set for event number " + eventNumber);
+                bank.show();
+            }
 //                if(bank.getInt("trigger",0)==0) 
 //                    System.out.println(eventNumber + " " + unixTime + " " + String.format("0x%08X", bank.getInt("trigger",0))
 //                                               + " " + String.format("0x%08X", bank.getInt("trigger",1))
@@ -153,10 +174,14 @@ public class HELmonitor extends DetectorMonitor {
                 syncSave = sync;
 //                System.out.println(eventNumber + " " + unixTime + " " + hel + " " + sync + " " + quartet);
                 this.getDataGroup().getItem(0,0,0).getGraph("helSequence").addPoint(eventNumber, hel, 0., 0.);
+                this.getDataGroup().getItem(0,0,0).getGraph("syncSequence").addPoint(eventNumber, sync+0.1, 0., 0.);
+                this.getDataGroup().getItem(0,0,0).getGraph("quartetSequence").addPoint(eventNumber, quartet-0.1, 0., 0.);
                 if(this.getDataGroup().getItem(0,0,0).getGraph("helSequence").getVectorX().size()==2) {
                     this.getDetectorCanvas().getCanvas("Helicity").cd(3);
-                    this.getDetectorCanvas().getCanvas("Raw Signals").getPad(3).getAxisY().setRange(-1, 2);
                     this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getGraph("helSequence"));
+                    this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getGraph("syncSequence"),"same");
+                    this.getDetectorCanvas().getCanvas("Helicity").draw(this.getDataGroup().getItem(0,0,0).getGraph("quartetSequence"),"same");
+                    this.getDetectorCanvas().getCanvas("Raw Signals").getPad(3).getAxisY().setRange(-1, 2);
                 }
             }
             this.getDetectorSummary().getH1F("summary").fill(hel);
