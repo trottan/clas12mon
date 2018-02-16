@@ -98,7 +98,7 @@ public class FTOFmonitor  extends DetectorMonitor {
             timeFADC.setTitleY(stacks[lay] + " " + views[ord] + " PMTS");
             timeFADC.setTitleX("FADC timing");
             timeFADC.setTitle("Sector "+sec);
-            H2F datTDC = new H2F("datTDC"+sec+lay+ord, "sec/lay/ord "+sec+lay+ord+" TDC", 100, 450., 850., npaddles[lay], 1, npaddles[lay]+1);
+            H2F datTDC = new H2F("datTDC"+sec+lay+ord, "sec/lay/ord "+sec+lay+ord+" TDC", 100, 0., 600., npaddles[lay], 1, npaddles[lay]+1);
             datTDC.setTitleY(stacks[lay] + " " + views[ord] + " PMTS");
             datTDC.setTitleX("TDC Channel");
             datTDC.setTitle("Sector "+sec);
@@ -298,7 +298,7 @@ public class FTOFmonitor  extends DetectorMonitor {
         
     public void storeTDCHits(int idet, int is, int il, int ip, float tdc) {
 
-        if(tdc>450&&tdc<850){
+        if(tdc>0&&tdc<600){
               ftofHits[idet].nht[is][il]++; int inh = ftofHits[idet].nht[is][il];
               if (inh>npaddles[idet]) inh=npaddles[idet];            
               ftofHits[idet].tdcr[is][il][inh-1]  = tdc;

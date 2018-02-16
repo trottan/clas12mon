@@ -252,6 +252,6 @@ public class BMTmonitor extends DetectorMonitor {
 				this.getDetectorSummary().getH2F("summary").fill(strip,3*(layer-1)+(sector-1),1);
 			}
 		}
-		System.out.println("Event Done: "+this.getNumberOfEvents());
+		//System.out.println("Event Done: "+this.getNumberOfEvents());
 	}
 }

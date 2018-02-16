@@ -96,7 +96,7 @@ public class ECmonitor  extends DetectorMonitor {
             timeFADC.setTitleY(stacks[stack-1] + " " + views[view-1] + " strip");
             timeFADC.setTitleX("FADC timing");
             datADC.setTitle("Sector "+sector);
-            H2F datTDC = new H2F("datTDC"+layer+sector, "lay/sec " + layer + sector+" TDC", 100, 450., 850., this.npaddles[layer-1], 1, npaddles[layer-1]+1);
+            H2F datTDC = new H2F("datTDC"+layer+sector, "lay/sec " + layer + sector+" TDC", 100, 0., 600., this.npaddles[layer-1], 1, npaddles[layer-1]+1);
             datTDC.setTitleY(stacks[stack-1] + " " + views[view-1] + " strip");
             datTDC.setTitleX("TDC Channel");
             datTDC.setTitle("Sector "+sector);
