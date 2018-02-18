@@ -227,12 +227,13 @@ public class FTOFmonitor  extends DetectorMonitor {
                 	  this.getDataGroup().getItem(sector,lay,0).getH2F("datADC"+sector+lay+ord).fill(ADC,paddle*1.0);
                 	  if(time > 1) this.getDataGroup().getItem(sector,lay,0).getH2F("timeFADC"+sector+lay+ord).fill(time,paddle*1.0);
                 	  if(layer == 2) this.getDetectorSummary().getH1F("sum_p1").fill(sector*1.0);
-                          if(layer == 1) this.getDetectorSummary().getH1F("sum_p2").fill(sector*1.0); 
-                          if(layer == 3) this.getDetectorSummary().getH1F("sum_p2").fill(sector+6.0); 
-                          storeADCHits(lay,sector-1,ord,paddle,ADC,time);
+                      if(layer == 1) this.getDetectorSummary().getH1F("sum_p2").fill(sector*1.0); 
+                      if(layer == 3) this.getDetectorSummary().getH1F("sum_p2").fill(sector+6.0); 
+                      storeADCHits(lay,sector-1,ord,paddle,ADC,time);
                 }
             }
         }
+        
         if(event.hasBank("FTOF::tdc")==true){
             DataBank  bank = event.getBank("FTOF::tdc");
             int rows = bank.rows();
@@ -245,8 +246,8 @@ public class FTOFmonitor  extends DetectorMonitor {
                 
                 int lay=layer-1; int ord=order-2;
                 if(TDC>0 && isGoodECALTrigger(sector)) {
-                	   this.getDataGroup().getItem(0,lay,0).getH2F("occTDC"+lay+ord).fill(sector*1.0,paddle*1.0);
-                	   this.getDataGroup().getItem(sector,lay,0).getH2F("datTDC"+sector+lay+ord).fill(TDC*0.02345-triggerPhase*4,paddle*1.0);
+                   this.getDataGroup().getItem(0,lay,0).getH2F("occTDC"+lay+ord).fill(sector*1.0,paddle*1.0);
+                   this.getDataGroup().getItem(sector,lay,0).getH2F("datTDC"+sector+lay+ord).fill(TDC*0.02345-triggerPhase*4,paddle*1.0);
                    storeTDCHits(lay,sector-1,ord,paddle,(float)(TDC*0.02345-triggerPhase*4));
                 }
             }
@@ -324,7 +325,7 @@ public class FTOFmonitor  extends DetectorMonitor {
         int    ipR = ftofHits[idet].strra[is][1][0];
         double adL = ftofHits[idet].adcr[is][0][0];
         double adR = ftofHits[idet].adcr[is][1][0];
-    	    if ((iL==1&&iR==1)&&(ipL==ipR)) h2.fill(Math.sqrt(adL*adR), ipL*1.0);
+    	if ((iL==1&&iR==1)&&(ipL==ipR)) h2.fill(Math.sqrt(adL*adR), ipL*1.0);
     }
     
     public void getTD(int idet, int is, H2F h2) {
@@ -334,7 +335,7 @@ public class FTOFmonitor  extends DetectorMonitor {
         int    ipR = ftofHits[idet].strrt[is][1][0];
         double tdL = ftofHits[idet].tdcr[is][0][0];
         double tdR = ftofHits[idet].tdcr[is][1][0];
-    	   if ((iL==1&&iR==1)&&(ipL==ipR)) h2.fill(tdL-tdR, ipL*1.0);
+    	if ((iL==1&&iR==1)&&(ipL==ipR)) h2.fill(tdL-tdR, ipL*1.0);
     }    
     
     @Override
