@@ -35,7 +35,7 @@ public class DCmonitor extends DetectorMonitor {
         this.setNumberOfEvents(0);
         H1F summary = new H1F("summary","summary",6,0.5,6.5);
         summary.setTitleX("sector");
-        summary.setTitleY("DC hits");
+        summary.setTitleY("DC occupancy");
         summary.setTitle("DC");
         summary.setFillColor(33);
         DataGroup sum = new DataGroup(1,1);
