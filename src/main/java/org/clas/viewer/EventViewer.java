@@ -616,6 +616,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               //System.out.println("RECON plots uploaded");
               entry.addAttachment(data+"/RF_canvas0.png", "RF canvas 1");
               entry.addAttachment(data+"/RF_canvas1.png", "RF canvas 2");
+              entry.addAttachment(data+"/RF_canvas2.png", "RF canvas 3");
+              entry.addAttachment(data+"/RF_canvas3.png", "RF canvas 4");
               System.out.println("RF plots uploaded");
               entry.addAttachment(data+"/HEL_canvas0.png", "HEL canvas 1");
               entry.addAttachment(data+"/HEL_canvas1.png", "HEL canvas 2");
