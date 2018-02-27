@@ -271,14 +271,17 @@ public class DCmonitor extends DetectorMonitor {
                 }
             }
         }
-        
+     
         
         if(this.getNumberOfEvents()>0) {
-        	int entries = 0;
-        	for(int sector=1; sector <=6; sector++) {
-            	H1F raw_check = this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector);
-                entries += raw_check.getEntries();
-             }
+            int entries = 0;
+            for(int sector=1; sector <=6; sector++) {
+              H1F raw_check = this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector);
+              entries += raw_check.getEntries();
+            }
+                
+            H1F raw_summary = this.getDetectorSummary().getH1F("summary");
+                
             for(int sector=1; sector <=6; sector++) {
             	H1F raw = this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector);
                 H1F ave = this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector);
@@ -289,11 +292,12 @@ public class DCmonitor extends DetectorMonitor {
                 }
                 this.getDetectorCanvas().getCanvas("Normalized Occupancies log").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
                 this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
-             }
- 
-         }
-       
-        
+                
+                if(raw_summary.getEntries()>0) {
+                    this.getDetectorSummary().getH1F("summary").setBinContent(sector, 100*raw_summary.getBinContent(sector)/this.getNumberOfEvents()/112/12/3);
+                }
+            }
+        }   
     }
 
 }
