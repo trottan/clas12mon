@@ -335,6 +335,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         String TriggerDef[] = { "Electron",
 		        "Electron S1","Electron S2","Electron S3","Electron S4","Electron S5","Electron S6",
+		        "ElectronOR noDC>300","PCALxECAL>10","","","","","","","","","","",
+		        "FTOFxPCALxECAL(1-4)","FTOFxPCALxECAL(2-5)","FTOFxPCALxECAL(3-6)","","",
+		        "FTxHDxFTOFxPCALxCTOF",
+		        "FTxHDx(FTOFxPCAL)^2","FTxHD>100","FT>100","","","",
+		        "1K Pulser"};
+/*        
+        String TriggerDef[] = { "Electron",
+		        "Electron S1","Electron S2","Electron S3","Electron S4","Electron S5","Electron S6",
 		        "HTCC(>1pe)","HTCCxPCAL(>300MeV)","FTOFxPCAL^3","FTOFxPCALxECAL^3",
 		        "FTOFxPCALxCTOF","FTOFxPCALxCND","FTOFxPCALxCNDxCTOF","FTOFxPCAL^2",
 		        "FTOFxPCALxECAL^2","FTOFxPCAL(1-4)","FTOFxPCAL(2-5)","FTOFxPCAL(3-6)",
@@ -342,7 +350,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 		        "FTxFTOFxPCALxCTOF","FTxFTOFxPCALxCND","FTxFTOFxPCALxCTOFxCND",
 		        "FTx(FTOFxPCAL)^2","FTx(FTOFxPCAL)^3","FT(>300)xHODO","FT(>500)xHODO","FT>300","FT>500",
 		        "1K Pulser"};  
-        		             
+*/        		             
         JMenu trigBitsBeam = new JMenu("TriggerBits");
         trigBitsBeam.getAccessibleContext().setAccessibleDescription("Test Trigger Bits");
         
