@@ -15,7 +15,7 @@ import org.jlab.io.base.DataEvent;
 
 public class TRIGGERmonitor extends DetectorMonitor {
 	
-	String tbit = "Trigger Bits: EC.PC.HTCC(0)    EC.PC.HTCC(1-6)    HTCC(7)    HTCC.PC(8)    FTOF.PC.* (9-21)    FT.* (22-30)    1K Pulser(31)";
+	String tbit = "Trigger Bits: EC.PC.HTCC(0)    EC.PC.HTCC(1-6)    EC.PC OR noDC>300(7)  EC.PC>10(8)    FTOF.PC.EC(19-21)    FT.* (24-27)    1K Pulser(31)";
 	
     public TRIGGERmonitor(String name) {
         super(name);
