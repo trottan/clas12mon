@@ -294,7 +294,7 @@ public class DCmonitor extends DetectorMonitor {
                 this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
                 
                 if(raw_summary.getEntries()>0) {
-                    this.getDetectorSummary().getH1F("summary").setBinContent(sector, 100*raw_summary.getBinContent(sector)/this.getNumberOfEvents()/112/12/3);
+                    this.getDetectorSummary().getH1F("summary").setBinContent(sector-1, 100*raw_summary.getBinContent(sector)/this.getNumberOfEvents()/112/12/3);
                 }
             }
         }   
