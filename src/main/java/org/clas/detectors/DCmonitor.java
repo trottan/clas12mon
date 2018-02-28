@@ -42,6 +42,9 @@ public class DCmonitor extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
+        H1F raw_summary = new H1F("raw_summary","raw_summary",6,0.5,6.5);
+        
+        
         for(int sector=1; sector <= 6; sector++) {
             H2F raw = new H2F("raw_sec" + sector, "Sector " + sector + " Occupancy", 112, 0.5, 112.5, 36, 0.5, 36.5);
             raw.setTitleX("wire");
@@ -80,13 +83,14 @@ public class DCmonitor extends DetectorMonitor {
             mult.setTitleY("counts");
             mult.setTitle("multiplicity sector " + sector);
             
-            DataGroup dg = new DataGroup(5,1);
+            DataGroup dg = new DataGroup(6,1);
             dg.addDataSet(raw, 0);
             dg.addDataSet(occ, 1);
             dg.addDataSet(reg_occ, 2);
             dg.addDataSet(raw_reg_occ, 3);
             dg.addDataSet(tdc_raw, 4);
             dg.addDataSet(mult, 5);
+            dg.addDataSet(raw_summary, 6);
             this.getDataGroup().add(dg, sector,0,0);
         }
         
@@ -226,8 +230,14 @@ public class DCmonitor extends DetectorMonitor {
                 this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector).fill(region * 1.0);
                 this.getDataGroup().getItem(sector,0,0).getH2F("tdc_raw"+sector).fill(TDC,layer*1.0);
                 this.getDataGroup().getItem(sector,sl,0).getH1F("tdc_sl_raw" + sector+ sl).fill(TDC,layer*1.0);
-                if(TDC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
-
+                //if(TDC > 0) this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
+                if(TDC > 0) this.getDataGroup().getItem(sector,0,0).getH1F("raw_summary").fill(sector*1.0);
+                
+                if(this.getDataGroup().getItem(sector,0,0).getH1F("raw_summary").getEntries()>0) {
+                    this.getDetectorSummary().getH1F("summary").setBinContent(sector-1, 100*this.getDataGroup().getItem(sector,0,0).getH1F("raw_summary").getBinContent(sector-1)/this.getNumberOfEvents()/112/12/3);
+                }
+                
+                
                 nEventSector[sector-1]++;
                 
 //                if(sector == 1 && sec1_check == 0){
@@ -279,9 +289,7 @@ public class DCmonitor extends DetectorMonitor {
               H1F raw_check = this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector);
               entries += raw_check.getEntries();
             }
-                
-            H1F raw_summary = this.getDetectorSummary().getH1F("summary");
-                
+ 
             for(int sector=1; sector <=6; sector++) {
             	H1F raw = this.getDataGroup().getItem(sector,0,0).getH1F("raw_reg_occ_sec"+sector);
                 H1F ave = this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector);
@@ -293,9 +301,6 @@ public class DCmonitor extends DetectorMonitor {
                 this.getDetectorCanvas().getCanvas("Normalized Occupancies log").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
                 this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setRange(0.01, max_occ);
                 
-                if(raw_summary.getEntries()>0) {
-                    this.getDetectorSummary().getH1F("summary").setBinContent(sector-1, 100*raw_summary.getBinContent(sector)/this.getNumberOfEvents()/112/12/3);
-                }
             }
         }   
     }
