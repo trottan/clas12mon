@@ -24,7 +24,8 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").divide(1, 2);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridY(false);
-        H2F summary = new H2F("summary","summary",192, 0.5, 192.5, 138, 0.5, 138.5);  // x = 224   y = 184
+        
+        H2F summary = new H2F("summary","summary",384, 0.5, 384.5, 127, 0.5, 127.5);  // x = 224   y = 184
         summary.setTitleX("channel");
         summary.setTitleY("RICH hits");
         summary.setTitle("RICH");
@@ -32,42 +33,29 @@ public class RICHmonitor  extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H2F occADC = new H2F("occADC", "occADC", 192, 0.5, 192.5, 138, 0.5, 138.5);
-        occADC.setTitleY("ring-PMT");
-        occADC.setTitleX("sector");
-        occADC.setTitle("ADC Occupancy");
-        H2F occTDC = new H2F("occTDC", "occTDC", 192, 0.5, 192.5, 138, 0.5, 138.5);
-        occTDC.setTitleY("ring-PMT");
-        occTDC.setTitleX("sector");
+        H2F occTDC = new H2F("occTDC", "occTDC", 384, 0.5, 384.5, 127, 0.5, 127.5);
+        occTDC.setTitleY("tile number");
+        occTDC.setTitleX("channel number");
         occTDC.setTitle("TDC Occupancy");
-        H2F adc = new H2F("adc", "adc", 250, 0, 50000, 828, 0.5, 26496.5);
-        adc.setTitleX("ADC - value");
-        adc.setTitleY("PMT");
-        H2F tdc = new H2F("tdc", "tdc", 200, 0, 400, 828, 0.5, 26496.5);
-        tdc.setTitleX("TDC - time");
-        tdc.setTitleY("PMT");
+
+        H2F tdc = new H2F("tdc", "tdc", 200, 0, 400, 384, 0.5, 384.5);
+        tdc.setTitleX("time [ns]");
+        tdc.setTitleY("MAPMT number");
+        tdc.setTitle("TDC timing");
         
            
-        DataGroup dg = new DataGroup(2,2);
-        dg.addDataSet(occADC, 0);
-        dg.addDataSet(occTDC, 1);
-        dg.addDataSet(adc, 2);
-        dg.addDataSet(tdc, 3);
+        DataGroup dg = new DataGroup(2,1);
+        dg.addDataSet(occTDC, 0);
+        dg.addDataSet(tdc, 1);
         this.getDataGroup().add(dg,0,0,0);
     }
         
     @Override
     public void plotHistos() {
         // plotting histos
-//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(0);
-//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(0).getAxisZ().setLog(getLogZ());
-//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occADC"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(0);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDC"));
-//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(2);
-//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(2).getAxisZ().setLog(getLogZ());
-//        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("adc"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(1);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(1).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc"));
@@ -115,11 +103,13 @@ public class RICHmonitor  extends DetectorMonitor {
                 int      comp = bank.getShort("component",i);
                 int       tdc = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); // order specifies left-right for ADC
-//                           System.out.println("ROW " + i + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = "+ comp + " TDC = " + TDC);    
+                         // System.out.println("ROW " + i + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = "+ comp + " TDC = " + TDC);    
                 if(tdc>0){ 
-                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp*1.0,layer*1.0);
-                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, (comp-1)*138+layer);
-                    this.getDetectorSummary().getH2F("summary").fill(comp*1.0,layer*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp+ 192*order,layer*1.0);
+                    
+                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, comp+ 192*order);
+                    
+                    this.getDetectorSummary().getH2F("summary").fill(comp+ 192*order,layer*1.0);
                 }
             }
         }        
