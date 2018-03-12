@@ -25,25 +25,24 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridY(false);
         
-        H2F summary = new H2F("summary","summary",192, 0.5, 192.5, 127, 0.5, 127.5);  // x = 224   y = 184
-        summary.setTitleX("channel");
-        summary.setTitleY("RICH hits");
+        H2F summary = new H2F("summary","summary",192, 0.5, 192.5, 138, 0.5, 138.5);
+        summary.setTitleX("MAPMT channel");
+        summary.setTitleY("tile");
         summary.setTitle("RICH");
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H2F occTDC = new H2F("occTDC", "occTDC", 192, 0.5, 192.5, 127, 0.5, 127.5);
+        H2F occTDC = new H2F("occTDC", "occTDC", 192, 0.5, 192.5, 138, 0.5, 138.5);
         occTDC.setTitleY("tile number");
         occTDC.setTitleX("channel number");
         occTDC.setTitle("TDC Occupancy");
 
-        H2F tdc = new H2F("tdc", "tdc", 200, 0, 400, 384, 0.5, 384.5);
+        H2F tdc = new H2F("tdc", "tdc", 200, 0, 400, 417, 0.5, 417.5);
         tdc.setTitleX("time [ns]");
-        tdc.setTitleY("MAPMT number");
+        tdc.setTitleY("MAPMT (3 slots / tile)");
         tdc.setTitle("TDC timing");
         
-           
         DataGroup dg = new DataGroup(2,1);
         dg.addDataSet(occTDC, 0);
         dg.addDataSet(tdc, 1);
@@ -98,16 +97,21 @@ public class RICHmonitor  extends DetectorMonitor {
             DataBank  bank = event.getBank("RICH::tdc");
             int rows = bank.rows();
             for(int i = 0; i < rows; i++){
-                int    sector = bank.getByte("sector",i);
-                int     layer = bank.getByte("layer",i);
-                int      comp = bank.getShort("component",i);
-                int       tdc = bank.getInt("TDC",i);
-                int     order = bank.getByte("order",i); // order specifies left-right for ADC
+                int     sector = bank.getByte("sector",i);
+                int  layerbyte = bank.getByte("layer",i);
+                long     layer = layerbyte & 0xFF;
+                long      comp = bank.getShort("component",i);
+                long      pmt   = comp/64;
+                int        tdc = bank.getInt("TDC",i);
+                int  orderbyte = bank.getByte("order",i); // order specifies left-right for ADC
+                long     order = orderbyte & 0xFF;
+
+                
                          // System.out.println("ROW " + i + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = "+ comp + " TDC = " + TDC);    
                 if(tdc>0){ 
                     this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp,layer*1.0);
                     
-                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, comp+ 192*order);
+                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, layer*3 + pmt);
                     
                     this.getDetectorSummary().getH2F("summary").fill(comp,layer*1.0);
                 }
