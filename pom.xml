@@ -24,6 +24,12 @@
       <version>2.9.0</version>
        <type>jar</type>
     </dependency>
+    <dependency>
+      <groupId>org.epics</groupId>
+      <artifactId>ca</artifactId>
+      <version>1.0.0</version>
+       <type>jar</type>
+    </dependency>
     </dependencies> 
     <repositories>
       <repository>
