@@ -57,6 +57,8 @@ import org.jlab.io.task.DataSourceProcessorPane;
 import org.jlab.io.task.IDataEventListener;
 import org.jlab.elog.LogEntry; 
 
+import org.jlab.clas.reco.ReconstructionEngine;
+import org.jlab.rec.cvt.services.CVTReconstruction;
         
 /**
  *
@@ -108,8 +110,18 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 new TRIGGERmonitor("Trigger"),   // 18
      
     };
+
+    ReconstructionEngine[] engines = {
+        new CVTReconstruction()
+    };
+
+    void initEngines() {
+        for (ReconstructionEngine ee : engines) ee.init();
+    }
         
-    public EventViewer() {    	
+    public EventViewer() {
+
+        initEngines();
         		
 	// create menu bar
         menuBar = new JMenuBar();
@@ -839,6 +851,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             else {
                 hipo = (HipoDataEvent) event;    
             }
+
+            for (ReconstructionEngine ee : this.engines) {
+                ee.processDataEvent(event);
+            }
+
             
             for(int k=0; k<this.monitors.length; k++) {
                 this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
