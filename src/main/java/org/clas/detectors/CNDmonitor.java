@@ -22,7 +22,8 @@ public class CNDmonitor  extends DetectorMonitor {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
         
-        H1F summary = new H1F("summary","summary",72,0.5,72.5);
+//        H1F summary = new H1F("summary","summary",72,0.5,72.5);
+        H1F summary = new H1F("summary","summary",144,0.0,144.);
         summary.setTitleX(" PMT (all layers combined)");
         summary.setTitleY("CND hits");
         summary.setTitle("CND");
@@ -173,7 +174,7 @@ public class CNDmonitor  extends DetectorMonitor {
                         if(time > 1)this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time").fill(time*1.0,((sector-1)*3 + layer)*1.0);
                     }
                    
-                    this.getDetectorSummary().getH1F("summary").fill((sector-1)*3+layer);
+                    this.getDetectorSummary().getH1F("summary").fill((sector-1)*6+(layer-1)*2+order);
                 }
                 
 	    }
