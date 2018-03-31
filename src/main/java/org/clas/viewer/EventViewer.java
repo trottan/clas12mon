@@ -853,10 +853,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
 
             for (ReconstructionEngine ee : this.engines) {
-                ee.processDataEvent(event);
+                ee.processDataEvent(hipo);
             }
 
-            
             for(int k=0; k<this.monitors.length; k++) {
                 this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
                 this.monitors[k].setTriggerWord(getTriggerWord(hipo));   
