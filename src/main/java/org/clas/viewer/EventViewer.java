@@ -561,7 +561,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized logarithmic scale");
               entry.addAttachment(data+"/DC_canvas2.png", "DC occupancies normalized linear scale");
               entry.addAttachment(data+"/DC_canvas3.png", "DC region occupancies");
-              entry.addAttachment(data+"/DC_canvas4.png", "DC TDC raw value distribution");
+              entry.addAttachment(data+"/DC_canvas4.png", "DC TDC raw value versus layer");
+              entry.addAttachment(data+"/DC_canvas5.png", "DC TDC spectra per Sector / Superlayer");
               entry.addAttachment(data+"/DC_canvas5.png", "DC hit multiplicity");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
@@ -606,6 +607,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/LTCC_canvas1.png", "LTCC FADC timing");
               //entry.addAttachment(data+"/LTCC_canvas2.png", "LTCC TDC occupancies and spectra");
               System.out.println("LTTC plots uploaded");
+              System.out.println("RICH plot uploaded");
+              entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
               //entry.addAttachment(data+"/RECON_canvas0.png", "RECON CVT cosmic");
               //entry.addAttachment(data+"/RECON_canvas1.png", "RECON CVT positive tracks");
               //entry.addAttachment(data+"/RECON_canvas2.png", "RECON CVT negative tracks");
@@ -622,8 +625,6 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/HEL_canvas0.png", "HEL canvas 1");
               entry.addAttachment(data+"/HEL_canvas1.png", "HEL canvas 2");
               System.out.println("HEL plots uploaded");
-              entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
-              System.out.println("RICH plot uploaded");
               entry.addAttachment(data+"/Trigger_canvas0.png", "Trigger bits");
               //entry.addAttachment(data+"/Trigger_canvas1.png", "Trigger EC peak");
               //entry.addAttachment(data+"/Trigger_canvas2.png", "Trigger EC cluster");
