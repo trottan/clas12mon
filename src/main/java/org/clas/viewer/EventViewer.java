@@ -1063,13 +1063,24 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
    }
 
     public static void main(String[] args){
+        int xSize = 1600;
+        int ySize = 1000;
+        
+        if(args.length>0){
+            xSize = Integer.parseInt(args[0]);
+            if(args.length>1){
+                ySize = Integer.parseInt(args[1]);
+            } else {
+                ySize = (int) (xSize/1.6);
+            }
+        }
         JFrame frame = new JFrame("CLAS12Mon");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         EventViewer viewer = new EventViewer();
         //frame.add(viewer.getPanel());
         frame.add(viewer.mainPanel);
         frame.setJMenuBar(viewer.menuBar);
-        frame.setSize(1400, 800);
+        frame.setSize(xSize, ySize);
         frame.setVisible(true);
     }
     
