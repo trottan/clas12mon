@@ -15,6 +15,8 @@ import org.jlab.io.base.DataEvent;
 public class RFmonitor extends DetectorMonitor {
     
     private double tdc2Time = 0.023436;
+    private double rfbucket = 4.008;
+    private int    ncycles  = 40;
     private int    eventNumber = 0;
     
     public RFmonitor(String name) {
@@ -43,20 +45,20 @@ public class RFmonitor extends DetectorMonitor {
         rf2.setTitleX("RF2 tdc");
         rf2.setTitleY("Counts");
         rf2.setFillColor(36);
-        H1F rfdiff = new H1F("rfdiff","rfdiff", 200, 1.,4.);
+        H1F rfdiff = new H1F("rfdiff","rfdiff", 250, 0, rfbucket);
         rfdiff.setTitleX("RF diff");
         rfdiff.setTitleY("Counts");
-        F1D fdiff = new F1D("fdiff","[amp]*gaus(x,[mean],[sigma])", 0, 5.0);
+        F1D fdiff = new F1D("fdiff","[amp]*gaus(x,[mean],[sigma])", 0, rfbucket);
         fdiff.setParameter(0, 0);
         fdiff.setParameter(1, 0);
         fdiff.setParameter(2, 1.0);
         fdiff.setLineWidth(2);
         fdiff.setLineColor(2);
         fdiff.setOptStat("1111");
-        H1F rfdiffAve = new H1F("rfdiffAve","rfdiffAve", 480, 1.,4.);
+        H1F rfdiffAve = new H1F("rfdiffAve","rfdiffAve", 500, 0, rfbucket);
         rfdiffAve.setTitleX("RF diff");
         rfdiffAve.setTitleY("Counts");
-        F1D fdiffAve = new F1D("fdiffAve","[amp]*gaus(x,[mean],[sigma])", 1.0, 4.0);
+        F1D fdiffAve = new F1D("fdiffAve","[amp]*gaus(x,[mean],[sigma])", 0, rfbucket);
         fdiffAve.setParameter(0, 0);
         fdiffAve.setParameter(1, 0);
         fdiffAve.setParameter(2, 1.0);
@@ -109,10 +111,10 @@ public class RFmonitor extends DetectorMonitor {
         f2diff.setLineWidth(2);
         f2diff.setLineColor(2);
         f2diff.setOptStat("1111");
-        H2F timeRF1 = new H2F("timeRF1","timeRF1",100,0.,240, 200, 1., 4.);
+        H2F timeRF1 = new H2F("timeRF1","timeRF1",100,0.,240, 200, 0, rfbucket);
         timeRF1.setTitleX("RF1 (ns)");
         timeRF1.setTitleY("RF diff (ns)");
-        H2F timeRF2 = new H2F("timeRF2","timeRF2",100,0.,240, 200, 1., 4.);
+        H2F timeRF2 = new H2F("timeRF2","timeRF2",100,0.,240, 200, 0, rfbucket);
         timeRF2.setTitleX("RF2 (ns)");
         timeRF2.setTitleY("RF diff (ns)");
         GraphErrors  rf1Timeline = new GraphErrors("rf1Timeline");
@@ -141,8 +143,8 @@ public class RFmonitor extends DetectorMonitor {
         rfAveTimeline.setMarkerSize(5);  // size in points on the screen
         H1F rf1difftmp = new H1F("rf1difftmp","rf1difftmp", 160, 158.,162.);
         H1F rf2difftmp = new H1F("rf2difftmp","rf2difftmp", 160, 158.,162.);
-        H1F rfdifftmp = new H1F("rfdifftmp","rfdifftmp", 160, 2.,5.);
-        H1F rfdiffAvetmp = new H1F("rfdiffAvetmp","rfdiffAvetmp", 480, 1.,4.);
+        H1F rfdifftmp = new H1F("rfdifftmp","rfdifftmp", 250, 0, rfbucket);
+        H1F rfdiffAvetmp = new H1F("rfdiffAvetmp","rfdiffAvetmp", 500, 0, rfbucket);
         H1F rf1fADC = new H1F("rf1fADC","rf1fADC", 100,0.,400);
         rf1fADC.setTitleX("RF1 tdc");
         rf1fADC.setTitleY("Counts");
@@ -159,13 +161,13 @@ public class RFmonitor extends DetectorMonitor {
         rf2fADCadc.setTitleX("RF2 adc");
         rf2fADCadc.setTitleY("Counts");
         rf2fADCadc.setFillColor(36);
-        H1F rffADCdiff = new H1F("rffADCdiff","rffADCdiff", 1000, 55, 65);
+        H1F rffADCdiff = new H1F("rffADCdiff","rffADCdiff", 400, 0, rfbucket);
         rffADCdiff.setTitleX("RF diff");
         rffADCdiff.setTitleY("Counts");
-        H1F rffADCdifftmp = new H1F("rffADCdifftmp","rffADCdifftmp", 1000, 55, 65);
+        H1F rffADCdifftmp = new H1F("rffADCdifftmp","rffADCdifftmp", 400, 0, rfbucket);
         rffADCdifftmp.setTitleX("RF diff");
         rffADCdifftmp.setTitleY("Counts");
-        F1D ffADCdiff = new F1D("ffADCdiff","[amp]*gaus(x,[mean],[sigma])", 55, 65);
+        F1D ffADCdiff = new F1D("ffADCdiff","[amp]*gaus(x,[mean],[sigma])", 0, rfbucket);
         ffADCdiff.setParameter(0, 0);
         ffADCdiff.setParameter(1, 0);
         ffADCdiff.setParameter(2, 1.0);
@@ -330,23 +332,28 @@ public class RFmonitor extends DetectorMonitor {
             this.getDataGroup().getItem(0,0,0).getH1F("rf2difftmp").fill((rf2.get(i+1)-rf2.get(i))*tdc2Time);
         }
 
-        if(rf1.size()==rf2.size()) {
+        if(rf1.size()==rf2.size() || true) {
             double rfTime1 = 0;
             double rfTime2 = 0;
-            for(int i=0; i<rf1.size(); i++) {
-                this.getDataGroup().getItem(0,0,0).getH1F("rfdiff").fill((rf1.get(i)-rf2.get(i))*tdc2Time);
-                this.getDataGroup().getItem(0,0,0).getH1F("rfdifftmp").fill((rf1.get(i)-rf2.get(i))*tdc2Time);
-//                rfTime1 += rf1.get(i)*tdc2Time - i*80*2.004;
-//                rfTime2 += rf2.get(i)*tdc2Time - i*80*2.004;
-                rfTime1 += ((rf1.get(i)*tdc2Time) % (80*2.004));
-                rfTime2 += ((rf2.get(i)*tdc2Time) % (80*2.004));
+            int npairs = Math.min(rf1.size(),rf2.size());
+            for(int i=0; i<npairs; i++) {
+                double rfTimei = ((rf1.get(i)-rf2.get(i))*tdc2Time + (100*rfbucket)) % rfbucket;
+                this.getDataGroup().getItem(0,0,0).getH1F("rfdiff").fill(rfTimei);
+                this.getDataGroup().getItem(0,0,0).getH1F("rfdifftmp").fill(rfTimei);
+//                System.out.println((rf1.get(i)*tdc2Time) + " " + (rf2.get(i)*tdc2Time));
+//                rfTime1 += rf1.get(i)*tdc2Time - i*ncycles*rfbucket;
+//                rfTime2 += rf2.get(i)*tdc2Time - i*ncycles*rfbucket;
+                rfTime1 += ((rf1.get(i)*tdc2Time) % (ncycles*rfbucket));
+                rfTime2 += ((rf2.get(i)*tdc2Time) % (ncycles*rfbucket));
             }
-            rfTime1 /=rf1.size();
-            rfTime2 /=rf2.size();            
-            this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAve").fill(rfTime1-rfTime2);
-            this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAvetmp").fill(rfTime1-rfTime2);
-            this.getDataGroup().getItem(0,0,0).getH2F("timeRF1").fill(rfTime1,rfTime1-rfTime2);
-            this.getDataGroup().getItem(0,0,0).getH2F("timeRF2").fill(rfTime2,rfTime1-rfTime2);            
+            rfTime1 /=npairs;
+            rfTime2 /=npairs;            
+//            System.out.println("aaa " + (rfTime1-rfTime2));
+            double rfTime = (rfTime1-rfTime2 + 100*rfbucket) % rfbucket;
+            this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAve").fill(rfTime);
+            this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAvetmp").fill(rfTime);
+            this.getDataGroup().getItem(0,0,0).getH2F("timeRF1").fill(rfTime1,rfTime);
+            this.getDataGroup().getItem(0,0,0).getH2F("timeRF2").fill(rfTime2,rfTime);            
         }
         if(this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAvetmp").getEntries()>=500){
             H1F rf1diff   = this.getDataGroup().getItem(0,0,0).getH1F("rf1difftmp");
@@ -401,10 +408,12 @@ public class RFmonitor extends DetectorMonitor {
                 }
             }
             if(rf1time>0 && rf2time>0) {
+//                System.out.println(rf1time + " " + rf2time);
+                double rftime = (rf1time-rf2time + 100*rfbucket) % rfbucket;
                 this.getDataGroup().getItem(0,0,0).getH1F("rf1fADCadc").fill(rf1adc);
                 this.getDataGroup().getItem(0,0,0).getH1F("rf2fADCadc").fill(rf2adc);
-                this.getDataGroup().getItem(0,0,0).getH1F("rffADCdiff").fill(rf1time-rf2time);
-                this.getDataGroup().getItem(0,0,0).getH1F("rffADCdifftmp").fill(rf1time-rf2time);
+                this.getDataGroup().getItem(0,0,0).getH1F("rffADCdiff").fill(rftime);
+                this.getDataGroup().getItem(0,0,0).getH1F("rffADCdifftmp").fill(rftime);
             }
         }
         if(this.getDataGroup().getItem(0,0,0).getH1F("rffADCdifftmp").getEntries()>=500){
