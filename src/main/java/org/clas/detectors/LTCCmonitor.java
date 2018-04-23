@@ -91,7 +91,7 @@ public class LTCCmonitor  extends DetectorMonitor {
         tdcR.setTitleY("PMT (all sectors combined)");
         
         
-        DataGroup dg = new DataGroup(1,10);
+        DataGroup dg = new DataGroup(1,12);
         dg.addDataSet(occADC, 0);
         dg.addDataSet(occADCnorm, 1);
         dg.addDataSet(occADCref, 2);
