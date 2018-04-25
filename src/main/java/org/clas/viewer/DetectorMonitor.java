@@ -321,10 +321,10 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
 
     }
     
-    public void printCanvas(String dir) {
+    public void printCanvas(String dir, String timestamp) {
         // print canvas to files
         for(int tab=0; tab<this.detectorTabNames.size(); tab++) {
-            String fileName = dir + "/" + this.detectorName + "_canvas" + tab + ".png";
+            String fileName = dir + "/" + this.detectorName + "_canvas" + tab + "_" + timestamp + ".png";
             System.out.println(fileName);
             this.detectorCanvas.getCanvas(this.detectorTabNames.get(tab)).save(fileName);
         }

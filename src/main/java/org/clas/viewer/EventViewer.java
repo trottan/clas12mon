@@ -508,7 +508,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(e.getActionCommand()=="Upload all histos to the logbook") {   
             
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
-            String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
+            String tstamp = df.format(new Date());
+            String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + tstamp;        
             File theDir = new File(data);
             // if the directory does not exist, create it
             if (!theDir.exists()) {
@@ -518,18 +519,18 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 if(result){ System.out.println("Created directory: " + data);}
             }
             
-            String fileName1 = data + "/summary_FD.png";
+            String fileName1 = data + "/summary_FD_"+tstamp+".png";
             System.out.println(fileName1);
             CLAS12Canvas.getCanvas("FD").save(fileName1);
-            String fileName2 = data + "/summary_CD.png";
+            String fileName2 = data + "/summary_CD_"+tstamp+".png";
             System.out.println(fileName2);
             CLAS12Canvas.getCanvas("CD").save(fileName2);
-            String fileName3 = data + "/summary_FT.png";
+            String fileName3 = data + "/summary_FT_"+tstamp+".png";
             System.out.println(fileName3);
             CLAS12Canvas.getCanvas("FT").save(fileName3);
             
             for(int k=0; k<this.monitors.length; k++) {
-                this.monitors[k].printCanvas(data);
+                this.monitors[k].printCanvas(data,tstamp);
             }
             
             LogEntry entry = new LogEntry("All online monitoring histograms for run number " + this.runNumber, "HBLOG");
@@ -537,104 +538,107 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             System.out.println("Starting to upload all monitoring plots");
             
             try{
-              entry.addAttachment(data+"/summary_FD.png", "Summary plots FD");
-              entry.addAttachment(data+"/summary_CD.png", "Summary plots CD");
-              entry.addAttachment(data+"/summary_FT.png", "Summary plots FT");
+              entry.addAttachment(data+"/summary_FD_"+tstamp+".png", "Summary plots FD");
+              entry.addAttachment(data+"/summary_CD_"+tstamp+".png", "Summary plots CD");
+              entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots FT");
               System.out.println("Summary plots uploaded");
-              entry.addAttachment(data+"/BMT_canvas0.png", "BMT occupancies");
-              entry.addAttachment(data+"/BMT_canvas1.png", "BMT occupancies c");
-              entry.addAttachment(data+"/BMT_canvas2.png", "BMT occupancies z");
-              entry.addAttachment(data+"/BMT_canvas3.png", "BMT time of max");
-              entry.addAttachment(data+"/BMT_canvas4.png", "BMT multiplicity");
+              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies");
+              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies c");
+              entry.addAttachment(data+"/BMT_canvas2_"+tstamp+".png", "BMT occupancies z");
+              entry.addAttachment(data+"/BMT_canvas3_"+tstamp+".png", "BMT time of max");
+              entry.addAttachment(data+"/BMT_canvas4_"+tstamp+".png", "BMT multiplicity");
               System.out.println("BMT plots uploaded");
-              entry.addAttachment(data+"/BST_canvas0.png", "BST occupancies 2D");
-              entry.addAttachment(data+"/BST_canvas1.png", "BST occupancies 1D");
-              entry.addAttachment(data+"/BST_canvas2.png", "BST multiplicity"); 
+              entry.addAttachment(data+"/BST_canvas0_"+tstamp+".png", "BST occupancies 2D");
+              entry.addAttachment(data+"/BST_canvas1_"+tstamp+".png", "BST occupancies 1D");
+              entry.addAttachment(data+"/BST_canvas2_"+tstamp+".png", "BST multiplicity"); 
               System.out.println("BST plots uploaded");
-              entry.addAttachment(data+"/CND_canvas0.png", "CND ADC occupancies and spectra");
-              entry.addAttachment(data+"/CND_canvas1.png", "CND TDC occupancies and spectra");
+              entry.addAttachment(data+"/CND_canvas0_"+tstamp+".png", "CND ADC occupancies and spectra");
+              entry.addAttachment(data+"/CND_canvas1_"+tstamp+".png", "CND TDC occupancies and spectra");
               System.out.println("CND plots uploaded");
-              entry.addAttachment(data+"/CTOF_canvas0.png", "CTOF ADC occupancies and spectra");
-              entry.addAttachment(data+"/CTOF_canvas1.png", "CTOF TDC occupancies and spectra");
+              entry.addAttachment(data+"/CTOF_canvas0_"+tstamp+".png", "CTOF ADC occupancies and spectra");
+              entry.addAttachment(data+"/CTOF_canvas1_"+tstamp+".png", "CTOF TDC occupancies and spectra");
               System.out.println("CTOF plots uploaded");
-              entry.addAttachment(data+"/DC_canvas0.png", "DC occupancies raw");
-              entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized logarithmic scale");
-              entry.addAttachment(data+"/DC_canvas2.png", "DC occupancies normalized linear scale");
-              entry.addAttachment(data+"/DC_canvas3.png", "DC region occupancies");
-              entry.addAttachment(data+"/DC_canvas4.png", "DC TDC raw value versus layer");
-              entry.addAttachment(data+"/DC_canvas5.png", "DC TDC spectra per Sector / Superlayer");
-              entry.addAttachment(data+"/DC_canvas6.png", "DC hit multiplicity");
+              entry.addAttachment(data+"/DC_canvas0_"+tstamp+".png", "DC occupancies raw");
+              entry.addAttachment(data+"/DC_canvas1_"+tstamp+".png", "DC occupancies normalized logarithmic scale");
+              entry.addAttachment(data+"/DC_canvas2_"+tstamp+".png", "DC occupancies normalized linear scale");
+              entry.addAttachment(data+"/DC_canvas3_"+tstamp+".png", "DC region occupancies");
+              entry.addAttachment(data+"/DC_canvas4_"+tstamp+".png", "DC TDC raw value versus layer");
+              entry.addAttachment(data+"/DC_canvas5_"+tstamp+".png", "DC TDC spectra per Sector / Superlayer");
+              entry.addAttachment(data+"/DC_canvas6_"+tstamp+".png", "DC hit multiplicity");
               System.out.println("DC plots uploaded");
-              entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
-              entry.addAttachment(data+"/ECAL_canvas1.png", "ECAL TDC occupancies");
-              entry.addAttachment(data+"/ECAL_canvas2.png", "ECAL ADC histograms");
-              entry.addAttachment(data+"/ECAL_canvas3.png", "ECAL FADC timing");
-              entry.addAttachment(data+"/ECAL_canvas4.png", "ECAL TDC histograms");
-              entry.addAttachment(data+"/ECAL_canvas5.png", "ECAL ADC sum");
+              entry.addAttachment(data+"/ECAL_canvas0_"+tstamp+".png", "ECAL ADC occupancies");
+              entry.addAttachment(data+"/ECAL_canvas1_"+tstamp+".png", "ECAL TDC occupancies");
+              entry.addAttachment(data+"/ECAL_canvas2_"+tstamp+".png", "ECAL ADC histograms");
+              entry.addAttachment(data+"/ECAL_canvas3_"+tstamp+".png", "ECAL FADC timing");
+              entry.addAttachment(data+"/ECAL_canvas4_"+tstamp+".png", "ECAL TDC histograms");
+              entry.addAttachment(data+"/ECAL_canvas5_"+tstamp+".png", "ECAL ADC sum");
               System.out.println("ECAL plots uploaded");
-              //entry.addAttachment(data+"/Faraday Cup_canvas0.png", "Faraday Cup");
+              //entry.addAttachment(data+"/Faraday Cup_canvas0_"+tstamp+".png", "Faraday Cup");
               //System.out.println("Farady Cup plots uploaded");
-              entry.addAttachment(data+"/FMT_canvas0.png", "FMT occupancies 2D");
-              entry.addAttachment(data+"/FMT_canvas1.png", "FMT Time of Max");
-              entry.addAttachment(data+"/FMT_canvas2.png", "FMT occupancies 1D");
-              entry.addAttachment(data+"/FMT_canvas3.png", "FMT Multiplicity");
+              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
+              entry.addAttachment(data+"/FMT_canvas1_"+tstamp+".png", "FMT Time of Max");
+              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
+              entry.addAttachment(data+"/FMT_canvas3_"+tstamp+".png", "FMT Multiplicity");
               System.out.println("FMT plots uploaded");
-              entry.addAttachment(data+"/FTCAL_canvas0.png", "FTCAL");
+              entry.addAttachment(data+"/FTCAL_canvas0_"+tstamp+".png", "FTCAL");
               System.out.println("FTCAL plot uploaded");
-              entry.addAttachment(data+"/FTHODO_canvas0.png", "FTHODO FADC occupancies");
-              entry.addAttachment(data+"/FTHODO_canvas1.png", "FTHODO FADC spectra");
+              entry.addAttachment(data+"/FTHODO_canvas0_"+tstamp+".png", "FTHODO FADC occupancies");
+              entry.addAttachment(data+"/FTHODO_canvas1_"+tstamp+".png", "FTHODO FADC spectra");
               System.out.println("FTHODO plots uploaded");
-              entry.addAttachment(data+"/FTOF_canvas0.png", "FTOF ADC occupancies");
-              entry.addAttachment(data+"/FTOF_canvas1.png", "FTOF TDC occupancies");
-              entry.addAttachment(data+"/FTOF_canvas2.png", "FTOF ADC histograms");
-              entry.addAttachment(data+"/FTOF_canvas3.png", "FTOF FADC timing");
-              entry.addAttachment(data+"/FTOF_canvas4.png", "FTOF TDC histograms");
-              entry.addAttachment(data+"/FTOF_canvas5.png", "FTOF GMEAN");
+              entry.addAttachment(data+"/FTOF_canvas0_"+tstamp+".png", "FTOF ADC occupancies");
+              entry.addAttachment(data+"/FTOF_canvas1_"+tstamp+".png", "FTOF TDC occupancies");
+              entry.addAttachment(data+"/FTOF_canvas2_"+tstamp+".png", "FTOF ADC histograms");
+              entry.addAttachment(data+"/FTOF_canvas3_"+tstamp+".png", "FTOF FADC timing");
+              entry.addAttachment(data+"/FTOF_canvas4_"+tstamp+".png", "FTOF TDC histograms");
+              entry.addAttachment(data+"/FTOF_canvas5_"+tstamp+".png", "FTOF GMEAN");
               System.out.println("FTOF plots uploaded");
-              entry.addAttachment(data+"/FTTRK_canvas0.png", "FTTRK occupancies 2D");
-              entry.addAttachment(data+"/FTTRK_canvas1.png", "FTTRK occupancies 1D");
-              entry.addAttachment(data+"/FTTRK_canvas2.png", "FTTRK average time maximum");
-              entry.addAttachment(data+"/FTTRK_canvas3.png", "FTTRK ADC and time spectra");
+              entry.addAttachment(data+"/FTTRK_canvas0_"+tstamp+".png", "FTTRK occupancies 2D");
+              entry.addAttachment(data+"/FTTRK_canvas1_"+tstamp+".png", "FTTRK occupancies 1D");
+              entry.addAttachment(data+"/FTTRK_canvas2_"+tstamp+".png", "FTTRK average time maximum");
+              entry.addAttachment(data+"/FTTRK_canvas3_"+tstamp+".png", "FTTRK ADC and time spectra");
               System.out.println("FTTRK plots uploaded");
-              //entry.addAttachment(data+"/HEL_canvas0.png", "Helicity");
+              //entry.addAttachment(data+"/HEL_canvas0_"+tstamp+".png", "Helicity");
               //System.out.println("Helicity plot uploaded");
-              entry.addAttachment(data+"/HTCC_canvas0.png", "HTCC occupancies");
-              entry.addAttachment(data+"/HTCC_canvas1.png", "HTCC ADC spectra");
-              entry.addAttachment(data+"/HTCC_canvas2.png", "HTCC FADC timing spectra");
-              //entry.addAttachment(data+"/HTCC_canvas3.png", "HTCC TDC spectra");
+              entry.addAttachment(data+"/HTCC_canvas0_"+tstamp+".png", "HTCC occupancies");
+              entry.addAttachment(data+"/HTCC_canvas1_"+tstamp+".png", "HTCC ADC spectra");
+              entry.addAttachment(data+"/HTCC_canvas2_"+tstamp+".png", "HTCC FADC timing spectra");
+              //entry.addAttachment(data+"/HTCC_canvas3_"+tstamp+".png", "HTCC TDC spectra");
               System.out.println("HTCC plots uploaded");
-              entry.addAttachment(data+"/LTCC_canvas0.png", "LTCC ADC occupancies and spectra");
-              entry.addAttachment(data+"/LTCC_canvas1.png", "LTCC FADC timing");
-              //entry.addAttachment(data+"/LTCC_canvas2.png", "LTCC TDC occupancies and spectra");
+              entry.addAttachment(data+"/LTCC_canvas0_"+tstamp+".png", "LTCC ADC occupancies and spectra");
+              entry.addAttachment(data+"/LTCC_canvas1_"+tstamp+".png", "LTCC FADC timing");
+              //entry.addAttachment(data+"/LTCC_canvas2_"+tstamp+".png", "LTCC TDC occupancies and spectra");
               System.out.println("LTTC plots uploaded");
               System.out.println("RICH plot uploaded");
-              entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
-              //entry.addAttachment(data+"/RECON_canvas0.png", "RECON CVT cosmic");
-              //entry.addAttachment(data+"/RECON_canvas1.png", "RECON CVT positive tracks");
-              //entry.addAttachment(data+"/RECON_canvas2.png", "RECON CVT negative tracks");
-              //entry.addAttachment(data+"/RECON_canvas3.png", "RECON DC tracks per event");
-              //entry.addAttachment(data+"/RECON_canvas4.png", "RECON DC hits per track");
-              //entry.addAttachment(data+"/RECON_canvas5.png", "RECON DC momentum");
-              //entry.addAttachment(data+"/RECON_canvas6.png", "RECON DC theta angle");
+              entry.addAttachment(data+"/RICH_canvas0_"+tstamp+".png", "RICH occupancy");
+              //entry.addAttachment(data+"/RECON_canvas0_"+tstamp+".png", "RECON CVT cosmic");
+              //entry.addAttachment(data+"/RECON_canvas1_"+tstamp+".png", "RECON CVT positive tracks");
+              //entry.addAttachment(data+"/RECON_canvas2_"+tstamp+".png", "RECON CVT negative tracks");
+              //entry.addAttachment(data+"/RECON_canvas3_"+tstamp+".png", "RECON DC tracks per event");
+              //entry.addAttachment(data+"/RECON_canvas4_"+tstamp+".png", "RECON DC hits per track");
+              //entry.addAttachment(data+"/RECON_canvas5_"+tstamp+".png", "RECON DC momentum");
+              //entry.addAttachment(data+"/RECON_canvas6_"+tstamp+".png", "RECON DC theta angle");
               //System.out.println("RECON plots uploaded");
-              entry.addAttachment(data+"/RF_canvas0.png", "RF canvas 1");
-              entry.addAttachment(data+"/RF_canvas1.png", "RF canvas 2");
-              entry.addAttachment(data+"/RF_canvas2.png", "RF canvas 3");
-              entry.addAttachment(data+"/RF_canvas3.png", "RF canvas 4");
+              entry.addAttachment(data+"/RF_canvas0_"+tstamp+".png", "RF canvas 1");
+              entry.addAttachment(data+"/RF_canvas1_"+tstamp+".png", "RF canvas 2");
+              entry.addAttachment(data+"/RF_canvas2_"+tstamp+".png", "RF canvas 3");
+              entry.addAttachment(data+"/RF_canvas3_"+tstamp+".png", "RF canvas 4");
               System.out.println("RF plots uploaded");
-              entry.addAttachment(data+"/HEL_canvas0.png", "HEL canvas 1");
-              entry.addAttachment(data+"/HEL_canvas1.png", "HEL canvas 2");
+              entry.addAttachment(data+"/HEL_canvas0_"+tstamp+".png", "HEL canvas 1");
+              entry.addAttachment(data+"/HEL_canvas1_"+tstamp+".png", "HEL canvas 2");
               System.out.println("HEL plots uploaded");
-              entry.addAttachment(data+"/Trigger_canvas0.png", "Trigger bits");
-              //entry.addAttachment(data+"/Trigger_canvas1.png", "Trigger EC peak");
-              //entry.addAttachment(data+"/Trigger_canvas2.png", "Trigger EC cluster");
-              //entry.addAttachment(data+"/Trigger_canvas3.png", "Trigger HTCC cluster");
-              //entry.addAttachment(data+"/Trigger_canvas4.png", "Trigger FTOF cluster");
+              entry.addAttachment(data+"/Trigger_canvas0_"+tstamp+".png", "Trigger bits");
+              //entry.addAttachment(data+"/Trigger_canvas1_"+tstamp+".png", "Trigger EC peak");
+              //entry.addAttachment(data+"/Trigger_canvas2_"+tstamp+".png", "Trigger EC cluster");
+              //entry.addAttachment(data+"/Trigger_canvas3_"+tstamp+".png", "Trigger HTCC cluster");
+              //entry.addAttachment(data+"/Trigger_canvas4_"+tstamp+".png", "Trigger FTOF cluster");
               System.out.println("Trigger plots uploaded");
 
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
-            } catch(Exception exc){exc.printStackTrace(); System.out.println( exc.getMessage());}
+            } catch(Exception exc){
+                exc.printStackTrace(); 
+                System.out.println( exc.getMessage());
+            }
               
         }
         
@@ -642,7 +646,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(e.getActionCommand()=="Upload occupancy histos to the logbook") {   
                 
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
-            String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
+            String tstamp = df.format(new Date());
+            String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + tstamp;        
             File theDir = new File(data);
             // if the directory does not exist, create it
             if (!theDir.exists()) {
@@ -652,18 +657,18 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 if(result){ System.out.println("Created directory: " + data);}
             }
             
-            String fileName1 = data + "/summary_FD.png";
+            String fileName1 = data + "/summary_FD_"+tstamp+".png";
             System.out.println(fileName1);
             CLAS12Canvas.getCanvas("FD").save(fileName1);
-            String fileName2 = data + "/summary_CD.png";
+            String fileName2 = data + "/summary_CD_"+tstamp+".png";
             System.out.println(fileName2);
             CLAS12Canvas.getCanvas("CD").save(fileName2);
-            String fileName3 = data + "/summary_FT.png";
+            String fileName3 = data + "/summary_FT_"+tstamp+".png";
             System.out.println(fileName3);
             CLAS12Canvas.getCanvas("FT").save(fileName3);
             
             for(int k=0; k<this.monitors.length; k++) {
-                this.monitors[k].printCanvas(data);
+                this.monitors[k].printCanvas(data,tstamp);
             }
             
             LogEntry entry = new LogEntry("Occupancy online monitoring histograms for run number " + this.runNumber, "HBLOG");
@@ -671,56 +676,59 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             System.out.println("Starting to upload the occupancy plots");
             
             try{
-              entry.addAttachment(data+"/summary_FD.png", "Summary plots for the forward detector");
-              entry.addAttachment(data+"/summary_CD.png", "Summary plots for the central detector");
-              entry.addAttachment(data+"/summary_FT.png", "Summary plots for the forward tagger");
+              entry.addAttachment(data+"/summary_FD_"+tstamp+".png", "Summary plots for the forward detector");
+              entry.addAttachment(data+"/summary_CD_"+tstamp+".png", "Summary plots for the central detector");
+              entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots for the forward tagger");
               System.out.println("Summary plots uploaded");
-              entry.addAttachment(data+"/BMT_canvas0.png", "BMT occupancies");
-              entry.addAttachment(data+"/BMT_canvas1.png", "BMT occupancies c");
-              entry.addAttachment(data+"/BMT_canvas2.png", "BMT occupancies z");
+              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies");
+              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies c");
+              entry.addAttachment(data+"/BMT_canvas2_"+tstamp+".png", "BMT occupancies z");
               System.out.println("BMT plots uploaded");
-              entry.addAttachment(data+"/BST_canvas0.png", "BST occupancies 2D");
-              entry.addAttachment(data+"/BST_canvas1.png", "BST occupancies 1D"); 
+              entry.addAttachment(data+"/BST_canvas0_"+tstamp+".png", "BST occupancies 2D");
+              entry.addAttachment(data+"/BST_canvas1_"+tstamp+".png", "BST occupancies 1D"); 
               System.out.println("BST plots uploaded");
-              entry.addAttachment(data+"/CND_canvas0.png", "CND ADC occupancies and spectra");
-              entry.addAttachment(data+"/CND_canvas1.png", "CND TDC occupancies and spectra");
+              entry.addAttachment(data+"/CND_canvas0_"+tstamp+".png", "CND ADC occupancies and spectra");
+              entry.addAttachment(data+"/CND_canvas1_"+tstamp+".png", "CND TDC occupancies and spectra");
               System.out.println("CND plots uploaded");
-              entry.addAttachment(data+"/CTOF_canvas0.png", "CTOF ADC occupancies and spectra");
-              entry.addAttachment(data+"/CTOF_canvas1.png", "CTOF TDC occupancies and spectra");
+              entry.addAttachment(data+"/CTOF_canvas0_"+tstamp+".png", "CTOF ADC occupancies and spectra");
+              entry.addAttachment(data+"/CTOF_canvas1_"+tstamp+".png", "CTOF TDC occupancies and spectra");
               System.out.println("CTOF plots uploaded");
-              entry.addAttachment(data+"/DC_canvas0.png", "DC occupancies raw");
-              entry.addAttachment(data+"/DC_canvas1.png", "DC occupancies normalized logarithmic scale");
-              entry.addAttachment(data+"/DC_canvas2.png", "DC occupancies normalized linear scale");
-              entry.addAttachment(data+"/DC_canvas3.png", "DC region occupancies");
+              entry.addAttachment(data+"/DC_canvas0_"+tstamp+".png", "DC occupancies raw");
+              entry.addAttachment(data+"/DC_canvas1_"+tstamp+".png", "DC occupancies normalized logarithmic scale");
+              entry.addAttachment(data+"/DC_canvas2_"+tstamp+".png", "DC occupancies normalized linear scale");
+              entry.addAttachment(data+"/DC_canvas3_"+tstamp+".png", "DC region occupancies");
               System.out.println("DC plots uploaded");
-              entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
-              entry.addAttachment(data+"/ECAL_canvas1.png", "ECAL TDC occupancies");
+              entry.addAttachment(data+"/ECAL_canvas0_"+tstamp+".png", "ECAL ADC occupancies");
+              entry.addAttachment(data+"/ECAL_canvas1_"+tstamp+".png", "ECAL TDC occupancies");
               System.out.println("ECAL plots uploaded");
-              entry.addAttachment(data+"/FMT_canvas0.png", "FMT occupancies 2D");
-              entry.addAttachment(data+"/FMT_canvas2.png", "FMT occupancies 1D");
+              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
+              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
               System.out.println("FMT plots uploaded");
-              entry.addAttachment(data+"/FTCAL_canvas0.png", "FTCAL");
+              entry.addAttachment(data+"/FTCAL_canvas0_"+tstamp+".png", "FTCAL");
               System.out.println("FTCAL plot uploaded");
-              entry.addAttachment(data+"/FTHODO_canvas0.png", "FTHODO FADC occupancies");
+              entry.addAttachment(data+"/FTHODO_canvas0_"+tstamp+".png", "FTHODO FADC occupancies");
               System.out.println("FTHODO plot uploaded");
-              entry.addAttachment(data+"/FTOF_canvas0.png", "FTOF ADC occupancies");
-              entry.addAttachment(data+"/FTOF_canvas1.png", "FTOF TDC occupancies");
+              entry.addAttachment(data+"/FTOF_canvas0_"+tstamp+".png", "FTOF ADC occupancies");
+              entry.addAttachment(data+"/FTOF_canvas1_"+tstamp+".png", "FTOF TDC occupancies");
               System.out.println("FTOF plots uploaded");
-              entry.addAttachment(data+"/FTTRK_canvas0.png", "FTTRK occupancies 2D");
-              entry.addAttachment(data+"/FTTRK_canvas1.png", "FTTRK occupancies 1D");
+              entry.addAttachment(data+"/FTTRK_canvas0_"+tstamp+".png", "FTTRK occupancies 2D");
+              entry.addAttachment(data+"/FTTRK_canvas1_"+tstamp+".png", "FTTRK occupancies 1D");
               System.out.println("FTTRK plots uploaded");
-              entry.addAttachment(data+"/HTCC_canvas0.png", "HTCC occupancies");
+              entry.addAttachment(data+"/HTCC_canvas0_"+tstamp+".png", "HTCC occupancies");
               System.out.println("HTCC plot uploaded");
-              entry.addAttachment(data+"/LTCC_canvas0.png", "LTCC occupancies and spectra");
+              entry.addAttachment(data+"/LTCC_canvas0_"+tstamp+".png", "LTCC occupancies and spectra");
               System.out.println("LTCC plots uploaded");
-              entry.addAttachment(data+"/RICH_canvas0.png", "RICH occupancy");
+              entry.addAttachment(data+"/RICH_canvas0_"+tstamp+".png", "RICH occupancy");
               System.out.println("RICH plot uploaded");
-              entry.addAttachment(data+"/Trigger_canvas0.png", "Trigger bits");
+              entry.addAttachment(data+"/Trigger_canvas0_"+tstamp+".png", "Trigger bits");
               System.out.println("Trigger plots uploaded");
             
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
-            } catch(Exception exc){}
+            } catch(Exception exc) {
+                exc.printStackTrace(); 
+                System.out.println( exc.getMessage());
+            }
         }
          
          
@@ -944,7 +952,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     public void printHistosToFile() {
         DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
-        String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
+        String tstamp = df.format(new Date());
+        String data = outPath + "/output" + "/clas12mon_" + this.runNumber + "_" + tstamp;        
         File theDir = new File(data);
         // if the directory does not exist, create it
         if (!theDir.exists()) {
@@ -961,18 +970,18 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
         }
         
-        String fileName1 = data + "/summary_FD.png";
+        String fileName1 = data + "/summary_FD_"+tstamp+".png";
         System.out.println(fileName1);
         CLAS12Canvas.getCanvas("FD").save(fileName1);
-        String fileName2 = data + "/summary_CD.png";
+        String fileName2 = data + "/summary_CD_"+tstamp+".png";
         System.out.println(fileName2);
         CLAS12Canvas.getCanvas("CD").save(fileName2);
-        String fileName3 = data + "/summary_FT.png";
+        String fileName3 = data + "/summary_FT_"+tstamp+".png";
         System.out.println(fileName3);
         CLAS12Canvas.getCanvas("FT").save(fileName3);
         
         for(int k=0; k<this.monitors.length; k++) {
-            this.monitors[k].printCanvas(data);
+            this.monitors[k].printCanvas(data,tstamp);
         }
         
         System.out.println("Histogram pngs succesfully saved in: " + data);
