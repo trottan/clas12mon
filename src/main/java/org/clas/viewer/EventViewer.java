@@ -563,7 +563,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/DC_canvas3.png", "DC region occupancies");
               entry.addAttachment(data+"/DC_canvas4.png", "DC TDC raw value versus layer");
               entry.addAttachment(data+"/DC_canvas5.png", "DC TDC spectra per Sector / Superlayer");
-              entry.addAttachment(data+"/DC_canvas5.png", "DC hit multiplicity");
+              entry.addAttachment(data+"/DC_canvas6.png", "DC hit multiplicity");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0.png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1.png", "ECAL TDC occupancies");
@@ -634,7 +634,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
-            } catch(Exception exc){}
+            } catch(Exception exc){exc.printStackTrace(); System.out.println( exc.getMessage());}
               
         }
         
