@@ -77,13 +77,15 @@ public class FMTmonitor extends DetectorMonitor {
 		H2F occupancyHisto = new H2F("Occupancies","Occupancies",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
 		occupancyHisto.setTitleX("strips");
 		occupancyHisto.setTitleY("detector");
-                H1F histmulti = new H1F("multi", "multi", 150, -0.5, 149.5);
-                histmulti.setTitleX("hit multiplicity");
-                histmulti.setTitleY("counts");
-                histmulti.setTitle("Multiplicity of BMT channels"); 
-		DataGroup occupancyGroup = new DataGroup("");
+                DataGroup occupancyGroup = new DataGroup("");
 		occupancyGroup.addDataSet(occupancyHisto, 0);
-                occupancyGroup.addDataSet(histmulti, 0);
+                for (int layer = 1; layer <= maxNumberLayer; layer++) {
+                    H1F histmulti = new H1F("multi_layer "+ layer, "multi_layer "+ layer, 150, -0.5, 149.5);
+                    histmulti.setTitleX("hit multiplicity");
+                    histmulti.setTitleY("counts");
+                    histmulti.setTitle("Multiplicity of FMT channels for layer" + layer); 
+                    occupancyGroup.addDataSet(histmulti, 0);
+                }
 		this.getDataGroup().add(occupancyGroup, 0, 0, 0);
 		
 		H1F timeOfMaxHisto = new H1F("TimeOfMax","TimeOfMax",numberOfChips,0,numberOfChips);
@@ -154,11 +156,13 @@ public class FMTmonitor extends DetectorMonitor {
                 
                 this.getDetectorCanvas().getCanvas("Occupancy").update();
                 
-                this.getDetectorCanvas().getCanvas("Multiplicity").divide(1, 1);
+                this.getDetectorCanvas().getCanvas("Multiplicity").divide(maxNumberSector*2, maxNumberLayer/2);
                 this.getDetectorCanvas().getCanvas("Multiplicity").setGridX(false);
                 this.getDetectorCanvas().getCanvas("Multiplicity").setGridY(false);
-                this.getDetectorCanvas().getCanvas("Multiplicity").cd(0);
-                this.getDetectorCanvas().getCanvas("Multiplicity").draw(this.getDataGroup().getItem(0,0,0).getH1F("multi"));
+                for (int layer = 1; layer <= maxNumberLayer; layer++) {
+                    this.getDetectorCanvas().getCanvas("Multiplicity").cd(layer-1);
+                    this.getDetectorCanvas().getCanvas("Multiplicity").draw(this.getDataGroup().getItem(0,0,0).getH1F("multi_layer " + layer));
+                }
                 this.getDetectorCanvas().getCanvas("Multiplicity").update();
                 
 		
@@ -175,18 +179,20 @@ public class FMTmonitor extends DetectorMonitor {
 		if (event.hasBank("FMT::adc") == true) {
 			DataBank bank = event.getBank("FMT::adc");
                         
-                        this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
-                        
+    //                    this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
+                        int[] mult_layer = {0,0,0,0,0,0};
 			for (int i = 0; i < bank.rows(); i++) {
 				int sectorNb = bank.getByte("sector", i);
 				int layerNb = bank.getByte("layer", i);
-				int strip = bank.getShort("component", i);
+				int strip   = bank.getShort("component", i);
+				int ADC     = bank.getInt("ADC", i);
 				float timeNb = bank.getFloat("time", i);
-				
+                                
 				if (strip < 0 || !mask[sectorNb][layerNb][strip]){
 					continue;
 				}
-				
+				if(ADC>0) {
+				mult_layer[layerNb-1]++;
 				int dreamNb = (strip - 1) / numberOfStripsPerChip + 1;
 				
 				dreamHit[sectorNb][layerNb][dreamNb]++;
@@ -195,7 +201,9 @@ public class FMTmonitor extends DetectorMonitor {
 				.fill(strip);
 				this.getDataGroup().getItem(0, 0, 0).getH2F("Occupancies").fill(strip,maxNumberSector*(layerNb-1)+(sectorNb-1),1);
                                 this.getDetectorSummary().getH2F("summary").fill(strip,maxNumberSector*(layerNb-1)+(sectorNb-1),1);
+                                }
 			}
+                        for (int layer = 1; layer <= maxNumberLayer; layer++) this.getDataGroup().getItem(0,0,0).getH1F("multi_layer " + layer).fill(mult_layer[layer-1]);
 			int compt=0;
 			if (getNumberOfEvents() % 1000 == 0) {
 				for (int sector = 1; sector <= maxNumberSector; sector++) {
