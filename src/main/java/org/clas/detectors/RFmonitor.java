@@ -1,7 +1,9 @@
 package org.clas.detectors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.clas.viewer.DetectorMonitor;
+import org.jlab.detector.calib.utils.ConstantsManager;
 import org.jlab.groot.data.GraphErrors;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
@@ -10,10 +12,13 @@ import org.jlab.groot.group.DataGroup;
 import org.jlab.groot.math.F1D;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
+import org.jlab.utils.groups.IndexedTable;
 
 
 public class RFmonitor extends DetectorMonitor {
     
+    ConstantsManager ccdb = new ConstantsManager();
+    IndexedTable rfConfig = null;
     private double tdc2Time = 0.023436;
     private double rfbucket = 4.008;
     private int    ncycles  = 40;
@@ -21,6 +26,10 @@ public class RFmonitor extends DetectorMonitor {
     
     public RFmonitor(String name) {
         super(name);
+        
+        ccdb.setVariation("default");
+        ccdb.init(Arrays.asList(new String[]{"/calibration/eb/rf/config"}));
+
         this.setDetectorTabNames("RF TDCs","RF Time","RF Timeline","RF fADC");
         this.init(false);
     }
@@ -29,6 +38,8 @@ public class RFmonitor extends DetectorMonitor {
     @Override
     public void createHistos() {
         // create histograms
+        int tdcMin = (int) (ncycles*rfbucket/tdc2Time)/-100;
+        int tdcMax = (int) (ncycles*3*rfbucket/tdc2Time)+100;
         this.setNumberOfEvents(0);
         H1F summary = new H1F("summary","summary",6,0.5,6.5);
         summary.setTitleX("sector");
@@ -37,11 +48,11 @@ public class RFmonitor extends DetectorMonitor {
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
-        H1F rf1 = new H1F("rf1","rf1", 100,0.,120000);
+        H1F rf1 = new H1F("rf1","rf1", 400,0.,120000);
         rf1.setTitleX("RF1 tdc");
         rf1.setTitleY("Counts");
         rf1.setFillColor(33);
-        H1F rf2 = new H1F("rf2","rf2", 100,0.,120000);
+        H1F rf2 = new H1F("rf2","rf2", 400,0.,120000);
         rf2.setTitleX("RF2 tdc");
         rf2.setTitleY("Counts");
         rf2.setFillColor(36);
@@ -65,56 +76,56 @@ public class RFmonitor extends DetectorMonitor {
         fdiffAve.setLineWidth(2);
         fdiffAve.setLineColor(2);
         fdiffAve.setOptStat("1111");
-        H1F rf1rawdiff = new H1F("rf1rawdiff","rf1rawdiff", 100, 6800.,6900.);
+        H1F rf1rawdiff = new H1F("rf1rawdiff","rf1rawdiff", 100, tdcMin, tdcMax);
         rf1rawdiff.setTitleX("RF1 diff");
         rf1rawdiff.setTitleY("Counts");
-        F1D f1rawdiff = new F1D("f1rawdiff","[amp]*gaus(x,[mean],[sigma])",6800.,6900.);
+        F1D f1rawdiff = new F1D("f1rawdiff","[amp]*gaus(x,[mean],[sigma])", tdcMin, tdcMax);
         f1rawdiff.setParameter(0, 0);
         f1rawdiff.setParameter(1, 0);
         f1rawdiff.setParameter(2, 1.0);
         f1rawdiff.setLineWidth(2);
         f1rawdiff.setLineColor(2);
         f1rawdiff.setOptStat("1111");
-        H1F rf2rawdiff = new H1F("rf2rawdiff","rf2rawdiff", 100, 6800.,6900.);
+        H1F rf2rawdiff = new H1F("rf2rawdiff","rf2rawdiff", 100, tdcMin, tdcMax);
         rf2rawdiff.setTitleX("RF2 diff");
         rf2rawdiff.setTitleY("Counts");
-        F1D f2rawdiff = new F1D("f2rawdiff","[amp]*gaus(x,[mean],[sigma])", 6800.,6900.);
+        F1D f2rawdiff = new F1D("f2rawdiff","[amp]*gaus(x,[mean],[sigma])", tdcMin, tdcMax);
         f2rawdiff.setParameter(0, 0);
         f2rawdiff.setParameter(1, 0);
         f2rawdiff.setParameter(2, 1.0);
         f2rawdiff.setLineWidth(2);
         f2rawdiff.setLineColor(2);
         f2rawdiff.setOptStat("1111");
-        H2F rf1rawdiffrf1 = new H2F("rf1rawdiffrf1","rf1rawdiffrf1", 100,0.,120000, 25, 6800.,6900.);
+        H2F rf1rawdiffrf1 = new H2F("rf1rawdiffrf1","rf1rawdiffrf1", 100,0.,120000, 25, tdcMin, tdcMax);
         rf1rawdiffrf1.setTitleX("RF1 tdc");
         rf1rawdiffrf1.setTitleY("RF1 diff");
-        H2F rf2rawdiffrf2 = new H2F("rf2rawdiffrf2","rf2rawdiffrf2", 100,0.,120000, 25, 6800.,6900.);
+        H2F rf2rawdiffrf2 = new H2F("rf2rawdiffrf2","rf2rawdiffrf2", 100,0.,120000, 25, tdcMin, tdcMax);
         rf2rawdiffrf2.setTitleX("RF2 tdc");
         rf2rawdiffrf2.setTitleY("RF2 diff");
-        H1F rf1diff = new H1F("rf1diff","rf1diff", 160, 158.,162.);
+        H1F rf1diff = new H1F("rf1diff","rf1diff", (int) ((int) ncycles*rfbucket), ncycles*rfbucket-2, ncycles*rfbucket+2);
         rf1diff.setTitleX("RF1 diff (ns)");
         rf1diff.setTitleY("Counts");
-        F1D f1diff = new F1D("f1diff","[amp]*gaus(x,[mean],[sigma])", 158.,162.);
+        F1D f1diff = new F1D("f1diff","[amp]*gaus(x,[mean],[sigma])", ncycles*rfbucket-2, ncycles*rfbucket+2);
         f1diff.setParameter(0, 0);
         f1diff.setParameter(1, 0);
         f1diff.setParameter(2, 1.0);
         f1diff.setLineWidth(2);
         f1diff.setLineColor(2);
         f1diff.setOptStat("1111");
-        H1F rf2diff = new H1F("rf2diff","rf2diff", 160, 158.,162.);
+        H1F rf2diff = new H1F("rf2diff","rf2diff", (int) ((int) ncycles*rfbucket), ncycles*rfbucket-2, ncycles*rfbucket+2);
         rf2diff.setTitleX("RF2 diff (ns)");
         rf2diff.setTitleY("Counts");
-        F1D f2diff = new F1D("f2diff","[amp]*gaus(x,[mean],[sigma])", 158.,162.);
+        F1D f2diff = new F1D("f2diff","[amp]*gaus(x,[mean],[sigma])", ncycles*rfbucket-2, ncycles*rfbucket+2);
         f2diff.setParameter(0, 0);
         f2diff.setParameter(1, 0);
         f2diff.setParameter(2, 1.0);
         f2diff.setLineWidth(2);
         f2diff.setLineColor(2);
         f2diff.setOptStat("1111");
-        H2F timeRF1 = new H2F("timeRF1","timeRF1",100,0.,240, 200, 0, rfbucket);
+        H2F timeRF1 = new H2F("timeRF1","timeRF1",100,0.,ncycles*rfbucket*2, 200, 0, rfbucket);
         timeRF1.setTitleX("RF1 (ns)");
         timeRF1.setTitleY("RF diff (ns)");
-        H2F timeRF2 = new H2F("timeRF2","timeRF2",100,0.,240, 200, 0, rfbucket);
+        H2F timeRF2 = new H2F("timeRF2","timeRF2",100,0.,ncycles*rfbucket*2, 200, 0, rfbucket);
         timeRF2.setTitleX("RF2 (ns)");
         timeRF2.setTitleY("RF diff (ns)");
         GraphErrors  rf1Timeline = new GraphErrors("rf1Timeline");
@@ -141,8 +152,8 @@ public class RFmonitor extends DetectorMonitor {
         rfAveTimeline.setTitleY("<RF>");   // Y axis title
         rfAveTimeline.setMarkerColor(44); // color from 0-9 for given palette
         rfAveTimeline.setMarkerSize(5);  // size in points on the screen
-        H1F rf1difftmp = new H1F("rf1difftmp","rf1difftmp", 160, 158.,162.);
-        H1F rf2difftmp = new H1F("rf2difftmp","rf2difftmp", 160, 158.,162.);
+        H1F rf1difftmp = new H1F("rf1difftmp","rf1difftmp", (int) ((int) ncycles*rfbucket), ncycles*rfbucket-2, ncycles*rfbucket+2);
+        H1F rf2difftmp = new H1F("rf2difftmp","rf2difftmp", (int) ((int) ncycles*rfbucket), ncycles*rfbucket-2, ncycles*rfbucket+2);
         H1F rfdifftmp = new H1F("rfdifftmp","rfdifftmp", 250, 0, rfbucket);
         H1F rfdiffAvetmp = new H1F("rfdiffAvetmp","rfdiffAvetmp", 500, 0, rfbucket);
         H1F rf1fADC = new H1F("rf1fADC","rf1fADC", 100,0.,400);
@@ -153,7 +164,7 @@ public class RFmonitor extends DetectorMonitor {
         rf2fADC.setTitleX("RF2 tdc");
         rf2fADC.setTitleY("Counts");
         rf2fADC.setFillColor(36);
-        H1F rf1fADCadc = new H1F("rf1fADCadc","rf1fADCadc", 100,0.,10000);
+        H1F rf1fADCadc = new H1F("rf1fADCadc","rf1fADCadc", 100,0.,40000);
         rf1fADCadc.setTitleX("RF1 adc");
         rf1fADCadc.setTitleY("Counts");
         rf1fADCadc.setFillColor(33);
@@ -290,7 +301,20 @@ public class RFmonitor extends DetectorMonitor {
         
         if(event.hasBank("RUN::config")){
 	    DataBank head = event.getBank("RUN::config");
+            int runNumber    = head.getInt("run", 0);
 	    this.eventNumber = head.getInt("event", 0);
+            rfConfig = ccdb.getConstants(runNumber, "/calibration/eb/rf/config");
+            double run_tdc2Time = rfConfig.getDoubleValue("tdc2time",1,1,1);
+            double run_rfbucket = rfConfig.getDoubleValue("clock",1,1,1);
+            int    run_ncycles  = rfConfig.getIntValue("cycles",1,1,1);
+            if(run_tdc2Time != this.tdc2Time || run_rfbucket != this.rfbucket || run_ncycles != this.ncycles) {
+                this.tdc2Time = run_tdc2Time;
+                this.rfbucket = run_rfbucket;
+                this.ncycles  = run_ncycles;
+                this.resetEventListener();
+                System.out.println("RF config parameter changed to: \n\t tdc2time = " + this.tdc2Time + "\n\t rf bucket = " + this.rfbucket + "\n\t n. of cycles = " + this.ncycles);
+            }
+//            System.out.println();
         }
         // process event info and save into data group
         ArrayList<Integer> rf1 = new ArrayList();
@@ -305,6 +329,7 @@ public class RFmonitor extends DetectorMonitor {
                 int      comp = bank.getShort("component",i);
                 int       TDC = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); 
+//                if(TDC>29000) continue;
                 if(order==2) {
                     if(comp==1) {
                         this.getDataGroup().getItem(0,0,0).getH1F("rf1").fill(TDC*1.0);
@@ -333,23 +358,26 @@ public class RFmonitor extends DetectorMonitor {
         }
 
         if(rf1.size()==rf2.size() || true) {
-            double rfTime1 = 0;
-            double rfTime2 = 0;
+//            for(int i=0; i<rf1.size(); i++) System.out.println(rf1.get(i));
             int npairs = Math.min(rf1.size(),rf2.size());
             for(int i=0; i<npairs; i++) {
                 double rfTimei = ((rf1.get(i)-rf2.get(i))*tdc2Time + (100*rfbucket)) % rfbucket;
                 this.getDataGroup().getItem(0,0,0).getH1F("rfdiff").fill(rfTimei);
                 this.getDataGroup().getItem(0,0,0).getH1F("rfdifftmp").fill(rfTimei);
-//                System.out.println((rf1.get(i)*tdc2Time) + " " + (rf2.get(i)*tdc2Time));
-//                rfTime1 += rf1.get(i)*tdc2Time - i*ncycles*rfbucket;
-//                rfTime2 += rf2.get(i)*tdc2Time - i*ncycles*rfbucket;
+            }
+            double rfTime1 = 0;
+            double rfTime2 = 0;
+            for(int i=0; i<rf1.size(); i++) {
                 rfTime1 += ((rf1.get(i)*tdc2Time) % (ncycles*rfbucket));
+//                System.out.println(i + " " + rf1.get(i)*tdc2Time + " " + ((rf1.get(i)*tdc2Time) % (ncycles*rfbucket)));
+            }
+            for(int i=0; i<rf2.size(); i++) {
                 rfTime2 += ((rf2.get(i)*tdc2Time) % (ncycles*rfbucket));
             }
-            rfTime1 /=npairs;
-            rfTime2 /=npairs;            
+            rfTime1 /=rf1.size();
+            rfTime2 /=rf2.size();            
 //            System.out.println("aaa " + (rfTime1-rfTime2));
-            double rfTime = (rfTime1-rfTime2 + 100*rfbucket) % rfbucket;
+            double rfTime = (rfTime1-rfTime2 + 1000*rfbucket) % rfbucket;
             this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAve").fill(rfTime);
             this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAvetmp").fill(rfTime);
             this.getDataGroup().getItem(0,0,0).getH2F("timeRF1").fill(rfTime1,rfTime);
@@ -437,9 +465,9 @@ public class RFmonitor extends DetectorMonitor {
         this.fitRF(this.getDataGroup().getItem(0,0,0).getH1F("rfdiff"),    this.getDataGroup().getItem(0,0,0).getF1D("fdiff"));
         this.fitRF(this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAve"), this.getDataGroup().getItem(0,0,0).getF1D("fdiffAve"));
         double rfMean = this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAve").getMean();
-        this.getDetectorCanvas().getCanvas("RF Time").getPad(3).getAxisX().setRange(rfMean-0.5,rfMean+0.5);
-        this.getDetectorCanvas().getCanvas("RF Time").getPad(4).getAxisY().setRange(rfMean-0.5,rfMean+0.5);
-        this.getDetectorCanvas().getCanvas("RF Time").getPad(5).getAxisY().setRange(rfMean-0.5,rfMean+0.5);
+//        this.getDetectorCanvas().getCanvas("RF Time").getPad(3).getAxisX().setRange(rfMean-0.5,rfMean+0.5);
+//        this.getDetectorCanvas().getCanvas("RF Time").getPad(4).getAxisY().setRange(rfMean-0.5,rfMean+0.5);
+//        this.getDetectorCanvas().getCanvas("RF Time").getPad(5).getAxisY().setRange(rfMean-0.5,rfMean+0.5);
         this.fitRF(this.getDataGroup().getItem(0,0,0).getH1F("rffADCdiff"), this.getDataGroup().getItem(0,0,0).getF1D("ffADCdiff"));
     }
 
@@ -449,7 +477,7 @@ public class RFmonitor extends DetectorMonitor {
         double sigma = hirf.getRMS();
         f1rf.setParameter(0, amp);
         f1rf.setParameter(1, mean);
-        f1rf.setParameter(2, sigma);
+        f1rf.setParameter(2, 0.02);
         f1rf.setRange(mean-3.*sigma,mean+3.*sigma);
         DataFitter.fit(f1rf, hirf, "Q"); //No options uses error for sigma        
     }

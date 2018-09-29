@@ -174,9 +174,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         menuItem.getAccessibleContext().setAccessibleDescription("Upload all histos to the logbook");
         menuItem.addActionListener(this);
         upload.add(menuItem);
-        menuItem = new JMenuItem("Upload occupancy histos to the logbook", KeyEvent.VK_U);
-        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
-        menuItem.getAccessibleContext().setAccessibleDescription("Upload occupancy histos to the logbook");
+//        menuItem = new JMenuItem("Upload occupancy histos to the logbook", KeyEvent.VK_U);
+//        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+//        menuItem.getAccessibleContext().setAccessibleDescription("Upload occupancy histos to the logbook");
         menuItem.addActionListener(this);
         upload.add(menuItem);
         menuBar.add(upload);
@@ -416,7 +416,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         splitPanel.setLeftComponent(CLAS12View);
         splitPanel.setRightComponent(CLAS12Canvas);
         JTextPane clas12Text   = new JTextPane();
-        clas12Text.setText("CLAS12\n monitoring plots\n V2.0\n");
+        clas12Text.setText("CLAS12\n monitoring plots\n V3.0\n");
         clas12Text.setEditable(false);       
         this.clas12Textinfo.setEditable(false);
         this.clas12Textinfo.setFont(new Font("Avenir",Font.PLAIN,16));
@@ -439,7 +439,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
        
         for(int k =0; k<this.monitors.length; k++) {
-                this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName());
+                if(k!=6 && k!=14) this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName()); //don't show FMT tab
         	        this.monitors[k].getDetectorView().getView().addDetectorListener(this);
                         
         }
@@ -575,11 +575,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("ECAL plots uploaded");
               //entry.addAttachment(data+"/Faraday Cup_canvas0_"+tstamp+".png", "Faraday Cup");
               //System.out.println("Farady Cup plots uploaded");
-              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
-              entry.addAttachment(data+"/FMT_canvas1_"+tstamp+".png", "FMT Time of Max");
-              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
-              entry.addAttachment(data+"/FMT_canvas3_"+tstamp+".png", "FMT Multiplicity");
-              System.out.println("FMT plots uploaded");
+//              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
+//              entry.addAttachment(data+"/FMT_canvas1_"+tstamp+".png", "FMT Time of Max");
+//              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
+//              entry.addAttachment(data+"/FMT_canvas3_"+tstamp+".png", "FMT Multiplicity");
+//              System.out.println("FMT plots uploaded");
               entry.addAttachment(data+"/FTCAL_canvas0_"+tstamp+".png", "FTCAL");
               System.out.println("FTCAL plot uploaded");
               entry.addAttachment(data+"/FTHODO_canvas0_"+tstamp+".png", "FTHODO FADC occupancies");
@@ -701,9 +701,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/ECAL_canvas0_"+tstamp+".png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1_"+tstamp+".png", "ECAL TDC occupancies");
               System.out.println("ECAL plots uploaded");
-              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
-              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
-              System.out.println("FMT plots uploaded");
+//              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
+//              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
+//              System.out.println("FMT plots uploaded");
               entry.addAttachment(data+"/FTCAL_canvas0_"+tstamp+".png", "FTCAL");
               System.out.println("FTCAL plot uploaded");
               entry.addAttachment(data+"/FTHODO_canvas0_"+tstamp+".png", "FTHODO FADC occupancies");
@@ -900,9 +900,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(this.monitors[5].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getH2F("sumECin"));
    
         // FMT:
-        this.CLAS12Canvas.getCanvas("FD").cd(6);
-        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisZ().setLog(true);
-        if(this.monitors[6].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[6].getDetectorSummary().getH2F("summary"));
+//        this.CLAS12Canvas.getCanvas("FD").cd(6);
+//        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisZ().setLog(true);
+//        if(this.monitors[6].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[6].getDetectorSummary().getH2F("summary"));
         
         // FTOF:
         this.CLAS12Canvas.getCanvas("FD").cd(7);

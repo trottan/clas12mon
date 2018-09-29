@@ -3,19 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.clas.detector</groupId>
     <artifactId>clas12mon</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
     <dependencies>
       <dependency>
         <groupId>org.jlab.coat</groupId>
         <artifactId>coat-libs</artifactId>
-        <version>5.1-SNAPSHOT</version>
-         <type>jar</type>
-      </dependency>
-     <dependency>
-        <groupId>org.jlab.clas12.detector</groupId>
-        <artifactId>clas12detector-dc</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>5.7.0-SNAPSHOT</version>
          <type>jar</type>
       </dependency>
     <dependency>
