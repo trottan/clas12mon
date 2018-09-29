@@ -30,11 +30,10 @@ public class TRIGGERmonitor extends DetectorMonitor {
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",100,0.5,10000);
+        H1F summary = new H1F("Trigger Bits","Trigger Bits", 32,-0.5,31.5);
         summary.setFillColor(4);
-        summary.setTitleX("trigger");
-        summary.setTitleY("counts");
-        summary.setFillColor(33);
+        summary.setTitleX("Trigger Bits");
+        summary.setTitleY("Counts");
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
@@ -202,6 +201,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
 		//if (!testTriggerMask()) return;
         
         for (int i=0; i<32; i++) if(isTrigBitSet(i)) this.getDataGroup().getItem(0,0,0).getH1F(tbit).fill(i);
+        for (int i=0; i<32; i++) if(isTrigBitSet(i)) this.getDetectorSummary().getH1F("Trigger Bits").fill(i);
         
         for(int sec=1; sec<=6; sec++) {
             if (isGoodECALTrigger(sec)) {

@@ -106,6 +106,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 new HELmonitor("HEL"),        // 16
                 new FCUPmonitor("Faraday Cup"),  // 17
                 new TRIGGERmonitor("Trigger"),   // 18
+                new TJITTERmonitor("TimeJitter"),   // 19
      
     };
         
@@ -632,6 +633,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               //entry.addAttachment(data+"/Trigger_canvas3_"+tstamp+".png", "Trigger HTCC cluster");
               //entry.addAttachment(data+"/Trigger_canvas4_"+tstamp+".png", "Trigger FTOF cluster");
               System.out.println("Trigger plots uploaded");
+              entry.addAttachment(data+"/TimeJitter_canvas0_"+tstamp+".png", "Time Jitter");
+              System.out.println("Time Jitter plots uploaded");
 
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
@@ -903,7 +906,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 //        this.CLAS12Canvas.getCanvas("FD").cd(6);
 //        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisZ().setLog(true);
 //        if(this.monitors[6].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[6].getDetectorSummary().getH2F("summary"));
-        
+        // Trigger
+        this.CLAS12Canvas.getCanvas("FD").cd(6);
+        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisY().setLog(true);
+        if(this.monitors[18].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[18].getDetectorSummary().getH1F("Trigger Bits"));
+       
         // FTOF:
         this.CLAS12Canvas.getCanvas("FD").cd(7);
         this.CLAS12Canvas.getCanvas("FD").getPad(7).getAxisZ().setLog(true);
