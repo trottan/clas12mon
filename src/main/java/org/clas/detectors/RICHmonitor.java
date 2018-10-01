@@ -21,7 +21,7 @@ public class RICHmonitor  extends DetectorMonitor {
     public void createHistos() {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").divide(1, 2);
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").divide(1, 3);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridX(false);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").setGridY(false);
         
@@ -38,14 +38,20 @@ public class RICHmonitor  extends DetectorMonitor {
         occTDC.setTitleX("channel number");
         occTDC.setTitle("TDC Occupancy");
 
-        H2F tdc = new H2F("tdc", "tdc", 200, 0, 400, 417, 0.5, 417.5);
-        tdc.setTitleX("time [ns]");
-        tdc.setTitleY("MAPMT (3 slots / tile)");
-        tdc.setTitle("TDC timing");
+        H2F tdc_leading_edge = new H2F("tdc_leading_edge", "tdc leading edge", 200, 0, 400, 417, 0.5, 417.5);
+        tdc_leading_edge.setTitleX("leading edge time [ns]");
+        tdc_leading_edge.setTitleY("MAPMT (3 slots / tile)");
+        tdc_leading_edge.setTitle("TDC timing");
+
+        H2F tdc_trailing_edge = new H2F("tdc_trailing_edge", "tdc trailing edge", 200, 0, 400, 417, 0.5, 417.5);
+        tdc_trailing_edge.setTitleX("trailing edge time [ns]");
+        tdc_trailing_edge.setTitleY("MAPMT (3 slots / tile)");
+        tdc_trailing_edge.setTitle("TDC timing");
         
-        DataGroup dg = new DataGroup(2,1);
+        DataGroup dg = new DataGroup(2,2);
         dg.addDataSet(occTDC, 0);
-        dg.addDataSet(tdc, 1);
+        dg.addDataSet(tdc_leading_edge, 1);
+        dg.addDataSet(tdc_trailing_edge, 1);
         this.getDataGroup().add(dg,0,0,0);
     }
         
@@ -57,7 +63,10 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("occTDC"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(1);
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(1).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc"));
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc_leading_edge"));
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").cd(2);
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").getPad(2).getAxisZ().setLog(getLogZ());
+        this.getDetectorCanvas().getCanvas("Occupancies and spectra").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdc_trailing_edge"));
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").update();
         
         this.getDetectorView().getView().repaint();
@@ -101,7 +110,7 @@ public class RICHmonitor  extends DetectorMonitor {
                 int  layerbyte = bank.getByte("layer",i);
                 long     layer = layerbyte & 0xFF;
                 long      comp = bank.getShort("component",i);
-                long      pmt   = comp/64;
+                long     pmt   = comp/64;
                 int        tdc = bank.getInt("TDC",i);
                 int  orderbyte = bank.getByte("order",i); // order specifies left-right for ADC
                 long     order = orderbyte & 0xFF;
@@ -111,7 +120,8 @@ public class RICHmonitor  extends DetectorMonitor {
                 if(tdc>0){ 
                     this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp,layer*1.0);
                     
-                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc, layer*3 + pmt);
+                    if(orderbyte == 0) this.getDataGroup().getItem(0,0,0).getH2F("tdc_leading_edge").fill(tdc, layer*3 + pmt);
+                    if(orderbyte == 1) this.getDataGroup().getItem(0,0,0).getH2F("tdc_trailing_edge").fill(tdc, layer*3 + pmt);
                     
                     this.getDetectorSummary().getH2F("summary").fill(comp,layer*1.0);
                 }
