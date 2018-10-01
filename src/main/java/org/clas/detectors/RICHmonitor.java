@@ -120,8 +120,8 @@ public class RICHmonitor  extends DetectorMonitor {
                 if(tdc>0){ 
                     this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp,layer*1.0);
                     
-                    if(orderbyte == 0) this.getDataGroup().getItem(0,0,0).getH2F("tdc_leading_edge").fill(tdc, layer*3 + pmt);
-                    if(orderbyte == 1) this.getDataGroup().getItem(0,0,0).getH2F("tdc_trailing_edge").fill(tdc, layer*3 + pmt);
+                    if(orderbyte == 1) this.getDataGroup().getItem(0,0,0).getH2F("tdc_leading_edge").fill(tdc, layer*3 + pmt);
+                    if(orderbyte == 0) this.getDataGroup().getItem(0,0,0).getH2F("tdc_trailing_edge").fill(tdc, layer*3 + pmt);
                     
                     this.getDetectorSummary().getH2F("summary").fill(comp,layer*1.0);
                 }
