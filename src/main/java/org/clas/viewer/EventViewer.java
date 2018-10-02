@@ -178,7 +178,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 //        menuItem = new JMenuItem("Upload occupancy histos to the logbook", KeyEvent.VK_U);
 //        menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
 //        menuItem.getAccessibleContext().setAccessibleDescription("Upload occupancy histos to the logbook");
-        menuItem.addActionListener(this);
+//        menuItem.addActionListener(this);
         upload.add(menuItem);
         menuBar.add(upload);
         
