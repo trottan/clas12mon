@@ -45,9 +45,9 @@ public class TJITTERmonitor  extends DetectorMonitor {
         // initialize canvas and create histograms
         this.setNumberOfEvents(0);
         H1F summary = new H1F("summary","summary",200,-40,60);
-        summary.setTitleX("Time Jitter (ns)");
+        summary.setTitleX("TDC Time Jitter (ns)");
         summary.setTitleY("Counts");
-        summary.setTitle("Time Jitter");
+        summary.setTitle("TDC Time Jitter");
         summary.setFillColor(2);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
