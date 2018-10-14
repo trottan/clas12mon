@@ -26,6 +26,11 @@ import org.jlab.io.base.DataEventType;
 import org.jlab.io.task.IDataEventListener;
 import org.jlab.utils.groups.IndexedList;
 
+/**
+ *
+ * @author devita
+ */
+
 
 public class DetectorMonitor implements IDataEventListener, ActionListener {    
     

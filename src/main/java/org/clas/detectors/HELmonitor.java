@@ -7,6 +7,12 @@ import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
+/**
+ *
+ * @author devita
+ */
+
+
 public class HELmonitor extends DetectorMonitor {
 
     int syncSave = -1;

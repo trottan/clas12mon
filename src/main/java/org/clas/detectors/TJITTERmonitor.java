@@ -172,43 +172,47 @@ public class TJITTERmonitor  extends DetectorMonitor {
         }
         if (ftofADC != null && ftofTDC != null) {
             IndexedList<ArrayList<Integer>> tdcs = new IndexedList<ArrayList<Integer>>(3);
-            IndexedList<ArrayList<Double>> adcs = new IndexedList<ArrayList<Double>>(3);
-            for (int i = 0; i < ctofADC.rows(); i++) {
-                int layer = ftofADC.getByte("layer", i);
+            IndexedList<ArrayList<Double>>  adcs = new IndexedList<ArrayList<Double>>(3);
+            for (int i = 0; i < ftofADC.rows(); i++) {
+                int sector = ftofADC.getByte("sector", i);
+                int layer  = ftofADC.getByte("layer", i);
                 int paddle = ftofADC.getShort("component", i);
                 int order = ftofADC.getByte("order", i);
                 int icomp = (paddle - 1) * 2 + order + 1;
                 double adct = (double) ftofADC.getFloat("time", i);
-                if (adct > 0 && layer == 2) {
-                    if (!adcs.hasItem(1, 1, icomp)) adcs.add(new ArrayList<Double>(), 1, 1, icomp);
-                    adcs.getItem(1, 1, icomp).add(adct);
+                if (adct > 0) {
+                    if (!adcs.hasItem(sector,layer, icomp)) adcs.add(new ArrayList<Double>(), sector,layer, icomp);
+                    adcs.getItem(sector,layer, icomp).add(adct);
                 }
             }
             for (int i = 0; i < ftofTDC.rows(); i++) {
+                int sector = ftofTDC.getByte("sector", i);
                 int layer = ftofTDC.getByte("layer", i);
                 int paddle = ftofTDC.getShort("component", i);
                 int order = ftofTDC.getByte("order", i) - 2;
                 int icomp = (paddle - 1) * 2 + order + 1;
                 int tdc = ftofTDC.getInt("TDC", i);
-                if (tdc > 0 && layer == 2) {
-	           if(!tdcs.hasItem(1,1,icomp)) tdcs.add(new ArrayList<Integer>(),1,1,icomp);
-                   tdcs.getItem(1,1,icomp).add(tdc);
-		}
-	    }
-            for(int icomp=1; icomp<this.ftofPaddles*2+1; icomp++) {
-		if(tdcs.hasItem(1,1,icomp) && adcs.hasItem(1,1,icomp)) {
-                   List<Integer> listTDC = new ArrayList<Integer>();
-                   List<Double>  listADC = new ArrayList<Double>();
-                   listTDC = tdcs.getItem(1,1,icomp);
-                   listADC = adcs.getItem(1,1,icomp);
-		   for(int iadc=0; iadc<listADC.size(); iadc++) {
-                        for(int itdc=0; itdc<listTDC.size(); itdc++) {
-			    double adc = listADC.get(iadc);
-			    int tdc = listTDC.get(itdc);
-			    if(icomp%2 ==0) this.getDataGroup().getItem(0,0,0).getH2F("hi_ftof_tlphase").fill(triggerPhase0,tdc*tdcconv-adc);
-                            else            this.getDataGroup().getItem(0,0,0).getH2F("hi_ftof_trphase").fill(triggerPhase0,tdc*tdcconv-adc);
-                            this.getDetectorSummary().getH1F("summary").fill(tdc*tdcconv-adc-triggerPhase*period);
-			}
+                if (tdc > 0 ) {
+	           if(!tdcs.hasItem(sector,layer,icomp)) tdcs.add(new ArrayList<Integer>(),sector,layer,icomp);
+                   tdcs.getItem(sector,layer,icomp).add(tdc);
+                }
+            }
+            for(int isect=1; isect<=6; isect++) {
+                for(int icomp=1; icomp<this.ftofPaddles*2+1; icomp++) {
+                    if(tdcs.hasItem(isect,2,icomp) && adcs.hasItem(isect,2,icomp) && icomp<30 && isect!=2) {
+                       List<Integer> listTDC = new ArrayList<Integer>();
+                       List<Double>  listADC = new ArrayList<Double>();
+                       listTDC = tdcs.getItem(isect,2,icomp);
+                       listADC = adcs.getItem(isect,2,icomp);
+                       for(int iadc=0; iadc<listADC.size(); iadc++) {
+                            for(int itdc=0; itdc<listTDC.size(); itdc++) {
+                                double adc = listADC.get(iadc);
+                                int tdc = listTDC.get(itdc);
+                                if(icomp%2 ==0) this.getDataGroup().getItem(0,0,0).getH2F("hi_ftof_tlphase").fill(triggerPhase0,tdc*tdcconv-adc);
+                                else            this.getDataGroup().getItem(0,0,0).getH2F("hi_ftof_trphase").fill(triggerPhase0,tdc*tdcconv-adc);
+                                this.getDetectorSummary().getH1F("summary").fill(tdc*tdcconv-adc-triggerPhase*period);
+                            }
+                        }
                     }
                 }
 	    }

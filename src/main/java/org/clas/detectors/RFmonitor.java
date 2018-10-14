@@ -14,6 +14,10 @@ import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 import org.jlab.utils.groups.IndexedTable;
 
+/**
+ *
+ * @author devita
+ */
 
 public class RFmonitor extends DetectorMonitor {
     

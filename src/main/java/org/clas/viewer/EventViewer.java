@@ -58,6 +58,7 @@ import org.jlab.elog.LogEntry;
 /**
  *
  * @author ziegler
+ * @author devita
  */
 
 public class EventViewer implements IDataEventListener, DetectorListener, ActionListener, ChangeListener {
