@@ -62,10 +62,10 @@ public class CTOFmonitor  extends DetectorMonitor {
         occTDCR.setTitleX("PMT Downstream");
         occTDCR.setTitleY("Counts");
         occTDCR.setFillColor(38);
-        H2F tdcL = new H2F("tdcL", "tdcL", 50, 0, 50000, 48, 0.5, 48.5);
+        H2F tdcL = new H2F("tdcL", "tdcL", 50, 0, 15000, 48, 0.5, 48.5);
         tdcL.setTitleX("TDC Upstream - amplitude");
         tdcL.setTitleY("PMT Upstream");
-        H2F tdcR = new H2F("tdcR", "tdcR", 50, 0, 50000, 48, 0.5, 48.5);
+        H2F tdcR = new H2F("tdcR", "tdcR", 50, 0, 15000, 48, 0.5, 48.5);
         tdcR.setTitleX("TDC Downstream - amplitude");
         tdcR.setTitleY("PMT Downstream"); 
         

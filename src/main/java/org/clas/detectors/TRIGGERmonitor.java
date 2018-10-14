@@ -1,16 +1,10 @@
 package org.clas.detectors;
 
-import java.util.ArrayList;
 
 import org.clas.viewer.DetectorMonitor;
-import org.jlab.detector.base.DetectorType;
-import org.jlab.detector.view.DetectorShape2D;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
-import org.jlab.groot.fitter.DataFitter;
 import org.jlab.groot.group.DataGroup;
-import org.jlab.groot.math.F1D;
-import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
 public class TRIGGERmonitor extends DetectorMonitor {
@@ -19,7 +13,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
 	
     public TRIGGERmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("Trigger Bits", "EC peak trigger", "EC cluster trigger", "HTCC cluster trigger", "FTOF Cluster trigger");
+        this.setDetectorTabNames("Trigger Bits"/*, "EC peak trigger", "EC cluster trigger", "HTCC cluster trigger", "FTOF Cluster trigger"*/);
         this.useSectorButtons(true);
         this.init(false);
         this.testTrigger = true;
@@ -30,7 +24,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("Trigger Bits","Trigger Bits", 32,-0.5,31.5);
+        H1F summary = new H1F("summary","Trigger Bits", 32,-0.5,31.5);
         summary.setFillColor(4);
         summary.setTitleX("Trigger Bits");
         summary.setTitleY("Counts");
@@ -143,51 +137,51 @@ public class TRIGGERmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Trigger Bits").draw(this.getDataGroup().getItem(0,0,0).getH1F(tbit));
         this.getDetectorCanvas().getCanvas("Trigger Bits").update();
         
-        this.getDetectorCanvas().getCanvas("EC peak trigger").divide(3, 1);
-        this.getDetectorCanvas().getCanvas("EC peak trigger").setGridX(false);
-        this.getDetectorCanvas().getCanvas("EC peak trigger").setGridY(false);
-        this.getDetectorCanvas().getCanvas("EC cluster trigger").divide(3, 1);
-        this.getDetectorCanvas().getCanvas("EC cluster trigger").setGridX(false);
-        this.getDetectorCanvas().getCanvas("EC cluster trigger").setGridY(false);
-        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").divide(1, 2);
-        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").setGridX(false);
-        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").setGridY(false);
-        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").divide(1, 2);
-        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").setGridX(false);
-        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").setGridY(false);
+//        this.getDetectorCanvas().getCanvas("EC peak trigger").divide(3, 1);
+//        this.getDetectorCanvas().getCanvas("EC peak trigger").setGridX(false);
+//        this.getDetectorCanvas().getCanvas("EC peak trigger").setGridY(false);
+//        this.getDetectorCanvas().getCanvas("EC cluster trigger").divide(3, 1);
+//        this.getDetectorCanvas().getCanvas("EC cluster trigger").setGridX(false);
+//        this.getDetectorCanvas().getCanvas("EC cluster trigger").setGridY(false);
+//        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").divide(1, 2);
+//        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").setGridX(false);
+//        this.getDetectorCanvas().getCanvas("HTCC cluster trigger").setGridY(false);
+//        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").divide(1, 2);
+//        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").setGridX(false);
+//        this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").setGridY(false);
         
         
-        for(int sec=1; sec<7; sec++) {
-            if(getActiveSector()==sec) {
-                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(0);
-                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_energy"+sec));
-                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(1);
-                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_time"+sec));
-                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(2);
-                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_coord"+sec));
-                this.getDetectorCanvas().getCanvas("EC peak trigger").update();
-                
-                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(0);
-                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("eccluster_energy"+sec));
-                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(1);
-                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("eccluster_time"+sec));
-                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(2);
-                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH2F("eccluster_coord"+sec));
-                this.getDetectorCanvas().getCanvas("EC cluster trigger").update();
-        
-                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").cd(0);
-                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("httc_cluster_mask_high"+sec));
-                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").cd(1);
-                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("httc_cluster_mask_low"+sec));
-                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").update();
-
-                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").cd(0);
-                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ftof_cluster_mask_high"+sec));
-                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").cd(1);
-                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ftof_cluster_mask_low"+sec));
-                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").update();
-            }
-        }
+//        for(int sec=1; sec<7; sec++) {
+//            if(getActiveSector()==sec) {
+//                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(0);
+//                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_energy"+sec));
+//                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(1);
+//                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_time"+sec));
+//                this.getDetectorCanvas().getCanvas("EC peak trigger").cd(2);
+//                this.getDetectorCanvas().getCanvas("EC peak trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ecpeak_coord"+sec));
+//                this.getDetectorCanvas().getCanvas("EC peak trigger").update();
+//                
+//                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(0);
+//                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("eccluster_energy"+sec));
+//                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(1);
+//                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("eccluster_time"+sec));
+//                this.getDetectorCanvas().getCanvas("EC cluster trigger").cd(2);
+//                this.getDetectorCanvas().getCanvas("EC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH2F("eccluster_coord"+sec));
+//                this.getDetectorCanvas().getCanvas("EC cluster trigger").update();
+//        
+//                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").cd(0);
+//                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("httc_cluster_mask_high"+sec));
+//                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").cd(1);
+//                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("httc_cluster_mask_low"+sec));
+//                this.getDetectorCanvas().getCanvas("HTCC cluster trigger").update();
+//
+//                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").cd(0);
+//                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ftof_cluster_mask_high"+sec));
+//                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").cd(1);
+//                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").draw(this.getDataGroup().getItem(0,0,0).getH1F("ftof_cluster_mask_low"+sec));
+//                this.getDetectorCanvas().getCanvas("FTOF Cluster trigger").update();
+//            }
+//        }
         
     }
 
@@ -201,25 +195,25 @@ public class TRIGGERmonitor extends DetectorMonitor {
 		//if (!testTriggerMask()) return;
         
         for (int i=0; i<32; i++) if(isTrigBitSet(i)) this.getDataGroup().getItem(0,0,0).getH1F(tbit).fill(i);
-        for (int i=0; i<32; i++) if(isTrigBitSet(i)) this.getDetectorSummary().getH1F("Trigger Bits").fill(i);
+        for (int i=0; i<32; i++) if(isTrigBitSet(i)) this.getDetectorSummary().getH1F("summary").fill(i);
         
-        for(int sec=1; sec<=6; sec++) {
-            if (isGoodECALTrigger(sec)) {
-                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_energy"+sec).fill(0);
-                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_time"+sec).fill(0);
-                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_coord"+sec).fill(0);
-                
-                this.getDataGroup().getItem(sec,0,0).getH1F("eccluster_energy"+sec).fill(0);
-                this.getDataGroup().getItem(sec,0,0).getH1F("eccluster_time"+sec).fill(0);
-                this.getDataGroup().getItem(sec,0,0).getH2F("eccluster_coord"+sec).fill(0,0);
-                
-                this.getDataGroup().getItem(sec,0,0).getH1F("httc_cluster_mask_high"+sec).fill(0);
-                this.getDataGroup().getItem(sec,0,0).getH1F("httc_cluster_mask_low"+sec).fill(0);
-                
-                this.getDataGroup().getItem(sec,0,0).getH1F("ftof_cluster_mask_high"+sec).fill(0);
-                this.getDataGroup().getItem(sec,0,0).getH1F("ftof_cluster_mask_low"+sec).fill(0);
-            }
-        }
+//        for(int sec=1; sec<=6; sec++) {
+//            if (isGoodECALTrigger(sec)) {
+//                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_energy"+sec).fill(0);
+//                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_time"+sec).fill(0);
+//                this.getDataGroup().getItem(sec,0,0).getH1F("ecpeak_coord"+sec).fill(0);
+//                
+//                this.getDataGroup().getItem(sec,0,0).getH1F("eccluster_energy"+sec).fill(0);
+//                this.getDataGroup().getItem(sec,0,0).getH1F("eccluster_time"+sec).fill(0);
+//                this.getDataGroup().getItem(sec,0,0).getH2F("eccluster_coord"+sec).fill(0,0);
+//                
+//                this.getDataGroup().getItem(sec,0,0).getH1F("httc_cluster_mask_high"+sec).fill(0);
+//                this.getDataGroup().getItem(sec,0,0).getH1F("httc_cluster_mask_low"+sec).fill(0);
+//                
+//                this.getDataGroup().getItem(sec,0,0).getH1F("ftof_cluster_mask_high"+sec).fill(0);
+//                this.getDataGroup().getItem(sec,0,0).getH1F("ftof_cluster_mask_low"+sec).fill(0);
+//            }
+//        }
                        
     }
 

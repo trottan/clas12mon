@@ -49,7 +49,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public int bitsec = 0;
     public long trigger = 0;
     public long triggerPhase = 0;
-    public double max_occ = 4;
+    public double max_occ = 5;
     public int trigFD = 0;
     public int trigCD = 0;
     
@@ -61,10 +61,10 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public int eventResetTime_default[]=new int[19];    
     
     public DetectorMonitor(String name){
-        GStyle.getAxisAttributesX().setTitleFontSize(14); //24
-        GStyle.getAxisAttributesX().setLabelFontSize(14); //18
-        GStyle.getAxisAttributesY().setTitleFontSize(14); //24
-        GStyle.getAxisAttributesY().setLabelFontSize(14); //18
+        GStyle.getAxisAttributesX().setTitleFontSize(24); //24
+        GStyle.getAxisAttributesX().setLabelFontSize(18); //18
+        GStyle.getAxisAttributesY().setTitleFontSize(24); //24
+        GStyle.getAxisAttributesY().setLabelFontSize(18); //18
         GStyle.getAxisAttributesZ().setLabelFontSize(14); //14
         GStyle.setPalette("kDefault");
         GStyle.getAxisAttributesX().setLabelFontName("Avenir");

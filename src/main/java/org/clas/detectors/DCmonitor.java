@@ -23,7 +23,7 @@ public class DCmonitor extends DetectorMonitor {
 
     public DCmonitor(String name) {
         super(name);
-        this.setDetectorTabNames("Raw Occupancies","Normalized Occupancies log", "Normalized Occupancies lin", "Region Occupancies", "TDC raw spectra", "TDC spectra per Sector/Superlayer", "Hit Multiplicity");
+        this.setDetectorTabNames(/*"Raw Occupancies",*/"Normalized Occupancies log", "Normalized Occupancies lin", "Region Occupancies", "TDC raw spectra", "TDC spectra per Sector/Superlayer", "Hit Multiplicity");
         this.useSectorButtons(true);
         this.init(false);
     }
@@ -60,6 +60,7 @@ public class DCmonitor extends DetectorMonitor {
             reg_occ.setTitleX("region");
             reg_occ.setTitleY("occupancy %");
             reg_occ.setTitle("sector "+sector);
+            reg_occ.setFillColor(3);
             
             H1F raw_reg_occ = new H1F("raw_reg_occ_sec" + sector, "Sector " + sector + " region Occupancy", 3, 0.5, 3.5);
             raw_reg_occ.setTitleX("region");
@@ -73,6 +74,7 @@ public class DCmonitor extends DetectorMonitor {
             
             for(int sl=1; sl<=6; sl++) {
                 H1F tdc_sl_raw = new H1F("tdc_sl_raw" + sector+ sl, "Sector " + sector + " Superlayer " + sl + " TDC spectrum", 404, 0, 2020);
+                tdc_sl_raw.setFillColor(3);
                 DataGroup dg_sl = new DataGroup(1,1);
                 dg_sl.addDataSet(tdc_sl_raw, 0);
                 this.getDataGroup().add(dg_sl, sector, sl, 0);
@@ -82,6 +84,7 @@ public class DCmonitor extends DetectorMonitor {
             mult.setTitleX("hit multiplicity");
             mult.setTitleY("counts");
             mult.setTitle("multiplicity sector " + sector);
+            mult.setFillColor(3);
             
             DataGroup dg = new DataGroup(6,1);
             dg.addDataSet(raw, 0);
@@ -149,9 +152,9 @@ public class DCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").divide(2, 3);
         this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").setGridX(false);
         this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").setGridY(false);
-        this.getDetectorCanvas().getCanvas("Raw Occupancies").divide(2, 3);
-        this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridX(false);
-        this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridY(false);
+//        this.getDetectorCanvas().getCanvas("Raw Occupancies").divide(2, 3);
+//        this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridX(false);
+//        this.getDetectorCanvas().getCanvas("Raw Occupancies").setGridY(false);
         this.getDetectorCanvas().getCanvas("Region Occupancies").divide(2, 3);
         this.getDetectorCanvas().getCanvas("Region Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("Region Occupancies").setGridY(false);
@@ -174,9 +177,9 @@ public class DCmonitor extends DetectorMonitor {
             this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").getPad(sector-1).getAxisZ().setLog(!getLogZ());
             this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").draw(this.getDataGroup().getItem(sector,0,0).getH2F("occ_sec"+sector));
-            this.getDetectorCanvas().getCanvas("Raw Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
-            this.getDetectorCanvas().getCanvas("Raw Occupancies").cd(sector-1);
-            this.getDetectorCanvas().getCanvas("Raw Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector));
+//            this.getDetectorCanvas().getCanvas("Raw Occupancies").getPad(sector-1).getAxisZ().setLog(getLogZ());
+//            this.getDetectorCanvas().getCanvas("Raw Occupancies").cd(sector-1);
+//            this.getDetectorCanvas().getCanvas("Raw Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH2F("raw_sec"+sector));
             this.getDetectorCanvas().getCanvas("Region Occupancies").cd(sector-1);
             this.getDetectorCanvas().getCanvas("Region Occupancies").draw(this.getDataGroup().getItem(sector,0,0).getH1F("reg_occ_sec"+sector));
             this.getDetectorCanvas().getCanvas("TDC raw spectra").getPad(sector-1).getAxisZ().setLog(getLogZ());
@@ -194,7 +197,7 @@ public class DCmonitor extends DetectorMonitor {
 
         this.getDetectorCanvas().getCanvas("Normalized Occupancies log").update();
         this.getDetectorCanvas().getCanvas("Normalized Occupancies lin").update();
-        this.getDetectorCanvas().getCanvas("Raw Occupancies").update();
+//        this.getDetectorCanvas().getCanvas("Raw Occupancies").update();
         this.getDetectorCanvas().getCanvas("Region Occupancies").update();
         this.getDetectorCanvas().getCanvas("TDC raw spectra").update();
         this.getDetectorCanvas().getCanvas("Hit Multiplicity").update();

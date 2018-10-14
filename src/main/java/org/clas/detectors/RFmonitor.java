@@ -41,10 +41,10 @@ public class RFmonitor extends DetectorMonitor {
         int tdcMin = (int) (ncycles*rfbucket/tdc2Time)/-100;
         int tdcMax = (int) (ncycles*3*rfbucket/tdc2Time)+100;
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",6,0.5,6.5);
-        summary.setTitleX("sector");
-        summary.setTitleY("DC hits");
-        summary.setFillColor(33);
+        H1F summary = new H1F("summary","RF Difference",500, 0, rfbucket);
+        summary.setTitleX("RF diff (ns)");
+        summary.setTitleY("Counts");
+        summary.setFillColor(5);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
@@ -164,11 +164,11 @@ public class RFmonitor extends DetectorMonitor {
         rf2fADC.setTitleX("RF2 tdc");
         rf2fADC.setTitleY("Counts");
         rf2fADC.setFillColor(36);
-        H1F rf1fADCadc = new H1F("rf1fADCadc","rf1fADCadc", 100,0.,40000);
+        H1F rf1fADCadc = new H1F("rf1fADCadc","rf1fADCadc", 100,0.,60000);
         rf1fADCadc.setTitleX("RF1 adc");
         rf1fADCadc.setTitleY("Counts");
         rf1fADCadc.setFillColor(33);
-        H1F rf2fADCadc = new H1F("rf2fADCadc","rf2fADCadc", 100,0.,40000);
+        H1F rf2fADCadc = new H1F("rf2fADCadc","rf2fADCadc", 100,0.,60000);
         rf2fADCadc.setTitleX("RF2 adc");
         rf2fADCadc.setTitleY("Counts");
         rf2fADCadc.setFillColor(36);
@@ -340,7 +340,6 @@ public class RFmonitor extends DetectorMonitor {
                         rf2.add(TDC);
                     }
                 }
-                this.getDetectorSummary().getH1F("summary").fill(sector*1.0);
             }
         }
 //        System.out.println(rf1.size() + " " +rf2.size());
@@ -378,6 +377,7 @@ public class RFmonitor extends DetectorMonitor {
             rfTime2 /=rf2.size();            
 //            System.out.println("aaa " + (rfTime1-rfTime2));
             double rfTime = (rfTime1-rfTime2 + 1000*rfbucket) % rfbucket;
+            this.getDetectorSummary().getH1F("summary").fill(rfTime);
             this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAve").fill(rfTime);
             this.getDataGroup().getItem(0,0,0).getH1F("rfdiffAvetmp").fill(rfTime);
             this.getDataGroup().getItem(0,0,0).getH2F("timeRF1").fill(rfTime1,rfTime);

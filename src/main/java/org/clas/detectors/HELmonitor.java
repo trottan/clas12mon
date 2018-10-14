@@ -22,10 +22,10 @@ public class HELmonitor extends DetectorMonitor {
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
-        H1F summary = new H1F("summary","summary",30,-1.5,1.5);
+        H1F summary = new H1F("summary","helicity",20,-1.5,1.5);
         summary.setTitleX("helicity");
-        summary.setTitleY("counts");
-        summary.setFillColor(33);
+        summary.setTitleY("Counts");
+        summary.setFillColor(3);
         DataGroup sum = new DataGroup(1,1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);

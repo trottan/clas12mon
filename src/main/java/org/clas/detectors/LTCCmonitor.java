@@ -200,13 +200,13 @@ public class LTCCmonitor  extends DetectorMonitor {
                 int       tdc = bank.getInt("TDC",i);
                 int     order = bank.getByte("order",i); // order specifies left-right for ADC
                 int iPMT    = (sector-1)*18+comp;
-                
+//                System.out.println(sector + " " + layer + " " + comp + " " + order + " " + tdc);
                 if(tdc>0) {
                     this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill((sector-1)*2.0+layer, comp*1.0);
-                    if(order==0) {
+                    if(order==2) {
                         this.getDataGroup().getItem(0,0,0).getH2F("tdcL").fill(tdc*1.0,iPMT*1.0);
                     } 
-                    else if (order==1) {
+                    else if (order==3) {
                         this.getDataGroup().getItem(0,0,0).getH2F("tdcR").fill(tdc*1.0,iPMT*1.0);                
                     }
                 }

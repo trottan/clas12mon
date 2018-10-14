@@ -40,8 +40,6 @@ import javax.swing.text.StyledDocument;
 
 import org.clas.detectors.*;
 import org.jlab.detector.decode.CLASDecoder;
-import org.jlab.detector.decode.CodaEventDecoder;
-import org.jlab.detector.decode.DetectorEventDecoder;
 import org.jlab.detector.view.DetectorListener;
 import org.jlab.detector.view.DetectorPane2D;
 import org.jlab.detector.view.DetectorShape2D;
@@ -50,7 +48,6 @@ import org.jlab.groot.data.TDirectory;
 import org.jlab.groot.graphics.EmbeddedCanvasTabbed;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
-import org.jlab.io.base.DataEventType;
 import org.jlab.io.evio.EvioDataEvent;
 import org.jlab.io.hipo.HipoDataEvent;
 import org.jlab.io.task.DataSourceProcessorPane;
@@ -410,6 +407,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         CLAS12Canvas.getCanvas("FT").divide(1,3);
         CLAS12Canvas.getCanvas("FT").setGridX(false);
         CLAS12Canvas.getCanvas("FT").setGridY(false);
+        CLAS12Canvas.addCanvas("RF/HEL/JITTER/TRIGGER");
+        CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").divide(2,2);
+        CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").setGridX(false);
+        CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").setGridY(false);
 
         
         JPanel    CLAS12View = new JPanel(new BorderLayout());
@@ -488,9 +489,6 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(e.getActionCommand()=="Print histograms as png") {
             this.printHistosToFile();
         }
-        if(e.getActionCommand()=="Create histogram PDF") {
-            this.createHistoPDF();
-        }
         if(e.getActionCommand()=="Save histograms to file") {
             DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
             String fileName = "CLAS12Mon_run_" + this.runNumber + "_" + df.format(new Date()) + ".hipo";
@@ -520,6 +518,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 if(result){ System.out.println("Created directory: " + data);}
             }
             
+            String fileName = data + "/clas12mon_histos_" + this.runNumber + "_" + tstamp + ".hipo"; 
+            this.saveHistosToFile(fileName);
+            
             String fileName1 = data + "/summary_FD_"+tstamp+".png";
             System.out.println(fileName1);
             CLAS12Canvas.getCanvas("FD").save(fileName1);
@@ -529,6 +530,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             String fileName3 = data + "/summary_FT_"+tstamp+".png";
             System.out.println(fileName3);
             CLAS12Canvas.getCanvas("FT").save(fileName3);
+            String fileName4 = data + "/summary_RHJT_"+tstamp+".png";
+            System.out.println(fileName4);
+            CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").save(fileName4);
             
             for(int k=0; k<this.monitors.length; k++) {
                 this.monitors[k].printCanvas(data,tstamp);
@@ -542,6 +546,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/summary_FD_"+tstamp+".png", "Summary plots FD");
               entry.addAttachment(data+"/summary_CD_"+tstamp+".png", "Summary plots CD");
               entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots FT");
+              entry.addAttachment(data+"/summary_RHJT_"+tstamp+".png", "Summary plots RF/HEL/JITTER/TRIGGER");
               System.out.println("Summary plots uploaded");
               entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies");
               entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies c");
@@ -559,13 +564,13 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/CTOF_canvas0_"+tstamp+".png", "CTOF ADC occupancies and spectra");
               entry.addAttachment(data+"/CTOF_canvas1_"+tstamp+".png", "CTOF TDC occupancies and spectra");
               System.out.println("CTOF plots uploaded");
-              entry.addAttachment(data+"/DC_canvas0_"+tstamp+".png", "DC occupancies raw");
-              entry.addAttachment(data+"/DC_canvas1_"+tstamp+".png", "DC occupancies normalized logarithmic scale");
-              entry.addAttachment(data+"/DC_canvas2_"+tstamp+".png", "DC occupancies normalized linear scale");
-              entry.addAttachment(data+"/DC_canvas3_"+tstamp+".png", "DC region occupancies");
-              entry.addAttachment(data+"/DC_canvas4_"+tstamp+".png", "DC TDC raw value versus layer");
-              entry.addAttachment(data+"/DC_canvas5_"+tstamp+".png", "DC TDC spectra per Sector / Superlayer");
-              entry.addAttachment(data+"/DC_canvas6_"+tstamp+".png", "DC hit multiplicity");
+//              entry.addAttachment(data+"/DC_canvas0_"+tstamp+".png", "DC occupancies raw");
+              entry.addAttachment(data+"/DC_canvas0_"+tstamp+".png", "DC occupancies normalized logarithmic scale");
+              entry.addAttachment(data+"/DC_canvas1_"+tstamp+".png", "DC occupancies normalized linear scale");
+              entry.addAttachment(data+"/DC_canvas2_"+tstamp+".png", "DC region occupancies");
+              entry.addAttachment(data+"/DC_canvas3_"+tstamp+".png", "DC TDC raw value versus layer");
+              entry.addAttachment(data+"/DC_canvas4_"+tstamp+".png", "DC TDC spectra per Sector / Superlayer");
+              entry.addAttachment(data+"/DC_canvas5_"+tstamp+".png", "DC hit multiplicity");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0_"+tstamp+".png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1_"+tstamp+".png", "ECAL TDC occupancies");
@@ -660,6 +665,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 if(result){ System.out.println("Created directory: " + data);}
             }
             
+            String fileName = data + "/clas12mon_histos_" + this.runNumber + "_" + tstamp + ".hipo"; 
+            this.saveHistosToFile(fileName);
+
             String fileName1 = data + "/summary_FD_"+tstamp+".png";
             System.out.println(fileName1);
             CLAS12Canvas.getCanvas("FD").save(fileName1);
@@ -669,6 +677,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             String fileName3 = data + "/summary_FT_"+tstamp+".png";
             System.out.println(fileName3);
             CLAS12Canvas.getCanvas("FT").save(fileName3);
+            String fileName4 = data + "/summary_RHJT_"+tstamp+".png";
+            System.out.println(fileName4);
+            CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").save(fileName4);
             
             for(int k=0; k<this.monitors.length; k++) {
                 this.monitors[k].printCanvas(data,tstamp);
@@ -682,6 +693,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/summary_FD_"+tstamp+".png", "Summary plots for the forward detector");
               entry.addAttachment(data+"/summary_CD_"+tstamp+".png", "Summary plots for the central detector");
               entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots for the forward tagger");
+              entry.addAttachment(data+"/summary_RHJT_"+tstamp+".png", "Summary plots RF/HEL/JITTER/TRIGGER");
               System.out.println("Summary plots uploaded");
               entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies");
               entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies c");
@@ -696,10 +708,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/CTOF_canvas0_"+tstamp+".png", "CTOF ADC occupancies and spectra");
               entry.addAttachment(data+"/CTOF_canvas1_"+tstamp+".png", "CTOF TDC occupancies and spectra");
               System.out.println("CTOF plots uploaded");
-              entry.addAttachment(data+"/DC_canvas0_"+tstamp+".png", "DC occupancies raw");
-              entry.addAttachment(data+"/DC_canvas1_"+tstamp+".png", "DC occupancies normalized logarithmic scale");
-              entry.addAttachment(data+"/DC_canvas2_"+tstamp+".png", "DC occupancies normalized linear scale");
-              entry.addAttachment(data+"/DC_canvas3_"+tstamp+".png", "DC region occupancies");
+//              entry.addAttachment(data+"/DC_canvas0_"+tstamp+".png", "DC occupancies raw");
+              entry.addAttachment(data+"/DC_canvas0_"+tstamp+".png", "DC occupancies normalized logarithmic scale");
+              entry.addAttachment(data+"/DC_canvas1_"+tstamp+".png", "DC occupancies normalized linear scale");
+              entry.addAttachment(data+"/DC_canvas2_"+tstamp+".png", "DC region occupancies");
               System.out.println("DC plots uploaded");
               entry.addAttachment(data+"/ECAL_canvas0_"+tstamp+".png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1_"+tstamp+".png", "ECAL TDC occupancies");
@@ -838,20 +850,19 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 DataBank   header = clasDecoder.createHeaderBank(hipo, this.ccdbRunNumber, 0, (float) 0, (float) 0);
                 DataBank  trigger = clasDecoder.createTriggerBank(hipo);
                 hipo.appendBanks(header);
-                hipo.appendBank(trigger);
-                if(this.runNumber != this.getRunNumber(hipo)) {
-//                this.saveToFile("mon12_histo_run_" + runNumber + ".hipo");
-                    this.runNumber = this.getRunNumber(hipo);
-                    System.out.println("Setting run number to: " +this.runNumber);
-                    resetEventListener();
-                    this.clas12Textinfo.setText("\nrun number: "+this.runNumber + "\nmode:" + "\nfile:" + "\n");
-//                    this.clas12Textinfo.updateUI();
-                }
+                hipo.appendBank(trigger);                
             } 
             else {
                 hipo = (HipoDataEvent) event;    
             }
-            
+            if(this.runNumber != this.getRunNumber(hipo)) {
+    //                this.saveToFile("mon12_histo_run_" + runNumber + ".hipo");
+                this.runNumber = this.getRunNumber(hipo);
+                System.out.println("Setting run number to: " +this.runNumber);
+                resetEventListener();
+                this.clas12Textinfo.setText("\nrun number: "+this.runNumber + "\n");
+    //                    this.clas12Textinfo.updateUI();
+            }            
             for(int k=0; k<this.monitors.length; k++) {
                 this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
                 this.monitors[k].setTriggerWord(getTriggerWord(hipo));   
@@ -906,18 +917,17 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 //        this.CLAS12Canvas.getCanvas("FD").cd(6);
 //        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisZ().setLog(true);
 //        if(this.monitors[6].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[6].getDetectorSummary().getH2F("summary"));
-        // Trigger
-        this.CLAS12Canvas.getCanvas("FD").cd(6);
-        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisY().setLog(true);
-        if(this.monitors[18].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[18].getDetectorSummary().getH1F("Trigger Bits"));
        
         // FTOF:
+        this.CLAS12Canvas.getCanvas("FD").cd(6);
+        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisZ().setLog(true);
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p1"));
         this.CLAS12Canvas.getCanvas("FD").cd(7);
         this.CLAS12Canvas.getCanvas("FD").getPad(7).getAxisZ().setLog(true);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p1"));
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p2"));
         this.CLAS12Canvas.getCanvas("FD").cd(8);
         this.CLAS12Canvas.getCanvas("FD").getPad(8).getAxisZ().setLog(true);
-        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p2"));
+        if(this.monitors[9].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[9].getDetectorSummary().getH1F("sum_p3"));
         
         //////////////////////////////////////////////////
         ///  CD:
@@ -954,6 +964,25 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         ////////////////////////////////////////////////////
       
+        ///////////////////////////////////////////////////
+        // RF/HEL/JITTER/TRIGGER:
+        
+        // RF
+        this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(0);
+        if(this.monitors[15].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[15].getDetectorSummary().getH1F("summary"));
+        // HEL
+        this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(1);
+        if(this.monitors[16].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[16].getDetectorSummary().getH1F("summary"));
+        // FCUP
+        this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(2);
+        if(this.monitors[19].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[19].getDetectorSummary().getH1F("summary"));
+        // TRIGGER
+        this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(3);
+        this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").getPad(3).getAxisY().setLog(true);
+        if(this.monitors[18].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[18].getDetectorSummary().getH1F("summary"));
+        
+        ////////////////////////////////////////////////////
+      
         
     }
     
@@ -986,6 +1015,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         String fileName3 = data + "/summary_FT_"+tstamp+".png";
         System.out.println(fileName3);
         CLAS12Canvas.getCanvas("FT").save(fileName3);
+        String fileName4 = data + "/summary_RHJT_"+tstamp+".png";
+        System.out.println(fileName4);
+        CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").save(fileName4);
         
         for(int k=0; k<this.monitors.length; k++) {
             this.monitors[k].printCanvas(data,tstamp);
@@ -993,40 +1025,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         System.out.println("Histogram pngs succesfully saved in: " + data);
     }
-    
-    
-    public void createHistoPDF() {
-        /*
-        DateFormat df = new SimpleDateFormat("MM-dd-yyyy_hh.mm.ss_aa");
-        String data = System.getProperty("user.dir") + "/output" + "/clas12mon_" + this.runNumber + "_" + df.format(new Date());        
-        File theDir = new File(data);
-        // if the directory does not exist, create it
-        if (!theDir.exists()) {
-            boolean result = false;
-            try{
-                theDir.mkdir();
-                result = true;
-            } 
-            catch(SecurityException se){
-                //handle it
-            }        
-            if(result) {    
-            System.out.println("Created directory: " + data);
-            }
-        }
-        
-        String fileName = data + "/clas12_canvas.pdf";
-        System.out.println(fileName);
-        
-       // this.CLAS12Canvas.getCanvas("CLAS12-summary").save(fileName);
-        for(int k=0; k<this.monitors.length; k++) {
-            this.monitors[k].printCanvas(data);
-        }
-        */
-    }
-    
-    
-    
+       
 
     @Override
     public void processShape(DetectorShape2D shape) {
@@ -1061,6 +1060,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         this.CLAS12Canvas.getCanvas("CD").update();
         this.CLAS12Canvas.getCanvas("FT").initTimer(time);
         this.CLAS12Canvas.getCanvas("FT").update();
+        this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").initTimer(time);
+        this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").update();
         for(int k=0; k<this.monitors.length; k++) {
             this.monitors[k].setCanvasUpdate(time);
         }
@@ -1076,6 +1077,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         for(int k=0; k<this.monitors.length; k++) {
             this.monitors[k].timerUpdate();
         }
+        this.plotSummaries();
    }
 
     public static void main(String[] args){
