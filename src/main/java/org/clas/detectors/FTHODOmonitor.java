@@ -12,17 +12,16 @@ import org.jlab.utils.groups.IndexedTable;
 
 public class FTHODOmonitor extends DetectorMonitor {
 
-    ConstantsManager ccdb = new ConstantsManager();
     IndexedTable geometry = null;
     double tileWidth = 15;
 
     public FTHODOmonitor(String name) {
         super(name);
 
-        ccdb.setVariation("default");
-        ccdb.init(Arrays.asList(new String[]{
+        this.getCcdb().setVariation("default");
+        this.getCcdb().init(Arrays.asList(new String[]{
             "/geometry/ft/fthodo"}));
-        geometry = ccdb.getConstants(11, "/geometry/ft/fthodo");
+        geometry = this.getCcdb().getConstants(11, "/geometry/ft/fthodo");
 
         this.setDetectorTabNames("FADC Occupancies", "FADC spectra");
         this.init(false);

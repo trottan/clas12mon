@@ -27,7 +27,6 @@ public class TJITTERmonitor  extends DetectorMonitor {
     private double period  = 4;
     private double phase   = 1;
     private int    ncycles = 6;
-    ConstantsManager ccdb = new ConstantsManager();
     IndexedTable jitterConfig = null;
 
     
@@ -36,8 +35,8 @@ public class TJITTERmonitor  extends DetectorMonitor {
         
         this.setDetectorTabNames("Time Jitter");
         this.init(false);
-        ccdb.setVariation("default");
-        ccdb.init(Arrays.asList(new String[]{"/calibration/ftof/time_jitter"}));
+        this.getCcdb().setVariation("default");
+        this.getCcdb().init(Arrays.asList(new String[]{"/calibration/ftof/time_jitter"}));
     }
 
     @Override
@@ -62,11 +61,11 @@ public class TJITTERmonitor  extends DetectorMonitor {
         hi_ctof_trphase.setTitleY("#DeltaT (ns)");
         hi_ctof_trphase.setTitle("CTOF Downstream PMTs");
 
-        H2F hi_ftof_tlphase = new H2F("hi_ftof_tlphase", "hi_ftof_tlphase", 6, 0, 6, 100, -20.0, 80.0); 
+        H2F hi_ftof_tlphase = new H2F("hi_ftof_tlphase", "hi_ftof_tlphase", 6, 0, 6, 100, -20.0, 280.0); 
         hi_ftof_tlphase.setTitleX("Trigger Phase"); 
         hi_ftof_tlphase.setTitleY("#DeltaT (ns)");
         hi_ftof_tlphase.setTitle("FTOF-1B Left PMTs");
-        H2F hi_ftof_trphase = new H2F("hi_ftof_trphase", "hi_ftof_trphase", 6, 0, 6, 100, -20.0, 80.0); 
+        H2F hi_ftof_trphase = new H2F("hi_ftof_trphase", "hi_ftof_trphase", 6, 0, 6, 100, -20.0, 280.0); 
         hi_ftof_trphase.setTitleX("Trigger Phase"); 
         hi_ftof_trphase.setTitleY("#DeltaT (ns)");
         hi_ftof_trphase.setTitle("FTOF-1B Right PMTs");
@@ -120,7 +119,7 @@ public class TJITTERmonitor  extends DetectorMonitor {
         if(recRun!=null) {
             int runNumber  = recRun.getInt("run", 0);
             long timestamp = recRun.getLong("timestamp",0);    
-            this.jitterConfig = ccdb.getConstants(runNumber, "/calibration/ftof/time_jitter");
+            this.jitterConfig = this.getCcdb().getConstants(runNumber, "/calibration/ftof/time_jitter");
             this.period  = jitterConfig.getDoubleValue("period",0,0,0);
             this.phase   = jitterConfig.getIntValue("phase",0,0,0);
             this.ncycles = jitterConfig.getIntValue("cycles",0,0,0);           

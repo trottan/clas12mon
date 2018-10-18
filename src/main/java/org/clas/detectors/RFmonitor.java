@@ -21,7 +21,6 @@ import org.jlab.utils.groups.IndexedTable;
 
 public class RFmonitor extends DetectorMonitor {
     
-    ConstantsManager ccdb = new ConstantsManager();
     IndexedTable rfConfig = null;
     private double tdc2Time = 0.023436;
     private double rfbucket = 4.008;
@@ -31,8 +30,8 @@ public class RFmonitor extends DetectorMonitor {
     public RFmonitor(String name) {
         super(name);
         
-        ccdb.setVariation("default");
-        ccdb.init(Arrays.asList(new String[]{"/calibration/eb/rf/config"}));
+        this.getCcdb().setVariation("default");
+        this.getCcdb().init(Arrays.asList(new String[]{"/calibration/eb/rf/config"}));
 
         this.setDetectorTabNames("RF TDCs","RF Time","RF Timeline","RF fADC");
         this.init(false);
@@ -307,7 +306,7 @@ public class RFmonitor extends DetectorMonitor {
 	    DataBank head = event.getBank("RUN::config");
             int runNumber    = head.getInt("run", 0);
 	    this.eventNumber = head.getInt("event", 0);
-            rfConfig = ccdb.getConstants(runNumber, "/calibration/eb/rf/config");
+            rfConfig = this.getCcdb().getConstants(runNumber, "/calibration/eb/rf/config");
             double run_tdc2Time = rfConfig.getDoubleValue("tdc2time",1,1,1);
             double run_rfbucket = rfConfig.getDoubleValue("clock",1,1,1);
             int    run_ncycles  = rfConfig.getIntValue("cycles",1,1,1);
