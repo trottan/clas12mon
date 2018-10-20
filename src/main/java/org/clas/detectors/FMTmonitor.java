@@ -1,220 +1,237 @@
 package org.clas.detectors;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.clas.viewer.DetectorMonitor;
+import org.jlab.detector.calib.utils.DatabaseConstantProvider;
 import org.jlab.groot.data.H1F;
-import org.jlab.groot.data.H2F;
 import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
+import org.jlab.utils.groups.IndexedTable;
 
 public class FMTmonitor extends DetectorMonitor {
-	
-	int numberOfSamples;
-	int timeSampling;
 
-	int maxNumberLayer;
-	int maxNumberSector;
-	int maxNumberStrips;
-	int numberOfStripsPerChip;
-	int numberOfChips;
-	int binDivision;
-	int numberStrips[];
+    int sparseSample;
+    int numberOfSamples;
+    int samplingTime;
 
-	double hitNumber[][][];
-	int dreamHit [][][];
-	int timeMax[][][][];
-	int layerHit[][];
-	boolean mask[][][];
-	float tMax[][][];
-	
-	public FMTmonitor(String name) {
-		super(name);
-		
-		numberOfSamples = 16;
-		timeSampling = 40;
-		maxNumberLayer = 6;
-		maxNumberSector = 1;
-		maxNumberStrips = 1024;
-		numberOfStripsPerChip = 64 ;
-		numberOfChips = 48;
-		mask = new boolean[maxNumberSector + 1][maxNumberLayer + 1][maxNumberStrips + 1];
-		
-		numberStrips = new int[maxNumberLayer + 1];
-		dreamHit = new int[maxNumberSector + 1][maxNumberLayer + 1][maxNumberStrips/numberOfStripsPerChip+1];
-		tMax = new float [maxNumberSector + 1][maxNumberLayer + 1][maxNumberStrips/numberOfStripsPerChip+1];
-		
-		numberStrips[1] = 1024;
-		numberStrips[2] = 1024;
-		numberStrips[3] = 1024;
-		numberStrips[4] = 1024;
-		numberStrips[5] = 1024;
-		numberStrips[6] = 1024;
-		
-		
-		for (int sector = 1; sector <= maxNumberSector; sector++) {
-			for (int layer = 1; layer <= maxNumberLayer; layer++) {
-				for (int component = 1 ; component <= numberStrips[layer]; component++){
-					mask[sector][layer][component]=true;
-				}
-			}
-		}
-		
-		this.setDetectorTabNames("Occupancies", "TimeOfMax", "Occupancy", "Multiplicity");
-		this.init(false);
-	}
+    int maxNumberLayers;
+    int maxNumberSectors;
+    int maxNumberStrips;
+    int numberStrips[];
 
-	@Override
-	public void createHistos() {
+    boolean mask[][][];
 
-                H2F summary = new H2F("summary","summary",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
-		summary.setTitleX("strips");
-		summary.setTitleY("detector");
-		summary.setTitle("FMT");
-		DataGroup sum = new DataGroup(1,1);
-		sum.addDataSet(summary, 0);
-		this.setDetectorSummary(sum);
+    int numberOfHitsPerDetector[][];
 
-		H2F occupancyHisto = new H2F("Occupancies","Occupancies",maxNumberStrips, 0, maxNumberStrips, maxNumberLayer*maxNumberSector,0,maxNumberLayer*maxNumberSector);
-		occupancyHisto.setTitleX("strips");
-		occupancyHisto.setTitleY("detector");
-                DataGroup occupancyGroup = new DataGroup("");
-		occupancyGroup.addDataSet(occupancyHisto, 0);
-                for (int layer = 1; layer <= maxNumberLayer; layer++) {
-                    H1F histmulti = new H1F("multi_layer "+ layer, "multi_layer "+ layer, 150, -0.5, 149.5);
-                    histmulti.setTitleX("hit multiplicity");
-                    histmulti.setTitleY("counts");
-                    histmulti.setTitle("Multiplicity of FMT channels for layer" + layer); 
-                    occupancyGroup.addDataSet(histmulti, 0);
+    int runNumber;
+    int defaultRunNumber = 2284;
+
+    public FMTmonitor(String name) {
+        super(name);
+
+        this.loadConstantsFromCCDB(defaultRunNumber);
+
+        this.setDetectorTabNames("Occupancy", "TimeMax", "Multiplicity");
+        this.init(false);
+    }
+
+    public void loadConstantsFromCCDB(int runNumber) {
+        List<String> tablesFitter = null;
+        List<String> keysFitter = null;
+
+        keysFitter = Arrays.asList(new String[]{"FMTconfig"});
+        tablesFitter = Arrays.asList(new String[]{"/daq/config/fmt"});
+        this.getCcdb().init(keysFitter, tablesFitter);
+
+        IndexedTable bmtConfig = this.getCcdb().getConstants(runNumber, "FMTconfig");
+
+        this.sparseSample = bmtConfig.getIntValue("sparse", 0, 0, 0);
+        this.numberOfSamples = (bmtConfig.getIntValue("number_sample", 0, 0, 0) - 1) * (this.sparseSample + 1) + 1;
+        this.samplingTime = (byte) bmtConfig.getDoubleValue("sampling_time", 0, 0, 0);
+
+        DatabaseConstantProvider dbprovider = new DatabaseConstantProvider(runNumber, "default");
+        dbprovider.loadTable("/geometry/fmt/fmt_layer");
+
+        this.maxNumberLayers = dbprovider.length("/geometry/fmt/fmt_layer/Layer");
+
+        dbprovider.loadTable("/geometry/fmt/fmt_global");
+
+        this.maxNumberSectors = dbprovider.length("/geometry/fmt/fmt_global/N_strip");
+        this.maxNumberStrips = dbprovider.getInteger("/geometry/fmt/fmt_global/N_strip", 0);
+        this.numberStrips = new int[maxNumberLayers + 1];
+        for (int layer = 1; layer < maxNumberLayers + 1; layer++) {
+            this.numberStrips[layer] = dbprovider.getInteger("/geometry/fmt/fmt_global/N_strip", 0);
+        }
+
+        this.mask = new boolean[maxNumberSectors + 1][maxNumberLayers + 1][maxNumberStrips + 1];
+
+        for (int sector = 1; sector <= maxNumberSectors; sector++) {
+            for (int layer = 1; layer <= maxNumberLayers; layer++) {
+                for (int component = 1; component <= numberStrips[layer]; component++) {
+                    this.mask[sector][layer][component] = true;
                 }
-		this.getDataGroup().add(occupancyGroup, 0, 0, 0);
-		
-		H1F timeOfMaxHisto = new H1F("TimeOfMax","TimeOfMax",numberOfChips,0,numberOfChips);
-		timeOfMaxHisto.setTitleX("electronic chip");
-		timeOfMaxHisto.setTitleY("time of max adc");
-		timeOfMaxHisto.setFillColor(4);
-		DataGroup timeOfMaxGroup = new DataGroup("");
-		timeOfMaxGroup.addDataSet(timeOfMaxHisto, 0);
-		this.getDataGroup().add(timeOfMaxGroup, 0, 0, 1);
-		
-		for (int sector = 1; sector <= maxNumberSector; sector++) {
-			for (int layer = 1; layer <= maxNumberLayer; layer++) {
-				H1F hitmapHisto = new H1F("Occupancy Layer " + layer + " Sector " + sector, "Occupancy Layer " + layer + " Sector " + sector,
-						(numberStrips[layer])+1, 0., (double) (numberStrips[layer])+1);
-				hitmapHisto.setTitleX("strips (Layer " + layer  + " Sector " + sector+")");
-				hitmapHisto.setTitleY("Nb of hits");
-				hitmapHisto.setFillColor(4);
-				DataGroup hitmapGroup = new DataGroup("");
-				hitmapGroup.addDataSet(hitmapHisto, 0);
-				this.getDataGroup().add(hitmapGroup, sector, layer,2);
-			}
-		}		
-	}
+            }
+        }
 
-	@Override
-	public void plotHistos() {
-		
-		this.getDetectorCanvas().getCanvas("Occupancies").setGridX(false);
-		this.getDetectorCanvas().getCanvas("Occupancies").setGridY(false);
-		this.getDetectorCanvas().getCanvas("Occupancies").setAxisTitleSize(12);
-		this.getDetectorCanvas().getCanvas("Occupancies").setAxisLabelSize(12);
-                this.getDetectorCanvas().getCanvas("Occupancies").getPad(0).getAxisZ().setLog(getLogZ());
-		this.getDetectorCanvas().getCanvas("Occupancies").draw(this.getDataGroup().getItem(0, 0, 0).getH2F("Occupancies"));
-		this.getDetectorCanvas().getCanvas("Occupancies").update();
+        this.numberOfHitsPerDetector = new int[maxNumberSectors + 1][maxNumberLayers + 1];
+    }
 
-		this.getDetectorCanvas().getCanvas("TimeOfMax").setGridX(false);
-		this.getDetectorCanvas().getCanvas("TimeOfMax").setGridY(false);
-		this.getDetectorCanvas().getCanvas("TimeOfMax").setAxisTitleSize(12);
-		this.getDetectorCanvas().getCanvas("TimeOfMax").setAxisLabelSize(12);
-		this.getDetectorCanvas().getCanvas("TimeOfMax").draw(this.getDataGroup().getItem(0, 0, 1).getH1F("TimeOfMax"));
-		this.getDetectorCanvas().getCanvas("TimeOfMax").update();
+    @Override
+    public void createHistos() {
 
-		this.getDetectorCanvas().getCanvas("Occupancy").divide(maxNumberSector*2, maxNumberLayer/2);
-		this.getDetectorCanvas().getCanvas("Occupancy").setGridX(false);
-		this.getDetectorCanvas().getCanvas("Occupancy").setGridY(false);
-		this.getDetectorCanvas().getCanvas("Occupancy").setAxisTitleSize(12);
-		this.getDetectorCanvas().getCanvas("Occupancy").setAxisLabelSize(12);
-		
-		for (int sector = 1; sector <= maxNumberSector; sector++) {
-			for (int layer = 1; layer <= maxNumberLayer; layer++) {
-				int column=maxNumberSector - sector;
-				int row;
-				int numberOfColumns=maxNumberSector;
-				switch (layer) {
-				case 1: row=5; break;
-				case 2: row=4; break;
-				case 3: row=3; break;
-				case 4: row=2; break;
-				case 5: row=1; break;
-				case 6: row=0; break;
-				default:row=-1;break;
-				}
-				this.getDetectorCanvas().getCanvas("Occupancy").cd(column + numberOfColumns * row);
-				this.getDetectorCanvas().getCanvas("Occupancy").draw(
-						this.getDataGroup().getItem(sector, layer, 2).getH1F("Occupancy Layer " + layer + " Sector " + sector));
-			}
-		}
-                
-                this.getDetectorCanvas().getCanvas("Occupancy").update();
-                
-                this.getDetectorCanvas().getCanvas("Multiplicity").divide(maxNumberSector*2, maxNumberLayer/2);
-                this.getDetectorCanvas().getCanvas("Multiplicity").setGridX(false);
-                this.getDetectorCanvas().getCanvas("Multiplicity").setGridY(false);
-                for (int layer = 1; layer <= maxNumberLayer; layer++) {
-                    this.getDetectorCanvas().getCanvas("Multiplicity").cd(layer-1);
-                    this.getDetectorCanvas().getCanvas("Multiplicity").draw(this.getDataGroup().getItem(0,0,0).getH1F("multi_layer " + layer));
+        // create histograms
+        this.setNumberOfEvents(0);
+
+        H1F summary = new H1F("summary", "summary", maxNumberSectors * maxNumberLayers, 0.5, maxNumberSectors * maxNumberLayers + 0.5);
+        summary.setTitleX("detector");
+        summary.setTitleY("occupancy");
+        summary.setTitle("FMT");
+        summary.setFillColor(38);
+        DataGroup sum = new DataGroup(1, 1);
+        sum.addDataSet(summary, 0);
+        this.setDetectorSummary(sum);
+
+        H1F histmulti = new H1F("multi", "multi", 200, -0.5, 199.5);
+        histmulti.setTitleX("hit multiplicity");
+        histmulti.setTitleY("counts");
+        histmulti.setTitle("Multiplicity of FMT channels");
+        DataGroup occupancyGroup = new DataGroup("");
+        occupancyGroup.addDataSet(histmulti, 0);
+        this.getDataGroup().add(occupancyGroup, 0, 0, 0);
+
+        for (int sector = 1; sector <= maxNumberSectors; sector++) {
+            for (int layer = 1; layer <= maxNumberLayers; layer++) {
+                H1F hitmapHisto = new H1F("Occupancy Layer " + layer + " Sector " + sector, "Occupancy Layer " + layer + " Sector " + sector,
+                        (numberStrips[layer]) + 1, 0., (double) (numberStrips[layer]) + 1);
+                hitmapHisto.setTitleX("strips (Layer " + layer + " Sector " + sector + ")");
+                hitmapHisto.setTitleY("Nb of hits");
+                hitmapHisto.setFillColor(4);
+                DataGroup hitmapGroup = new DataGroup("");
+                hitmapGroup.addDataSet(hitmapHisto, 0);
+                this.getDataGroup().add(hitmapGroup, sector, layer, 2);
+
+                H1F timeMaxHisto = new H1F("TimeOfMax : Layer " + layer + " Sector " + sector, "TimeOfMax : Layer " + layer + " Sector " + sector,
+                        samplingTime * numberOfSamples, 1., samplingTime * numberOfSamples);
+                timeMaxHisto.setTitleX("Time of max (Layer " + layer + " Sector " + sector + ")");
+                timeMaxHisto.setTitleY("Nb hits");
+                timeMaxHisto.setFillColor(4);
+                DataGroup timeOfMaxGroup = new DataGroup("");
+                timeOfMaxGroup.addDataSet(timeMaxHisto, 0);
+                this.getDataGroup().add(timeOfMaxGroup, sector, layer, 1);
+
+            }
+        }
+    }
+
+    @Override
+    public void plotHistos() {
+
+        this.getDetectorCanvas().getCanvas("Occupancy").divide(maxNumberSectors * 2, maxNumberLayers / 2);
+        this.getDetectorCanvas().getCanvas("Occupancy").setGridX(false);
+        this.getDetectorCanvas().getCanvas("Occupancy").setGridY(false);
+        this.getDetectorCanvas().getCanvas("Occupancy").setAxisTitleSize(12);
+        this.getDetectorCanvas().getCanvas("Occupancy").setAxisLabelSize(12);
+
+        this.getDetectorCanvas().getCanvas("TimeMax").divide(maxNumberSectors, maxNumberLayers);
+        this.getDetectorCanvas().getCanvas("TimeMax").setGridX(false);
+        this.getDetectorCanvas().getCanvas("TimeMax").setGridY(false);
+        this.getDetectorCanvas().getCanvas("TimeMax").setAxisTitleSize(12);
+        this.getDetectorCanvas().getCanvas("TimeMax").setAxisLabelSize(12);
+
+        for (int sector = 1; sector <= maxNumberSectors; sector++) {
+            for (int layer = 1; layer <= maxNumberLayers; layer++) {
+                int column = maxNumberSectors - sector;
+                int row;
+                int numberOfColumns = maxNumberSectors;
+                switch (layer) {
+                    case 1:
+                        row = 5;
+                        break;
+                    case 2:
+                        row = 4;
+                        break;
+                    case 3:
+                        row = 3;
+                        break;
+                    case 4:
+                        row = 2;
+                        break;
+                    case 5:
+                        row = 1;
+                        break;
+                    case 6:
+                        row = 0;
+                        break;
+                    default:
+                        row = -1;
+                        break;
                 }
-                this.getDetectorCanvas().getCanvas("Multiplicity").update();
-                
-		
-	}
+                this.getDetectorCanvas().getCanvas("Occupancy").cd(column + numberOfColumns * row);
+                this.getDetectorCanvas().getCanvas("Occupancy").draw(
+                        this.getDataGroup().getItem(sector, layer, 2).getH1F("Occupancy Layer " + layer + " Sector " + sector));
 
-	public void processEvent(DataEvent event) {
-            
-        if (this.getNumberOfEvents() >= super.eventResetTime_current[6] && super.eventResetTime_current[6] > 0){
-		    resetEventListener();
-		}
-            	
+                this.getDetectorCanvas().getCanvas("TimeMax").cd(column + numberOfColumns * row);
+                this.getDetectorCanvas().getCanvas("TimeMax").draw(
+                        this.getDataGroup().getItem(sector, layer, 1).getH1F("TimeOfMax : Layer " + layer + " Sector " + sector));
+            }
+        }
+        this.getDetectorCanvas().getCanvas("Occupancy").update();
+        this.getDetectorCanvas().getCanvas("TimeMax").update();
+
+        this.getDetectorCanvas().getCanvas("Multiplicity").divide(1, 1);
+        this.getDetectorCanvas().getCanvas("Multiplicity").setGridX(false);
+        this.getDetectorCanvas().getCanvas("Multiplicity").setGridY(false);
+        this.getDetectorCanvas().getCanvas("Multiplicity").cd(0);
+        this.getDetectorCanvas().getCanvas("Multiplicity").draw(this.getDataGroup().getItem(0, 0, 0).getH1F("multi"));
+        this.getDetectorCanvas().getCanvas("Multiplicity").update();
+    }
+
+    public void processEvent(DataEvent event) {
+
+        if (this.getNumberOfEvents() >= super.eventResetTime_current[6] && super.eventResetTime_current[6] > 0) {
+            resetEventListener();
+        }
+
+        if (this.runNumber == 0) {
+            int numberOfEvents = this.getNumberOfEvents();
+            if (event.hasBank("RUN::config")) {
+                DataBank head = event.getBank("RUN::config");
+                runNumber = head.getInt("run", 0);
+            } else {
+                runNumber = 2284;
+            }
+            this.loadConstantsFromCCDB(runNumber);
+            this.createHistos();
+            this.plotHistos();
+            this.setNumberOfEvents(numberOfEvents); //Cause number of events got reset
+        }
+
         //if (!testTriggerMask()) return;
-        
-		if (event.hasBank("FMT::adc") == true) {
-			DataBank bank = event.getBank("FMT::adc");
-                        
-    //                    this.getDataGroup().getItem(0,0,0).getH1F("multi").fill(bank.rows());
-                        int[] mult_layer = {0,0,0,0,0,0};
-			for (int i = 0; i < bank.rows(); i++) {
-				int sectorNb = bank.getByte("sector", i);
-				int layerNb = bank.getByte("layer", i);
-				int strip   = bank.getShort("component", i);
-				int ADC     = bank.getInt("ADC", i);
-				float timeNb = bank.getFloat("time", i);
-                                
-				if (strip < 0 || !mask[sectorNb][layerNb][strip]){
-					continue;
-				}
-				if(ADC>0) {
-				mult_layer[layerNb-1]++;
-				int dreamNb = (strip - 1) / numberOfStripsPerChip + 1;
-				
-				dreamHit[sectorNb][layerNb][dreamNb]++;
-				tMax[sectorNb][layerNb][dreamNb]=( tMax[sectorNb][layerNb][dreamNb]*(dreamHit[sectorNb][layerNb][dreamNb]-1) + timeNb )/ dreamHit[sectorNb][layerNb][dreamNb];
-				this.getDataGroup().getItem(sectorNb, layerNb, 2).getH1F("Occupancy Layer " + layerNb + " Sector " + sectorNb)
-				.fill(strip);
-				this.getDataGroup().getItem(0, 0, 0).getH2F("Occupancies").fill(strip,maxNumberSector*(layerNb-1)+(sectorNb-1),1);
-                                this.getDetectorSummary().getH2F("summary").fill(strip,maxNumberSector*(layerNb-1)+(sectorNb-1),1);
-                                }
-			}
-                        for (int layer = 1; layer <= maxNumberLayer; layer++) this.getDataGroup().getItem(0,0,0).getH1F("multi_layer " + layer).fill(mult_layer[layer-1]);
-			int compt=0;
-			if (getNumberOfEvents() % 1000 == 0) {
-				for (int sector = 1; sector <= maxNumberSector; sector++) {
-					for (int layer = 1; layer <= maxNumberLayer; layer++) {
-						for (int dream = 1; dream <= numberStrips[layer] / numberOfStripsPerChip; dream++) {
-							this.getDataGroup().getItem(0, 0, 1).getH1F("TimeOfMax").setBinContent(compt,tMax[sector][layer][dream]);
-							compt++;
-						}
-					}
-				}
-			}
-		}
-	}
+        if (event.hasBank("FMT::adc") == true) {
+            DataBank bank = event.getBank("FMT::adc");
+
+            this.getDataGroup().getItem(0, 0, 0).getH1F("multi").fill(bank.rows());
+
+            for (int i = 0; i < bank.rows(); i++) {
+                int sector = bank.getByte("sector", i);
+                int layer = bank.getByte("layer", i);
+                int strip = bank.getShort("component", i);
+                float timeOfMax = bank.getFloat("time", i);
+
+                if (strip < 0 || !mask[sector][layer][strip]) {
+                    continue;
+                }
+
+                this.getDataGroup().getItem(sector, layer, 2).getH1F("Occupancy Layer " + layer + " Sector " + sector).fill(strip);
+                if ((samplingTime < timeOfMax) && (timeOfMax < samplingTime * (numberOfSamples - 1))) {
+                    this.getDataGroup().getItem(sector, layer, 1).getH1F("TimeOfMax : Layer " + layer + " Sector " + sector).fill(timeOfMax);
+                }
+                this.numberOfHitsPerDetector[sector][layer]++;
+                this.getDetectorSummary().getH1F("summary").setBinContent(maxNumberSectors * (layer - 1) + (sector - 1), (double) this.numberOfHitsPerDetector[sector][layer] / ((double) this.getNumberOfEvents()));
+            }
+        }
+    }
 }
