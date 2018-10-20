@@ -942,7 +942,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         // BVT
         this.CLAS12Canvas.getCanvas("CD").cd(2);
         this.CLAS12Canvas.getCanvas("CD").getPad(2).getAxisZ().setLog(true);
-        if(this.monitors[0].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[0].getDetectorSummary().getH2F("summary"));
+        if(this.monitors[0].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[0].getDetectorSummary().getH1F("summary"));
         // BST
         this.CLAS12Canvas.getCanvas("CD").cd(3);
         this.CLAS12Canvas.getCanvas("CD").getPad(3).getAxisZ().setLog(true);
