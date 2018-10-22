@@ -19,6 +19,7 @@ import org.jlab.detector.view.DetectorPane2D;
 import org.jlab.groot.base.GStyle;
 import org.jlab.groot.data.IDataSet;
 import org.jlab.groot.data.TDirectory;
+import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.groot.graphics.EmbeddedCanvasTabbed;
 import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataEvent;
@@ -322,8 +323,10 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         // process event
     }
     
+    public void plotDetectorSummary(EmbeddedCanvas c, String hname) {
+    }  
+    
     public void plotHistos() {
-
     }
     
     public void printCanvas(String dir, String timestamp) {

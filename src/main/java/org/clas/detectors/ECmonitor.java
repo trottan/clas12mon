@@ -1,11 +1,15 @@
 package org.clas.detectors;
 
+import java.awt.List;
+
 import org.clas.viewer.DetectorMonitor;
 import org.jlab.groot.base.GStyle;
+import org.jlab.groot.data.GraphErrors;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
 import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.groot.group.DataGroup;
+import org.jlab.groot.math.F1D;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
@@ -13,7 +17,8 @@ import org.jlab.io.base.DataEvent;
 public class ECmonitor  extends DetectorMonitor {
 
     private final int[] npaddles = new int[]{68,62,62,36,36,36,36,36,36};
-        
+    String[] stacks = new String[]{"PCAL","ECin","ECout"};
+    String[] views = new String[]{"u","v","w"};
     
     public ECmonitor(String name) {
         super(name);
@@ -46,25 +51,27 @@ public class ECmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC sum").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC sum").setGridY(false);
         
-        String[] stacks = new String[]{"PCAL","ECin","ECout"};
-        String[] views = new String[]{"u","v","w"};
-        
         DataGroup sum = new DataGroup(3,1);
-        for(int i=0; i<1; i++) {
+        int n=-1;
+        int col[] = {1,2,4};
+        String gtit[] = {"PCAL U (black) V (red) W (blue)","ECIN (left) ECOUT (right)", ""};
+        
+        F1D f1 = new F1D("p0","[a]",0.5,6.5); f1.setParameter(0,1); f1.setLineColor(3); f1.setLineWidth(3);
+        sum.addDataSet(f1, n++);
+        
+        for(int i=0; i<3; i++) {
             String name = "sum"+stacks[i];
-            H2F sumStack = new H2F("sum"+stacks[i],"sum"+stacks[i],6,0.5,6.5, 3, 0.5, 3.5);
+            H2F sumStack = new H2F(name,name,6,0.5,6.5,3,0.5,3.5);            
             sumStack.setTitleX("sector");
-            sumStack.setTitleY("strip dir. (u,v,w)");
-            sumStack.setTitle("PCAL");
-            sum.addDataSet(sumStack, i);
-        }
-        for(int i=1; i<3; i++) {
-            String name = "sum"+stacks[i];
-            H2F sumStack = new H2F("sum"+stacks[i],"sum"+stacks[i],12,0.5,6.5, 3, 0.5, 3.5);
-            sumStack.setTitleX("sector (in and out combined)");
-            sumStack.setTitleY("strip dir. (u,v,w)");
-            sumStack.setTitle("ECAL");
-            sum.addDataSet(sumStack, i);
+            sumStack.setTitleY("Sector Sum Norm");
+            sumStack.setTitle(stacks[i]);
+            sum.addDataSet(sumStack, n++);
+            for (int il=0; il<3; il++) {
+            	GraphErrors g = new GraphErrors(stacks[i]+views[il]);
+            	if(il==0) {g.setTitle(gtit[i]); g.setTitleX("sector"); g.setTitleY("Sector Normalized Hits");}
+                g.setMarkerStyle(1); g.setMarkerColor(col[il]); g.setLineColor(col[il]); g.setMarkerSize(3); g.setLineThickness(1);
+            	sum.addDataSet(g, n++);
+            }
         }
 
         this.setDetectorSummary(sum);
@@ -116,10 +123,32 @@ public class ECmonitor  extends DetectorMonitor {
         }
              
     }
-        
+    
+    public void updateNormGraph(H1F h, String name, double off) {
+    	double norm = h.getIntegral()/6;
+    	this.getDetectorSummary().getGraph(name).reset();
+    	GraphErrors g = h.getGraph();
+    	for (int i=0; i<g.getDataSize(0); i++) {
+    		double    x = g.getDataX(i)+off;
+    		double    y = (norm>0) ? g.getDataY(i)/norm:0.;
+    		double yerr = (norm>0&&g.getDataY(i)>0) ? g.getDataY(i)/norm*Math.sqrt(1/g.getDataY(i)+1/norm):0.;    		
+    		this.getDetectorSummary().getGraph(name).addPoint(x,y,0.,yerr);  
+    	}
+    }
+      
+    public void fillDetectorSummary() {
+    	for (int i=0; i<3; i++) {
+    		for (int il=0; il<3; il++) {
+    			updateNormGraph(getDetectorSummary().getH2F("sum"+stacks[i]).getSlicesY().get(il),stacks[i]+views[il], (i==2)?0.2:0.0);
+    		}
+    	}    	
+    }
+    
     @Override
     public void plotHistos() {    
         
+    	fillDetectorSummary();
+    	
         for(int layer=1; layer <=9; layer++) {
             this.getDetectorCanvas().getCanvas("ADC Occupancies").cd((layer-1)+0);
             this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad((layer-1)).getAxisZ().setLog(getLogZ());
@@ -182,12 +211,14 @@ public class ECmonitor  extends DetectorMonitor {
                 if (layer<4) pcsum[sector-1]+=adc; //raw ADC sum in PCAL
                 if (layer>3) ecsum[sector-1]+=adc; //raw ADC sum in EC
                 if(adc>0 && time>=0) {
-                    if(layer <= 3)    this.getDetectorSummary().getH2F("sumPCAL").fill(sector*1.0, layer);
-                    if(layer >= 4 && layer <= 6) this.getDetectorSummary().getH2F("sumECin").fill(sector-0.25, layer-3);
-                    if(layer >= 6 && layer <= 9) this.getDetectorSummary().getH2F("sumECin").fill(sector+0.25, layer-6);
+                    if(layer <= 3)               this.getDetectorSummary().getH2F("sumPCAL").fill(sector, layer);
+                    if(layer >= 4 && layer <= 6) this.getDetectorSummary().getH2F("sumECin").fill(sector, layer-3);
+                    if(layer >= 6 && layer <= 9) this.getDetectorSummary().getH2F("sumECout").fill(sector, layer-6);
                 }
 	    }
     	    }   
+        
+        fillDetectorSummary();
         
     	int bitsec = getElecTriggerSector(); 
         if(bitsec>0&&bitsec<7) this.getDataGroup().getItem(bitsec,0,0).getH2F("mipADC"+bitsec).fill(pcsum[bitsec-1], ecsum[bitsec-1]);

@@ -907,13 +907,24 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         if(this.monitors[13].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[13].getDetectorSummary().getH2F("summary"));
         
         // ECAL 
-        this.CLAS12Canvas.getCanvas("FD").cd(4);
-        this.CLAS12Canvas.getCanvas("FD").getPad(4).getAxisZ().setLog(true);
-        if(this.monitors[5].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getH2F("sumPCAL"));
-        this.CLAS12Canvas.getCanvas("FD").cd(5);
-        this.CLAS12Canvas.getCanvas("FD").getPad(5).getAxisZ().setLog(true);
-        if(this.monitors[5].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getH2F("sumECin"));
-   
+        this.CLAS12Canvas.getCanvas("FD").cd(4); this.CLAS12Canvas.getCanvas("FD").getPad(4).setAxisRange(0.5,6.5,0.5,1.5);
+        if(this.monitors[5].getDetectorSummary()!=null) {
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("PCALu"));
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("PCALv"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("PCALw"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getF1D("p0"),"same");
+        }
+        this.CLAS12Canvas.getCanvas("FD").cd(5); this.CLAS12Canvas.getCanvas("FD").getPad(5).setAxisRange(0.5,6.5,0.5,1.5);
+        if(this.monitors[5].getDetectorSummary()!=null) {
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECinu"));
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECinv"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECinw"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECoutu"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECoutv"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECoutw"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getF1D("p0"),"same");
+        }
+        
         // FMT:
 //        this.CLAS12Canvas.getCanvas("FD").cd(6);
 //        this.CLAS12Canvas.getCanvas("FD").getPad(6).getAxisZ().setLog(true);
