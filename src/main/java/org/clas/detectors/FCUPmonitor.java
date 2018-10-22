@@ -11,7 +11,6 @@ import org.jlab.utils.groups.IndexedTable;
 
 public class FCUPmonitor extends DetectorMonitor {
     
-    ConstantsManager ccdb = new ConstantsManager();
     IndexedTable fcupConfig = null;
     private int nscaler;
     private int fcup, fcupGated, slm, slmGated, clock, clockGated;
@@ -23,8 +22,8 @@ public class FCUPmonitor extends DetectorMonitor {
         super(name);
         this.setDetectorTabNames("Faraday Cup");
         this.init(false);
-        ccdb.setVariation("default");
-        ccdb.init(Arrays.asList(new String[]{"/runcontrol/fcup"}));
+        this.getCcdb().setVariation("default");
+        this.getCcdb().init(Arrays.asList(new String[]{"/runcontrol/fcup"}));
     }
 
     
@@ -111,7 +110,7 @@ public class FCUPmonitor extends DetectorMonitor {
         if(event.hasBank("RUN::config")){
 	    DataBank head = event.getBank("RUN::config");
             int runNumber    = head.getInt("run", 0);
-	    fcupConfig = ccdb.getConstants(runNumber, "/runcontrol/fcup");
+	    fcupConfig = this.getCcdb().getConstants(runNumber, "/runcontrol/fcup");
             double fcup_slope  = fcupConfig.getDoubleValue("slope",0,0,0);
             double fcup_offset = fcupConfig.getDoubleValue("slope",0,0,0);
             double fcup_atten  = fcupConfig.getIntValue("atten",0,0,0);

@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JSplitPane;
 import org.jlab.detector.base.DetectorOccupancy;
+import org.jlab.detector.calib.utils.ConstantsManager;
 import org.jlab.detector.view.DetectorPane2D;
 import org.jlab.groot.base.GStyle;
 import org.jlab.groot.data.IDataSet;
@@ -36,6 +37,7 @@ import org.jlab.utils.groups.IndexedList;
 public class DetectorMonitor implements IDataEventListener, ActionListener {    
     
     private final String           detectorName;
+    private ConstantsManager                    ccdb = new ConstantsManager();
     private ArrayList<String>      detectorTabNames  = new ArrayList();
     private IndexedList<DataGroup> detectorData      = new IndexedList<DataGroup>(3);
     private DataGroup              detectorSummary   = null;
@@ -215,6 +217,10 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public void clearTriggerMask(int bit) {this.TriggerMask&=~(1<<bit);}  
     public boolean testTriggerMask()      {return this.TriggerMask!=0 ? isTrigMaskSet(this.TriggerMask):true;}
     public boolean isGoodTrigger(int bit) {return TriggerBeam[bit] ? isTrigBitSet(bit):true;}
+
+    public ConstantsManager getCcdb() {
+        return ccdb;
+    }
    
     public EmbeddedCanvasTabbed getDetectorCanvas() {
         return detectorCanvas;
