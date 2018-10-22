@@ -549,11 +549,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots FT");
               entry.addAttachment(data+"/summary_RHJT_"+tstamp+".png", "Summary plots RF/HEL/JITTER/TRIGGER");
               System.out.println("Summary plots uploaded");
-              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies");
-              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies c");
-              entry.addAttachment(data+"/BMT_canvas2_"+tstamp+".png", "BMT occupancies z");
-              entry.addAttachment(data+"/BMT_canvas3_"+tstamp+".png", "BMT time of max");
-              entry.addAttachment(data+"/BMT_canvas4_"+tstamp+".png", "BMT multiplicity");
+              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies c");
+              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies z");
+              entry.addAttachment(data+"/BMT_canvas2_"+tstamp+".png", "BMT time of max");
+              entry.addAttachment(data+"/BMT_canvas3_"+tstamp+".png", "BMT multiplicity");
               System.out.println("BMT plots uploaded");
               entry.addAttachment(data+"/BST_canvas0_"+tstamp+".png", "BST occupancies 2D");
               entry.addAttachment(data+"/BST_canvas1_"+tstamp+".png", "BST occupancies 1D");
@@ -696,9 +695,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots for the forward tagger");
               entry.addAttachment(data+"/summary_RHJT_"+tstamp+".png", "Summary plots RF/HEL/JITTER/TRIGGER");
               System.out.println("Summary plots uploaded");
-              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies");
-              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies c");
-              entry.addAttachment(data+"/BMT_canvas2_"+tstamp+".png", "BMT occupancies z");
+              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies c");
+              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies z");
               System.out.println("BMT plots uploaded");
               entry.addAttachment(data+"/BST_canvas0_"+tstamp+".png", "BST occupancies 2D");
               entry.addAttachment(data+"/BST_canvas1_"+tstamp+".png", "BST occupancies 1D"); 
