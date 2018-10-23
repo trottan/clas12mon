@@ -43,11 +43,11 @@ public class FTTRKmonitor extends DetectorMonitor {
         tablesFitter = Arrays.asList(new String[]{"/daq/config/fttrk"});
         this.getCcdb().init(keysFitter, tablesFitter);
 
-        IndexedTable bmtConfig = this.getCcdb().getConstants(runNumber, "FTTconfig");
+        IndexedTable fttConfig = this.getCcdb().getConstants(runNumber, "FTTconfig");
 
-        this.sparseSample = bmtConfig.getIntValue("sparse", 0, 0, 0);
-        this.numberOfSamples = (bmtConfig.getIntValue("number_sample", 0, 0, 0) - 1) * (this.sparseSample + 1) + 1;
-        this.samplingTime = (byte) bmtConfig.getDoubleValue("sampling_time", 0, 0, 0);
+        this.sparseSample = fttConfig.getIntValue("sparse", 0, 0, 0);
+        this.numberOfSamples = (fttConfig.getIntValue("number_sample", 0, 0, 0) - 1) * (this.sparseSample + 1) + 1;
+        this.samplingTime = (byte) fttConfig.getDoubleValue("sampling_time", 0, 0, 0);
 
     }
 
@@ -78,7 +78,7 @@ public class FTTRKmonitor extends DetectorMonitor {
 
             int sector = 1;
             H1F timeMaxHisto = new H1F("TimeOfMax : Layer " + ilayer + " Sector " + sector, "TimeOfMax : Layer " + ilayer + " Sector " + sector,
-                    samplingTime * numberOfSamples, 1., samplingTime * numberOfSamples);
+                    samplingTime * numberOfSamples, 0., samplingTime * numberOfSamples);
             timeMaxHisto.setTitleX("Time of max (Layer " + ilayer + " Sector " + sector + ")");
             timeMaxHisto.setTitleY("Nb hits");
             timeMaxHisto.setFillColor(4);
