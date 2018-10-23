@@ -34,52 +34,52 @@ public class CTOFmonitor  extends DetectorMonitor {
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
         
-        H1F occADCL = new H1F("occADCL", "occADCL", 48, 0.5, 48.5);
-        occADCL.setTitleX("PMT Upstream");
-        occADCL.setTitleY("Counts");
-        occADCL.setFillColor(38);
-        H1F occADCR = new H1F("occADCR", "occADCR", 48, 0.5, 48.5);
-        occADCR.setTitleX("PMT Downstream");
-        occADCR.setTitleY("Counts");
-        occADCR.setFillColor(38);
-        H2F adcL = new H2F("adcL", "adcL", 50, 0, 5000, 48, 0.5, 48.5);
-        adcL.setTitleX("ADC Upstream - amplitude");
-        adcL.setTitleY("PMT Upstream");
-        H2F adcR = new H2F("adcR", "adcR", 50, 0, 5000, 48, 0.5, 48.5);
-        adcR.setTitleX("ADC Downstream - amplitude");
-        adcR.setTitleY("PMT Downstream");   
-        H2F fadcL_time = new H2F("fadcL_time", "fadcL_time", 80, 0, 400, 48, 0.5, 48.5);
-        fadcL_time.setTitleX("FADC Upstream - timing");
-        fadcL_time.setTitleY("PMT Upstream");
-        H2F fadcR_time = new H2F("fadcR_time", "fadcR_time", 80, 0, 400, 48, 0.5, 48.5);
-        fadcR_time.setTitleX("FADC Downstream - timing");
-        fadcR_time.setTitleY("PMT Downstream");  
-        H1F occTDCL = new H1F("occTDCL", "occTDCL", 48, 0.5, 48.5);
-        occTDCL.setTitleX("PMT Upstream");
-        occTDCL.setTitleY("Counts");
-        occTDCL.setFillColor(38);
-        H1F occTDCR = new H1F("occTDCR", "occTDCR", 48, 0.5, 48.5);
-        occTDCR.setTitleX("PMT Downstream");
-        occTDCR.setTitleY("Counts");
-        occTDCR.setFillColor(38);
-        H2F tdcL = new H2F("tdcL", "tdcL", 50, 0, 15000, 48, 0.5, 48.5);
-        tdcL.setTitleX("TDC Upstream - amplitude");
-        tdcL.setTitleY("PMT Upstream");
-        H2F tdcR = new H2F("tdcR", "tdcR", 50, 0, 15000, 48, 0.5, 48.5);
-        tdcR.setTitleX("TDC Downstream - amplitude");
-        tdcR.setTitleY("PMT Downstream"); 
+        H1F occADCU = new H1F("occADCU", "occADCU", 48, 0.5, 48.5);
+        occADCU.setTitleX("PMT Upstream");
+        occADCU.setTitleY("Counts");
+        occADCU.setFillColor(38);
+        H1F occADCD = new H1F("occADCD", "occADCD", 48, 0.5, 48.5);
+        occADCD.setTitleX("PMT Downstream");
+        occADCD.setTitleY("Counts");
+        occADCD.setFillColor(38);
+        H2F adcU = new H2F("adcU", "adcU", 50, 0, 5000, 48, 0.5, 48.5);
+        adcU.setTitleX("ADC Upstream - amplitude");
+        adcU.setTitleY("PMT Upstream");
+        H2F adcD = new H2F("adcD", "adcD", 50, 0, 5000, 48, 0.5, 48.5);
+        adcD.setTitleX("ADC Downstream - amplitude");
+        adcD.setTitleY("PMT Downstream");   
+        H2F fadcU_time = new H2F("fadcU_time", "fadcU_time", 80, 0, 400, 48, 0.5, 48.5);
+        fadcU_time.setTitleX("FADC Upstream - timing");
+        fadcU_time.setTitleY("PMT Upstream");
+        H2F fadcD_time = new H2F("fadcD_time", "fadcD_time", 80, 0, 400, 48, 0.5, 48.5);
+        fadcD_time.setTitleX("FADC Downstream - timing");
+        fadcD_time.setTitleY("PMT Downstream");  
+        H1F occTDCU = new H1F("occTDCU", "occTDCU", 48, 0.5, 48.5);
+        occTDCU.setTitleX("PMT Upstream");
+        occTDCU.setTitleY("Counts");
+        occTDCU.setFillColor(38);
+        H1F occTDCD = new H1F("occTDCD", "occTDCD", 48, 0.5, 48.5);
+        occTDCD.setTitleX("PMT Downstream");
+        occTDCD.setTitleY("Counts");
+        occTDCD.setFillColor(38);
+        H2F tdcU = new H2F("tdcU", "tdcU", 50, 0, 15000, 48, 0.5, 48.5);
+        tdcU.setTitleX("TDC Upstream - amplitude");
+        tdcU.setTitleY("PMT Upstream");
+        H2F tdcD = new H2F("tdcD", "tdcD", 50, 0, 15000, 48, 0.5, 48.5);
+        tdcD.setTitleX("TDC Downstream - amplitude");
+        tdcD.setTitleY("PMT Downstream"); 
         
         DataGroup dg = new DataGroup(2,5);
-        dg.addDataSet(occADCL, 0);
-        dg.addDataSet(occADCR, 1);
-        dg.addDataSet(adcL, 2);
-        dg.addDataSet(adcR, 3);
-        dg.addDataSet(fadcL_time, 4);
-        dg.addDataSet(fadcR_time, 5);
-        dg.addDataSet(occTDCL, 6);
-        dg.addDataSet(occTDCR, 7);
-        dg.addDataSet(tdcL, 8);
-        dg.addDataSet(tdcR, 9);
+        dg.addDataSet(occADCU, 0);
+        dg.addDataSet(occADCD, 1);
+        dg.addDataSet(adcU, 2);
+        dg.addDataSet(adcD, 3);
+        dg.addDataSet(fadcU_time, 4);
+        dg.addDataSet(fadcD_time, 5);
+        dg.addDataSet(occTDCU, 6);
+        dg.addDataSet(occTDCD, 7);
+        dg.addDataSet(tdcU, 8);
+        dg.addDataSet(tdcD, 9);
         this.getDataGroup().add(dg,0,0,0);
     }
         
@@ -93,32 +93,32 @@ public class CTOFmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("TDC Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").setGridY(false);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(0);
-        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occADCL"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occADCU"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(1);
-        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occADCR"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occADCD"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(2);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(2).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcL"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcU"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(3);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(3).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcR"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("adcD"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(4);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(4).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadcL_time"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadcU_time"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").cd(5);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").getPad(5).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time"));
+        this.getDetectorCanvas().getCanvas("ADC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("fadcD_time"));
         this.getDetectorCanvas().getCanvas("ADC Occupancies").update();
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(0);
-        this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occTDCL"));
+        this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occTDCU"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(1);
-        this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occTDCR"));
+        this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH1F("occTDCD"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(2);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").getPad(2).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcL"));
+        this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcU"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies").cd(3);
         this.getDetectorCanvas().getCanvas("TDC Occupancies").getPad(3).getAxisZ().setLog(getLogZ());
-        this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcR"));
+        this.getDetectorCanvas().getCanvas("TDC Occupancies").draw(this.getDataGroup().getItem(0,0,0).getH2F("tdcD"));
         this.getDetectorCanvas().getCanvas("TDC Occupancies").update();
     }
 
@@ -145,14 +145,14 @@ public class CTOFmonitor  extends DetectorMonitor {
 //                      " ADC = " + adc + " TIME = " + time); 
                 if(adc>0) {
                     if(order==0) {
-                        this.getDataGroup().getItem(0,0,0).getH1F("occADCL").fill(comp*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH2F("adcL").fill(adc*1.0,comp*1.0);
-                        if(time > 1) this.getDataGroup().getItem(0,0,0).getH2F("fadcL_time").fill(time*1.0,comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH1F("occADCU").fill(comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH2F("adcU").fill(adc*1.0,comp*1.0);
+                        if(time > 1) this.getDataGroup().getItem(0,0,0).getH2F("fadcU_time").fill(time*1.0,comp*1.0);
                     }
                     else if(order==1) {
-                        this.getDataGroup().getItem(0,0,0).getH1F("occADCR").fill(comp*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH2F("adcR").fill(adc*1.0,comp*1.0);
-                        if(time > 1) this.getDataGroup().getItem(0,0,0).getH2F("fadcR_time").fill(time*1.0,comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH1F("occADCD").fill(comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH2F("adcD").fill(adc*1.0,comp*1.0);
+                        if(time > 1) this.getDataGroup().getItem(0,0,0).getH2F("fadcD_time").fill(time*1.0,comp*1.0);
                     }
                     
                     this.getDetectorSummary().getH1F("summary").fill((order*48+comp)*1.0); 
@@ -174,12 +174,12 @@ public class CTOFmonitor  extends DetectorMonitor {
 //                                 + paddle + " TDC = " + TDC);    
                 if(tdc>0) {
                     if(order==2) {
-                        this.getDataGroup().getItem(0,0,0).getH1F("occTDCL").fill(comp*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH2F("tdcL").fill(tdc*1.0,comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH1F("occTDCU").fill(comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH2F("tdcU").fill(tdc*1.0,comp*1.0);
                     }
                     else if(order==3) {
-                        this.getDataGroup().getItem(0,0,0).getH1F("occTDCR").fill(comp*1.0);
-                        this.getDataGroup().getItem(0,0,0).getH2F("tdcR").fill(tdc*1.0,comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH1F("occTDCD").fill(comp*1.0);
+                        this.getDataGroup().getItem(0,0,0).getH2F("tdcD").fill(tdc*1.0,comp*1.0);
                     }
                 }
             }
