@@ -906,11 +906,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         // ECAL 
         this.CLAS12Canvas.getCanvas("FD").cd(4); this.CLAS12Canvas.getCanvas("FD").getPad(4).setAxisRange(0.5,6.5,0.5,1.5);
-        if(this.monitors[5].getDetectorSummary()!=null) {
+        if(this.monitors[5].getDetectorSummary()!=null) { 
         	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("PCALu"));
         	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("PCALv"),"same");
         	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("PCALw"),"same");
-//        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getF1D("p0"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getF1D("p0"),"same");
         }
         this.CLAS12Canvas.getCanvas("FD").cd(5); this.CLAS12Canvas.getCanvas("FD").getPad(5).setAxisRange(0.5,6.5,0.5,1.5);
         if(this.monitors[5].getDetectorSummary()!=null) {
@@ -920,7 +920,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECoutu"),"same");
         	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECoutv"),"same");
         	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getGraph("ECoutw"),"same");
-//        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getF1D("p0"),"same");
+        	this.CLAS12Canvas.getCanvas("FD").draw(this.monitors[5].getDetectorSummary().getF1D("p0"),"same");
         }
         
         // FMT:

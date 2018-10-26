@@ -51,13 +51,13 @@ public class ECmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC sum").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC sum").setGridY(false);
         
-        DataGroup sum = new DataGroup(3,5);
-        int n=-1;
+        DataGroup sum = new DataGroup(1,1);
+       
         int col[] = {1,2,4};
         String gtit[] = {"PCAL U (black) V (red) W (blue)","ECIN (left) ECOUT (right)", ""};
         
         F1D f1 = new F1D("p0","[a]",0.5,6.5); f1.setParameter(0,1); f1.setLineColor(3); f1.setLineWidth(3);
-        sum.addDataSet(f1, n++);
+        sum.addDataSet(f1, 0);
         
         for(int i=0; i<3; i++) {
             String name = "sum"+stacks[i];
@@ -65,12 +65,14 @@ public class ECmonitor  extends DetectorMonitor {
             sumStack.setTitleX("sector");
             sumStack.setTitleY("Sector Sum Norm");
             sumStack.setTitle(stacks[i]);
-            sum.addDataSet(sumStack, n++);
+            
+            sum.addDataSet(sumStack, 0); 
+            
             for (int il=0; il<3; il++) {
             	GraphErrors g = new GraphErrors(stacks[i]+views[il]);
             	if(il==0) {g.setTitle(gtit[i]); g.setTitleX("sector"); g.setTitleY("Sector Normalized Hits");}
                 g.setMarkerStyle(1); g.setMarkerColor(col[il]); g.setLineColor(col[il]); g.setMarkerSize(3); g.setLineThickness(1);
-            	sum.addDataSet(g, n++);
+            	sum.addDataSet(g, 0);
             }
         }
 
