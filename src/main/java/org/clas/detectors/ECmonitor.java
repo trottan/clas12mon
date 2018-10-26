@@ -51,7 +51,7 @@ public class ECmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("ADC sum").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC sum").setGridY(false);
         
-        DataGroup sum = new DataGroup(3,1);
+        DataGroup sum = new DataGroup(3,5);
         int n=-1;
         int col[] = {1,2,4};
         String gtit[] = {"PCAL U (black) V (red) W (blue)","ECIN (left) ECOUT (right)", ""};
