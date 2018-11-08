@@ -132,7 +132,7 @@ public class FCUPmonitor extends DetectorMonitor {
                     int crate   = scaler.getByte("crate",i);
                     int slot    = scaler.getByte("slot",i);
                     int channel = scaler.getShort("channel",i);
-                    int value   = scaler.getInt("value",i);
+                    int value   = (int) scaler.getLong("value",i);
                     if(slot==64) {
                         int j = (int) channel/16;
                         int k = channel%16;
