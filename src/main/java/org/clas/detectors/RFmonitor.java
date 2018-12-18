@@ -3,7 +3,6 @@ package org.clas.detectors;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.clas.viewer.DetectorMonitor;
-import org.jlab.detector.calib.utils.ConstantsManager;
 import org.jlab.groot.data.GraphErrors;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
@@ -428,11 +427,13 @@ public class RFmonitor extends DetectorMonitor {
                 if(order==0) {
                     if(comp==3) {
                         this.getDataGroup().getItem(0,0,0).getH1F("rf1fADC").fill(time);
+                        if(time>0) this.getDataGroup().getItem(0,0,0).getH1F("rf1fADCadc").fill(adc);
                         rf1time = time;
                         rf1adc  = adc;
                     }
                     else {
                         this.getDataGroup().getItem(0,0,0).getH1F("rf2fADC").fill(time);
+                        if(time>0) this.getDataGroup().getItem(0,0,0).getH1F("rf2fADCadc").fill(adc);
                         rf2time = time;
                         rf2adc  = adc;
                      }
@@ -441,8 +442,6 @@ public class RFmonitor extends DetectorMonitor {
             if(rf1time>0 && rf2time>0) {
 //                System.out.println(rf1time + " " + rf2time);
                 double rftime = (rf1time-rf2time + 100*rfbucket) % rfbucket;
-                this.getDataGroup().getItem(0,0,0).getH1F("rf1fADCadc").fill(rf1adc);
-                this.getDataGroup().getItem(0,0,0).getH1F("rf2fADCadc").fill(rf2adc);
                 this.getDataGroup().getItem(0,0,0).getH1F("rffADCdiff").fill(rftime);
                 this.getDataGroup().getItem(0,0,0).getH1F("rffADCdifftmp").fill(rftime);
             }
