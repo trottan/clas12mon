@@ -640,7 +640,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               //entry.addAttachment(data+"/Trigger_canvas4_"+tstamp+".png", "Trigger FTOF cluster");
               System.out.println("Trigger plots uploaded");
               entry.addAttachment(data+"/TimeJitter_canvas0_"+tstamp+".png", "Time Jitter");
-              System.out.println("Time Jitter plots uploaded");
+              System.out.println("Time Jitter plots uploaded");              
+              entry.addAttachment(data+"/BAND_canvas0_"+tstamp+".png", "BAND ADC occupancies and spectra");
+              entry.addAttachment(data+"/BAND_canvas1_"+tstamp+".png", "BAND TDC occupancies and spectra");
+              System.out.println("BAND plots uploaded");
 
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
@@ -737,6 +740,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("RICH plot uploaded");
               entry.addAttachment(data+"/Trigger_canvas0_"+tstamp+".png", "Trigger bits");
               System.out.println("Trigger plots uploaded");
+              entry.addAttachment(data+"/BAND_canvas0_"+tstamp+".png", "BAND ADC occupancies and spectra");
+              entry.addAttachment(data+"/BAND_canvas1_"+tstamp+".png", "BAND TDC occupancies and spectra");
+              System.out.println("BAND plots uploaded");
             
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
