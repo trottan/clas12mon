@@ -105,6 +105,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 new FCUPmonitor("Faraday Cup"),  // 17
                 new TRIGGERmonitor("Trigger"),   // 18
                 new TJITTERmonitor("TimeJitter"),   // 19
+                new BANDmonitor("BAND")      // 20
      
     };
         

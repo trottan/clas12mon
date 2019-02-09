@@ -65,8 +65,8 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public boolean TriggerBeam[] = new boolean[32];
     public int TriggerMask = 0;
     
-    public int eventResetTime_current[]=new int[19];
-    public int eventResetTime_default[]=new int[19];    
+    public int eventResetTime_current[]=new int[21];
+    public int eventResetTime_default[]=new int[21];    
     
     public DetectorMonitor(String name){
         GStyle.getAxisAttributesX().setTitleFontSize(24); //24
@@ -83,6 +83,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         GStyle.getAxisAttributesZ().setTitleFontName("Avenir");
         GStyle.setGraphicsFrameLineWidth(1);
         GStyle.getH1FAttributes().setLineWidth(1);
+//        GStyle.getH1FAttributes().setOptStat("1111111");
 
         this.detectorName = name;
         this.detectorPanel  = new JPanel();
@@ -109,6 +110,8 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         eventResetTime_current[16]=0;
         eventResetTime_current[17]=0;
         eventResetTime_current[18]=0;
+        eventResetTime_current[19]=0;
+        eventResetTime_current[20]=0;
         
         eventResetTime_default[0]=10000000;   // BMT
         eventResetTime_default[1]=10000000;   // BST
@@ -129,8 +132,10 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         eventResetTime_default[16]=10000000;  // HEL
         eventResetTime_default[17]=10000000;  // Faraday Cup
         eventResetTime_default[18]=10000000;  // Trigger
+        eventResetTime_default[19]=10000000;  // TimeJitter
+        eventResetTime_default[20]=10000000;  // BAND
      
-        for (int i=0; i<19; i++){
+        for (int i=0; i<21; i++){
             eventResetTime_current[i]=eventResetTime_default[i];
         }
     }

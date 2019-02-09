@@ -124,9 +124,11 @@ public class TJITTERmonitor  extends DetectorMonitor {
             this.phase   = jitterConfig.getIntValue("phase",0,0,0);
             this.ncycles = jitterConfig.getIntValue("cycles",0,0,0);           
 //            System.out.println(period + phase + ncycles + " " + timestamp + " " + triggerPhase0);
-            triggerPhase0 = (int) ((timestamp)%this.ncycles); // TI derived phase correction due to TDC and FADC clock differences
-            triggerPhase  = (int) ((timestamp+this.phase)%this.ncycles); // TI derived phase correction due to TDC and FADC clock differences
-	}
+            if(this.ncycles>0){
+                triggerPhase0 = (int) ((timestamp)%this.ncycles); // TI derived phase correction due to TDC and FADC clock differences
+                triggerPhase  = (int) ((timestamp+this.phase)%this.ncycles); // TI derived phase correction due to TDC and FADC clock differences
+            }
+        }
         if(ctofADC!=null && ctofTDC!=null) {
 	    IndexedList<ArrayList<Integer>> tdcs = new IndexedList<ArrayList<Integer>>(3);
 	    IndexedList<ArrayList<Double>>  adcs = new IndexedList<ArrayList<Double>>(3);
