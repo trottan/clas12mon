@@ -333,7 +333,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                
         menuBar.add(trigBits);
         
-        String TriggerDef[] = { "Electron",
+        String TriggerDefRGA[] = { "Electron",
 		        "Electron S1","Electron S2","Electron S3","Electron S4","Electron S5","Electron S6",
 		        "ElectronOR noDC>300","PCALxECAL>10","","","","","","","","","","",
 		        "FTOFxPCALxECAL(1-4)","FTOFxPCALxECAL(2-5)","FTOFxPCALxECAL(3-6)","","",
@@ -350,7 +350,15 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 		        "FTxFTOFxPCALxCTOF","FTxFTOFxPCALxCND","FTxFTOFxPCALxCTOFxCND",
 		        "FTx(FTOFxPCAL)^2","FTx(FTOFxPCAL)^3","FT(>300)xHODO","FT(>500)xHODO","FT>300","FT>500",
 		        "1K Pulser"};  
-*/        		             
+*/   
+        
+      //RGB
+        String TriggerDef[] = { "Electron OR",
+		        "Electron S1","Electron S2","Electron S3","Electron S4","Electron S5","Electron S6",
+		        "FTOFxPCALxECALxDC(1-4)","FTOFxPCALxECALxDC(2-5)","FTOFxPCALxECALxDC(3-6)",
+		        "Electron OR no DC","","","","","","","","","","","","","","","","","","","","",
+		        "1K Pulser"};   
+        
         JMenu trigBitsBeam = new JMenu("TriggerBits");
         trigBitsBeam.getAccessibleContext().setAccessibleDescription("Test Trigger Bits");
         
