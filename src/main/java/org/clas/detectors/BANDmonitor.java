@@ -49,8 +49,8 @@ public class BANDmonitor  extends DetectorMonitor {
         occTDC.setTitleY("Counts");
         occTDC.setFillColor(38);
         H2F tdc = new H2F("tdc", "tdc", 50, 0, 15000, 256, 0.5, 256.5);
-        tdc.setTitleX("TDC Upstream - amplitude");
-        tdc.setTitleY("PMT Upstream"); 
+        tdc.setTitleX("TDC - amplitude");
+        tdc.setTitleY("PMT"); 
         
         DataGroup dg = new DataGroup(1,5);
         dg.addDataSet(occADC, 0);
