@@ -333,15 +333,16 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                
         menuBar.add(trigBits);
         
-        String TriggerDefRGA[] = { "Electron",
+        //RGA
+        String TriggerDefRGAFall[] = { "Electron",
 		        "Electron S1","Electron S2","Electron S3","Electron S4","Electron S5","Electron S6",
 		        "ElectronOR noDC>300","PCALxECAL>10","","","","","","","","","","",
 		        "FTOFxPCALxECAL(1-4)","FTOFxPCALxECAL(2-5)","FTOFxPCALxECAL(3-6)","","",
 		        "FTxHDxFTOFxPCALxCTOF",
 		        "FTxHDx(FTOFxPCAL)^2","FTxHD>100","FT>100","","","",
 		        "1K Pulser"};
-/*        
-        String TriggerDef[] = { "Electron",
+        
+        String TriggerDefRGASpring[] = { "Electron",
 		        "Electron S1","Electron S2","Electron S3","Electron S4","Electron S5","Electron S6",
 		        "HTCC(>1pe)","HTCCxPCAL(>300MeV)","FTOFxPCAL^3","FTOFxPCALxECAL^3",
 		        "FTOFxPCALxCTOF","FTOFxPCALxCND","FTOFxPCALxCNDxCTOF","FTOFxPCAL^2",
@@ -350,7 +351,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 		        "FTxFTOFxPCALxCTOF","FTxFTOFxPCALxCND","FTxFTOFxPCALxCTOFxCND",
 		        "FTx(FTOFxPCAL)^2","FTx(FTOFxPCAL)^3","FT(>300)xHODO","FT(>500)xHODO","FT>300","FT>500",
 		        "1K Pulser"};  
-*/   
+   
         
       //RGB
         String TriggerDef[] = { "Electron OR",
