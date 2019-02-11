@@ -38,18 +38,18 @@ public class BANDmonitor  extends DetectorMonitor {
         occADC.setTitleX("PMT");
         occADC.setTitleY("Counts");
         occADC.setFillColor(38);
-        H2F adc = new H2F("adc", "adc", 50, 0, 5000, 256, 0.5, 256.5);
+        H2F adc = new H2F("adc", "adc", 20, 0, 20000, 256, 0.5, 256.5);
         adc.setTitleX("ADC - amplitude");
         adc.setTitleY("PMT");
-        H2F fadc_time = new H2F("fadc_time", "fadc_time", 80, 0, 400, 256, 0.5, 256.5);
+        H2F fadc_time = new H2F("fadc_time", "fadc_time", 30, 0, 400, 256, 0.5, 256.5);
         fadc_time.setTitleX("FADC - timing");
         fadc_time.setTitleY("PMT");
         H1F occTDC = new H1F("occTDC", "occTDC", 256, 0.5, 256.5);
         occTDC.setTitleX("PMT");
         occTDC.setTitleY("Counts");
         occTDC.setFillColor(38);
-        H2F tdc = new H2F("tdc", "tdc", 50, 0, 15000, 256, 0.5, 256.5);
-        tdc.setTitleX("TDC - amplitude");
+        H2F tdc = new H2F("tdc", "tdc", 30, 0, 1000, 256, 0.5, 256.5);
+        tdc.setTitleX("TDC - (ns)");
         tdc.setTitleY("PMT"); 
         
         DataGroup dg = new DataGroup(1,5);
@@ -129,7 +129,7 @@ public class BANDmonitor  extends DetectorMonitor {
 //                                 + paddle + " TDC = " + TDC);    
                 if(tdc>0) {
                     this.getDataGroup().getItem(0,0,0).getH1F("occTDC").fill(PMT*1.0);
-                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc*1.0,PMT*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("tdc").fill(tdc*0.0245,PMT*1.0);
                 }
             }
         }        
