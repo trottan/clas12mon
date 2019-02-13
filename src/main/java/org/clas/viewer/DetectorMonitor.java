@@ -391,6 +391,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         String folder = this.getDetectorName() + "/";
         System.out.println("Reading from: " + folder);
         DataGroup sum = this.getDetectorSummary();
+        if (sum!=null) {
         int nrows = sum.getRows();
         int ncols = sum.getColumns();
         int nds   = nrows*ncols;
@@ -399,28 +400,32 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
             List<IDataSet> dsList = sum.getData(i);
             for(IDataSet ds : dsList){
                 System.out.println("\t --> " + ds.getName());
-                newSum.addDataSet(dir.getObject(folder, ds.getName()),i);
+                if(dir.getObject(folder, ds.getName())!=null) newSum.addDataSet(dir.getObject(folder, ds.getName()),i);
             }
         }            
         this.setDetectorSummary(newSum);
+        
+        }
+        
         Map<Long, DataGroup> map = this.getDataGroup().getMap();
         for( Map.Entry<Long, DataGroup> entry : map.entrySet()) {
             Long key = entry.getKey();
             DataGroup group = entry.getValue();
-            nrows = group.getRows();
-            ncols = group.getColumns();
-            nds   = nrows*ncols;
+            int nrows = group.getRows();
+            int ncols = group.getColumns();
+            int nds   = nrows*ncols;
             DataGroup newGroup = new DataGroup(ncols,nrows);
             for(int i = 0; i < nds; i++){
                 List<IDataSet> dsList = group.getData(i);
                 for(IDataSet ds : dsList){
                     System.out.println("\t --> " + ds.getName());
-                    newGroup.addDataSet(dir.getObject(folder, ds.getName()),i);
+                    if(dir.getObject(folder, ds.getName())!=null) newGroup.addDataSet(dir.getObject(folder, ds.getName()),i);
                 }
             }
             map.replace(key, newGroup);
         }
         this.plotHistos();
+        
     }
     
     public void writeDataGroup(TDirectory dir) {

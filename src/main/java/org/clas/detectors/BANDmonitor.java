@@ -64,6 +64,7 @@ public class BANDmonitor  extends DetectorMonitor {
     @Override
     public void plotHistos() {        
         // plotting histos
+    	if (this.getDataGroup().getItem(0,0,0).getH1F("occADC")==null) return; //lcs To prevent exceptions if tab/histo missing from archive
         this.getDetectorCanvas().getCanvas("ADC Occupancies").divide(1, 3);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").setGridX(false);
         this.getDetectorCanvas().getCanvas("ADC Occupancies").setGridY(false);

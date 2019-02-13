@@ -130,6 +130,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
     @Override
     public void plotHistos() {
         // initialize canvas and plot histograms
+    	if(this.getDataGroup().getItem(0,0,0).getH1F(tbit)==null) return; //lcs To prevent exceptions if histo missing from archive
         this.getDetectorCanvas().getCanvas("Trigger Bits").divide(1, 1);
         this.getDetectorCanvas().getCanvas("Trigger Bits").setGridX(false);
         this.getDetectorCanvas().getCanvas("Trigger Bits").setGridY(false);
