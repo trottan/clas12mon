@@ -79,6 +79,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     private int runNumber     = 2284;
     private int ccdbRunNumber = 0;
     
+    double PERIOD = 0;
+    int     PHASE = 0;
+    int    CYCLES = 0;    
+    
     public String outPath = "/home/clasrun/CLAS12MON";
     
     // detector monitors
@@ -253,6 +257,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         menuItemRICH.getAccessibleContext().setAccessibleDescription("Reset RICH histograms");
         menuItemRICH.addActionListener(this);
         reset.add(menuItemRICH);
+        
+        JMenuItem menuItemTRIG = new JMenuItem("Reset TRIGGER histograms");
+        menuItemTRIG.getAccessibleContext().setAccessibleDescription("Reset TRIGGER histograms");
+        menuItemTRIG.addActionListener(this);
+        reset.add(menuItemTRIG);        
         
         menuBar.add(reset);
         
@@ -764,13 +773,13 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
          
          if (e.getActionCommand()=="Default for all"){
             for (int k=0;k<monitors.length;k++){
-                this.monitors[k].eventResetTime_current[k] = this.monitors[k].eventResetTime_default[k];
+                this.monitors[k].eventResetTime_current = this.monitors[k].eventResetTime_default;
             }
         }
          
          if (e.getActionCommand()=="Disable histogram reset"){
             for (int k=0;k<monitors.length;k++){
-                this.monitors[k].eventResetTime_current[k] = 0;
+                this.monitors[k].eventResetTime_current = 0;
             }
         }
         
@@ -831,14 +840,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     public long getTriggerWord(DataEvent event) {    	
  	    DataBank bank = event.getBank("RUN::config");	        
         return bank.getLong("trigger", 0);
-    }
+    } 
     
     public long getTriggerPhase(DataEvent event) {    	
  	    DataBank bank = event.getBank("RUN::config");	        
         long timestamp = bank.getLong("timestamp",0);    
-        int phase_offset = 1;
+        int phase_offset = 3;
         return ((timestamp%6)+phase_offset)%6; // TI derived phase correction due to TDC and FADC clock differences 
-    }
+    }  
     
     private int getRunNumber(DataEvent event) {
         int rNum = this.runNumber;
@@ -847,6 +856,15 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             rNum      = bank.getInt("run", 0);
         }
         return rNum;
+    }
+    
+    private void copyHitList(int k, int mon1, int mon2) {
+    	if (k!=mon1) return;
+    	monitors[mon1].ttdcs = monitors[mon2].ttdcs;
+    	monitors[mon1].ftdcs = monitors[mon2].ftdcs;
+    	monitors[mon1].fadcs = monitors[mon2].fadcs;
+   	    monitors[mon1].fapmt = monitors[mon2].fapmt;
+    	monitors[mon1].ftpmt = monitors[mon2].ftpmt;
     }
     
     @Override
@@ -880,7 +898,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }            
             for(int k=0; k<this.monitors.length; k++) {
                 this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
-                this.monitors[k].setTriggerWord(getTriggerWord(hipo));   
+                this.monitors[k].setTriggerWord(getTriggerWord(hipo));
+                copyHitList(k,19,10);
                 this.monitors[k].dataEventAction(hipo);
             }      
 	}
@@ -1006,7 +1025,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(3);
         this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").getPad(3).getAxisY().setLog(true);
         if(this.monitors[19].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[19].getDetectorSummary().getH1F("summary"));
-        
+         
         ////////////////////////////////////////////////////
       
         
@@ -1167,22 +1186,21 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     }
 
     private void resetHistograms(String actionCommand) {
-        
-        
+       
         if (actionCommand=="Reset BMT histograms"){
             System.out.println("Reset BMT histograms");
         	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset BMT plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[1].eventResetTime_default[1];
+                            int time = this.monitors[1].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[1].eventResetTime_current[1] = time;} 
+                            if (time > 0) {this.monitors[1].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[1].eventResetTime_current[1] = 0;
+ 			this.monitors[1].eventResetTime_current = 0;
                     }	
          }
         
@@ -1192,14 +1210,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[2].eventResetTime_default[2];
+                            int time = this.monitors[2].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[2].eventResetTime_current[2] = time;} 
+                            if (time > 0) {this.monitors[2].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[2].eventResetTime_current[2] = 0;
+ 			this.monitors[2].eventResetTime_current = 0;
                     }	
          }
         
@@ -1209,14 +1227,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[3].eventResetTime_default[3];
+                            int time = this.monitors[3].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[3].eventResetTime_current[3] = time;} 
+                            if (time > 0) {this.monitors[3].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[3].eventResetTime_current[3] = 0;
+ 			this.monitors[3].eventResetTime_current = 0;
                     }	
          }
         
@@ -1226,14 +1244,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[4].eventResetTime_default[4];
+                            int time = this.monitors[4].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[4].eventResetTime_current[4] = time;} 
+                            if (time > 0) {this.monitors[4].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[4].eventResetTime_current[4] = 0;
+ 			this.monitors[4].eventResetTime_current = 0;
                     }	
          }
         
@@ -1243,14 +1261,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[5].eventResetTime_default[5];
+                            int time = this.monitors[5].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[5].eventResetTime_current[5] = time;} 
+                            if (time > 0) {this.monitors[5].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[5].eventResetTime_current[5] = 0;
+ 			this.monitors[5].eventResetTime_current = 0;
                     }	
          }
         
@@ -1260,14 +1278,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[6].eventResetTime_default[6];
+                            int time = this.monitors[6].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[6].eventResetTime_current[6] = time;} 
+                            if (time > 0) {this.monitors[6].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[6].eventResetTime_current[6] = 0;
+ 			this.monitors[6].eventResetTime_current = 0;
                     }	
          }
         
@@ -1277,14 +1295,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[7].eventResetTime_default[7];
+                            int time = this.monitors[7].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[7].eventResetTime_current[7] = time;} 
+                            if (time > 0) {this.monitors[7].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[7].eventResetTime_current[7] = 0;
+ 			this.monitors[7].eventResetTime_current = 0;
                     }	
          }
         
@@ -1294,20 +1312,20 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[8].eventResetTime_default[8];
+                            int time = this.monitors[8].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
                             if (time > 0) {
-                                this.monitors[8].eventResetTime_current[8] = time;
-                                this.monitors[9].eventResetTime_current[9] = time;
-                                this.monitors[11].eventResetTime_current[11] = time;
+                                this.monitors[8].eventResetTime_current = time;
+                                this.monitors[9].eventResetTime_current = time;
+                                this.monitors[11].eventResetTime_current = time;
                             } 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			            this.monitors[8].eventResetTime_current[8] = 0;
-                        this.monitors[9].eventResetTime_current[9] = 0;
-                        this.monitors[11].eventResetTime_current[11] = 0;
+ 			            this.monitors[8].eventResetTime_current = 0;
+                        this.monitors[9].eventResetTime_current = 0;
+                        this.monitors[11].eventResetTime_current = 0;
                     }	
          }
         
@@ -1317,14 +1335,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[10].eventResetTime_default[10];
+                            int time = this.monitors[10].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[10].eventResetTime_current[10] = time;} 
+                            if (time > 0) {this.monitors[10].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[10].eventResetTime_current[10] = 0;
+ 			this.monitors[10].eventResetTime_current = 0;
                     }	
          }
         
@@ -1334,14 +1352,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[12].eventResetTime_default[12];
+                            int time = this.monitors[12].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[12].eventResetTime_current[12] = time;} 
+                            if (time > 0) {this.monitors[12].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[12].eventResetTime_current[12] = 0;
+ 			this.monitors[12].eventResetTime_current = 0;
                     }	
          }
         
@@ -1351,14 +1369,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[13].eventResetTime_default[13];
+                            int time = this.monitors[13].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[13].eventResetTime_current[13] = time;} 
+                            if (time > 0) {this.monitors[13].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[13].eventResetTime_current[13] = 0;
+ 			this.monitors[13].eventResetTime_current = 0;
                     }	
          }
         
@@ -1368,14 +1386,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[14].eventResetTime_default[14];
+                            int time = this.monitors[14].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[14].eventResetTime_current[14] = time;} 
+                            if (time > 0) {this.monitors[14].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[14].eventResetTime_current[14] = 0;
+ 			this.monitors[14].eventResetTime_current = 0;
                     }	
          }
         
@@ -1385,14 +1403,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[15].eventResetTime_default[15];
+                            int time = this.monitors[15].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[15].eventResetTime_current[15] = time;} 
+                            if (time > 0) {this.monitors[15].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[15].eventResetTime_current[15] = 0;
+ 			this.monitors[15].eventResetTime_current = 0;
                     }	
          }
         
@@ -1402,14 +1420,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[16].eventResetTime_default[16];
+                            int time = this.monitors[16].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[16].eventResetTime_current[16] = time;} 
+                            if (time > 0) {this.monitors[16].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[16].eventResetTime_current[16] = 0;
+ 			this.monitors[16].eventResetTime_current = 0;
                     }	
          }
         
@@ -1419,14 +1437,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[17].eventResetTime_default[17];
+                            int time = this.monitors[17].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[17].eventResetTime_current[17] = time;} 
+                            if (time > 0) {this.monitors[17].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[17].eventResetTime_current[17] = 0;
+ 			this.monitors[17].eventResetTime_current = 0;
                     }	
          }
         
@@ -1436,31 +1454,31 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[18].eventResetTime_default[18];
+                            int time = this.monitors[18].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[18].eventResetTime_current[18] = time;} 
+                            if (time > 0) {this.monitors[18].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[18].eventResetTime_current[18] = 0;
+ 			this.monitors[18].eventResetTime_current = 0;
                     }	
          }
         
-        if (actionCommand=="Reset Trigger histograms"){
-            System.out.println("Reset Trigger histograms");
+        if (actionCommand=="Reset TRIGGER histograms"){
+            System.out.println("Reset TRIGGER histograms");
         	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset Trigger plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
-                            int time = this.monitors[19].eventResetTime_default[19];
+                            int time = this.monitors[19].eventResetTime_default;
                             try {time = Integer.parseInt(resetTiming);} 
                             catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
-                            if (time > 0) {this.monitors[19].eventResetTime_current[19] = time;} 
+                            if (time > 0) {this.monitors[19].eventResetTime_current = time;} 
                             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
- 			this.monitors[19].eventResetTime_current[19] = 0;
+ 			this.monitors[19].eventResetTime_current = 0;
                     }	
          }
         

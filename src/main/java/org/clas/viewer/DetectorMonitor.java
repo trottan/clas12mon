@@ -50,9 +50,16 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     private Boolean                sectorButtons     = false;
     private int                 detectorActiveSector = 1;
     private Boolean                     detectorLogZ = true;
+    private Boolean                     detectorLogY = false;
     private Boolean                             isTB = false;
     private JRadioButton bS1,bS2,bS3,bS4,bS5,bS6;
     private JCheckBox        tbBtn;
+    
+    public IndexedList<List<Float>>         ttdcs = new IndexedList<List<Float>>(4);
+    public IndexedList<List<Float>>         fadcs = new IndexedList<List<Float>>(4);
+    public IndexedList<List<Float>>         ftdcs = new IndexedList<List<Float>>(4);
+    public IndexedList<List<Integer>>       fapmt = new IndexedList<List<Integer>>(3); 
+    public IndexedList<List<Integer>>       ftpmt = new IndexedList<List<Integer>>(3); 
     
     public int bitsec = 0;
     public long trigger = 0;
@@ -65,13 +72,13 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public boolean TriggerBeam[] = new boolean[32];
     public int TriggerMask = 0;
     
-    public int eventResetTime_current[]=new int[21];
-    public int eventResetTime_default[]=new int[21];    
+    public int eventResetTime_current = 0;
+    public int eventResetTime_default = 10000000;    
     
     public DetectorMonitor(String name){
-        GStyle.getAxisAttributesX().setTitleFontSize(24); //24
+        GStyle.getAxisAttributesX().setTitleFontSize(18); //24
         GStyle.getAxisAttributesX().setLabelFontSize(18); //18
-        GStyle.getAxisAttributesY().setTitleFontSize(24); //24
+        GStyle.getAxisAttributesY().setTitleFontSize(18); //24
         GStyle.getAxisAttributesY().setLabelFontSize(18); //18
         GStyle.getAxisAttributesZ().setLabelFontSize(14); //14
         GStyle.setPalette("kDefault");
@@ -89,55 +96,10 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
         this.detectorPanel  = new JPanel();
         this.detectorCanvas = new EmbeddedCanvasTabbed();
         this.detectorView   = new DetectorPane2D();
-        this.numberOfEvents = 0;
+        this.numberOfEvents = 0;   
         
-        eventResetTime_current[0]=0;
-        eventResetTime_current[1]=0;
-        eventResetTime_current[2]=0;
-        eventResetTime_current[3]=0;
-        eventResetTime_current[4]=0;
-        eventResetTime_current[5]=0;
-        eventResetTime_current[6]=0;
-        eventResetTime_current[7]=0;
-        eventResetTime_current[8]=0;
-        eventResetTime_current[9]=0;
-        eventResetTime_current[10]=0;
-        eventResetTime_current[11]=0;
-        eventResetTime_current[12]=0;
-        eventResetTime_current[13]=0;
-        eventResetTime_current[14]=0;
-        eventResetTime_current[15]=0;
-        eventResetTime_current[16]=0;
-        eventResetTime_current[17]=0;
-        eventResetTime_current[18]=0;
-        eventResetTime_current[19]=0;
-        eventResetTime_current[20]=0;
-        
-        eventResetTime_default[0]=10000000;   // BMT
-        eventResetTime_default[1]=10000000;   // BST
-        eventResetTime_default[2]=10000000;   // CND
-        eventResetTime_default[3]=10000000;   // CTOF
-        eventResetTime_default[4]=10000000;   // DC
-        eventResetTime_default[5]=10000000;   // ECAL
-        eventResetTime_default[6]=10000000;   // FMT
-        eventResetTime_default[7]=10000000;   // FTCAL
-        eventResetTime_default[8]=10000000;   // FTHODO
-        eventResetTime_default[9]=10000000;   // FTOF
-        eventResetTime_default[10]=10000000;  // FTTRK
-        eventResetTime_default[11]=10000000;  // HTTC
-        eventResetTime_default[12]=10000000;  // LTTC
-        eventResetTime_default[13]=10000000;  // RICH
-        eventResetTime_default[14]=10000000;  // RECONN
-        eventResetTime_default[15]=10000000;  // RF
-        eventResetTime_default[16]=10000000;  // HEL
-        eventResetTime_default[17]=10000000;  // Faraday Cup
-        eventResetTime_default[18]=10000000;  // Trigger
-        eventResetTime_default[19]=10000000;  // TimeJitter
-        eventResetTime_default[20]=10000000;  // BAND
-     
-        for (int i=0; i<21; i++){
-            eventResetTime_current[i]=eventResetTime_default[i];
-        }
+        eventResetTime_current = eventResetTime_default;
+
     }
 
     
@@ -151,12 +113,14 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     
     @Override
     public void dataEventAction(DataEvent event) {
-        if (!testTriggerMask()) return;
+    	
+        if (!testTriggerMask()) return;        
         this.setNumberOfEvents(this.getNumberOfEvents()+1);
+        
         if (event.getType() == DataEventType.EVENT_START) {
 //            resetEventListener();
             processEvent(event);
-	} else if (event.getType() == DataEventType.EVENT_SINGLE) {
+	} else if (event.getType() == DataEventType.EVENT_SINGLE) {		   
             processEvent(event);
             plotEvent(event);
 	} else if (event.getType() == DataEventType.EVENT_ACCUMULATE) {
@@ -278,6 +242,14 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public Boolean getLogZ() {
 	    return this.detectorLogZ;
     }
+    
+    public void setLogY(boolean flag) {
+	    this.detectorLogY = flag;
+    }
+    
+    public Boolean getLogY() {
+	    return this.detectorLogY;
+    }   
 
     public void init(boolean flagDetectorView) {
         // initialize monitoring application
@@ -458,5 +430,22 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
             }
         }
     }
+    
+    public void drawGroup(EmbeddedCanvas c, DataGroup group) {
+        int nrows = group.getRows();
+        int ncols = group.getColumns();
+        c.divide(ncols, nrows); 	    
+        int nds = nrows * ncols;
+        for (int i = 0; i < nds; i++) {
+            List<IDataSet> dsList = group.getData(i);
+            c.cd(i);  String opt = " ";
+            c.getPad().getAxisZ().setLog(getLogZ());
+            c.getPad().getAxisY().setLog(getLogY());
+            for (IDataSet ds : dsList) {
+               c.draw(ds,opt); opt="same";
+            }
+        } 	
+        c.update();
+    }     
         
 }
