@@ -29,6 +29,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
     int bit[][] = {{1,2,3,4,5,6},{7,8,9,10,11,12}};
 	double[] refm = new double[2];
 	double[] refs = new double[2];
+	boolean datataking = false;
 	
     public TRIGGERmonitor(String name) {
         super(name);
@@ -38,8 +39,7 @@ public class TRIGGERmonitor extends DetectorMonitor {
         this.init(false);
         this.testTrigger = true;
     }
-
-    
+   
     @Override
     public void createHistos() {
         this.setNumberOfEvents(0);
@@ -51,8 +51,10 @@ public class TRIGGERmonitor extends DetectorMonitor {
     public void plotHistos() {
     	setLogY(true); plot1DSummary(0); setLogY(false);
         plot1DSummary(1); 
-        fillFTOFGraphs();
-        plotFTOFGraphs(2);
+        if (datataking) {
+          fillFTOFGraphs();
+          plotFTOFGraphs(2);
+        }
     }    
        
     public void createTriggerBits(int k) {
@@ -170,12 +172,15 @@ public class TRIGGERmonitor extends DetectorMonitor {
         for (int i=0; i<32; i++) if(isTrigBitSet(i)) this.getDetectorSummary().getH1F("summary").fill(i);
         
         getFTOFMeanTime();
-        getFTOFFADCTime();        
+        getFTOFFADCTime();  
+        
+        datataking = true;
 
     } 
     
     public void fillFTOFGraphs() {
-    	
+    
+       
   	   this.getDetectorSummary().getGraph("TAT").reset();
 	   this.getDetectorSummary().getGraph("TRT").reset();
 	   this.getDetectorSummary().getGraph("TAF").reset();
@@ -288,12 +293,12 @@ public class TRIGGERmonitor extends DetectorMonitor {
         for (int il=0; il<2; il++) { //0=electron bits 1=muon bits
         for (int id=0; id<2; id++) { //0=tdc 1=fadc
         for (int is=1; is<7; is++) { //sector
-        String tag = "tdc"+"_"+is+"_"+id+"_"+il+"_"+1; 	     	
+        String tag = "tdc"+"_"+is+"_"+id+"_"+il+"_"+1; 	          
     	trigfits.add(this.fit(this.getDataGroup().getItem(0,0,1).getH1F("dat_"+tag),
    			                  this.getDataGroup().getItem(0,0,1).getF1D("fit_"+tag)),is+il*6,id);
         }
         }
-        }     	
+        }        
     }
     
     public F1D fit(H1F h, F1D f) {
@@ -311,7 +316,8 @@ public class TRIGGERmonitor extends DetectorMonitor {
     }
     
     @Override
-    public void timerUpdate() { 	
+    public void timerUpdate() { 
+    	if(!datataking) return;
         getFits();
         fillFTOFGraphs();
         plotFTOFGraphs(2);
