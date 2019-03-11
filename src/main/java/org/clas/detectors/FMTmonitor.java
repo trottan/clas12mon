@@ -191,7 +191,7 @@ public class FMTmonitor extends DetectorMonitor {
 
     public void processEvent(DataEvent event) {
 
-        if (this.getNumberOfEvents() >= super.eventResetTime_current[6] && super.eventResetTime_current[6] > 0) {
+        if (this.getNumberOfEvents() >= super.eventResetTime_current && super.eventResetTime_current > 0) {
             resetEventListener();
         }
 

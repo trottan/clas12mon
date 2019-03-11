@@ -90,7 +90,7 @@ public class BANDmonitor  extends DetectorMonitor {
 
     @Override
     public void processEvent(DataEvent event) {
-
+    	
         if(event.hasBank("BAND::adc")==true){
 	    DataBank bank = event.getBank("BAND::adc");
 	    int rows = bank.rows();

@@ -98,7 +98,7 @@ public class FCUPmonitor extends DetectorMonitor {
     @Override
     public void processEvent(DataEvent event) {
 
-        if (this.getNumberOfEvents() >= super.eventResetTime_current[17] && super.eventResetTime_current[17] > 0){
+        if (this.getNumberOfEvents() >= super.eventResetTime_current && super.eventResetTime_current > 0){
             resetEventListener();
         }
         

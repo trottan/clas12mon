@@ -1,5 +1,7 @@
 package org.clas.detectors;
 
+import java.util.ArrayList;
+
 import org.clas.viewer.DetectorMonitor;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
@@ -240,7 +242,7 @@ public class HTCCmonitor  extends DetectorMonitor {
     @Override
     public void processEvent(DataEvent event) {
         
-        if (this.getNumberOfEvents() >= super.eventResetTime_current[11] && super.eventResetTime_current[11] > 0){
+        if (this.getNumberOfEvents() >= super.eventResetTime_current && super.eventResetTime_current > 0){
             resetEventListener();
         }
         
@@ -257,6 +259,7 @@ public class HTCCmonitor  extends DetectorMonitor {
                 int order   = bank.getByte("order", loop);
                 int adc     = bank.getInt("ADC", loop);
                 float time  = bank.getFloat("time", loop);
+                               
 //                System.out.println("ROW " + loop + " SECTOR = " + sector + " LAYER = " + layer + " COMPONENT = " + comp + " ORDER + " + order +
 //                      " ADC = " + adc + " TIME = " + time); 
                 if(adc>0 && time>0) {
@@ -278,6 +281,8 @@ public class HTCCmonitor  extends DetectorMonitor {
                 }
 	    }
     	}
+        
+/*        
         if(event.hasBank("HTCC::tdc")==true){
             DataBank  bank = event.getBank("HTCC::tdc");
             int rows = bank.rows();
@@ -301,7 +306,8 @@ public class HTCCmonitor  extends DetectorMonitor {
                 
 //              this.getDetectorSummary().getH1F("summary").fill(sector*1.0);                
             }
-        }        
+        }
+*/        
     }
 
     @Override
