@@ -132,7 +132,7 @@ public class HELmonitor extends DetectorMonitor {
     @Override
     public void processEvent(DataEvent event) {
         
-        if (this.getNumberOfEvents() >= super.eventResetTime_current[16] && super.eventResetTime_current[16] > 0){
+        if (this.getNumberOfEvents() >= super.eventResetTime_current && super.eventResetTime_current > 0){
             resetEventListener();
         }
    

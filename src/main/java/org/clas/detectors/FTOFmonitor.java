@@ -9,10 +9,15 @@ import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.jlab.utils.groups.IndexedList.IndexGenerator;
+import java.util.Map;
 
 public class FTOFmonitor  extends DetectorMonitor {
 
     private final int[] npaddles = new int[]{23,62,5};
+    
 
     FTOFHits          ftofHits[] = new FTOFHits[3];    
     
@@ -208,66 +213,116 @@ public class FTOFmonitor  extends DetectorMonitor {
     @Override
     public void processEvent(DataEvent event) {
         
-        if (this.getNumberOfEvents() >= super.eventResetTime_current[9] && super.eventResetTime_current[9] > 0){
+        if (this.getNumberOfEvents() >= super.eventResetTime_current && super.eventResetTime_current > 0){
             resetEventListener();
         }
-        
-		//if (!testTriggerMask()) return;
 	    
-	    clear(0); clear(1); clear(2);
-    	
-        if(event.hasBank("FTOF::adc")==true){
-            DataBank  bank = event.getBank("FTOF::adc");
-            int rows = bank.rows();
-            for(int i = 0; i < rows; i++){
-                int    sector = bank.getByte("sector",i);
-                int     layer = bank.getByte("layer",i);
-                int    paddle = bank.getShort("component",i);
-                int       ADC = bank.getInt("ADC",i);
-                float    time = bank.getFloat("time",i);
-                int     order = bank.getByte("order",i);  
-                
-                int lay=layer-1; int ord=order-0;
-                if(ADC>0 && isGoodECALTrigger(sector)) {
-                    this.getDataGroup().getItem(0,lay,0).getH2F("occADC"+lay+ord).fill(sector*1.0,paddle*1.0);
-                    this.getDataGroup().getItem(sector,lay,0).getH2F("datADC"+sector+lay+ord).fill(ADC,paddle*1.0);
-                    if(time > 1) this.getDataGroup().getItem(sector,lay,0).getH2F("timeFADC"+sector+lay+ord).fill(time,paddle*1.0);
-                    if(layer == 2) this.getDetectorSummary().getH1F("sum_p1").fill(sector*1.0);
-                    if(layer == 1) this.getDetectorSummary().getH1F("sum_p2").fill(sector*1.0); 
-                    if(layer == 3) this.getDetectorSummary().getH1F("sum_p3").fill(sector*1.0); 
-                    storeADCHits(lay,sector-1,ord,paddle,ADC,time);
-                }
-            }
-        }
-        
+	    clear(0); clear(1); clear(2); ttdcs.clear(); fadcs.clear(); ftdcs.clear(); ftpmt.clear() ; fapmt.clear();    	
+
+	            
         if(event.hasBank("FTOF::tdc")==true){
             DataBank  bank = event.getBank("FTOF::tdc");
-            int rows = bank.rows();
-            for(int i = 0; i < rows; i++){
-                int    sector = bank.getByte("sector",i);
-                int     layer = bank.getByte("layer",i);
-                int    paddle = bank.getShort("component",i);
-                int       TDC = bank.getInt("TDC",i);
-                int     order = bank.getByte("order",i); 
+            for(int i = 0; i < bank.rows(); i++){
+                int  is = bank.getByte("sector",i);
+                int  il = bank.getByte("layer",i);
+                int  lr = bank.getByte("order",i);                       
+                int  ip = bank.getShort("component",i);
                 
-                int lay=layer-1; int ord=order-2;
-                if(TDC>0 && isGoodECALTrigger(sector)) {
-                   this.getDataGroup().getItem(0,lay,0).getH2F("occTDC"+lay+ord).fill(sector*1.0,paddle*1.0);
-                   this.getDataGroup().getItem(sector,lay,0).getH2F("datTDC"+sector+lay+ord).fill(TDC*0.02345-triggerPhase*4,paddle*1.0);
-                   storeTDCHits(lay,sector-1,ord,paddle,(float)(TDC*0.02345-triggerPhase*4));
+                float    tdcd = bank.getInt("TDC",i)*0.02345f-triggerPhase*4;
+                
+                int lay=il-1; int ord=lr-2;
+                if(tdcd>0) {               	
+                    if(!ttdcs.hasItem(is,il,ord,ip)) ttdcs.add(new ArrayList<Float>(),is,il,ord,ip);
+                        ttdcs.getItem(is,il,ord,ip).add(tdcd); 
+                    if(!ftpmt.hasItem(is,il,ip)) ftpmt.add(new ArrayList<Integer>(),is,il,ip);
+                 	    ftpmt.getItem(is,il,ip).add(ip);                                	
+                   this.getDataGroup().getItem(0,lay,0).getH2F("occTDC"+lay+ord).fill(is,ip);
+                   this.getDataGroup().getItem(is,lay,0).getH2F("datTDC"+is+lay+ord).fill(tdcd,ip);
+                   storeTDCHits(lay,is-1,ord,ip,(float)(tdcd));
+                }
+            }
+        }	    
+	    	    
+        if(event.hasBank("FTOF::adc")==true){
+            DataBank  bank = event.getBank("FTOF::adc");            
+            for(int i = 0; i < bank.rows(); i++){
+                int  is = bank.getByte("sector",i);
+                int  il = bank.getByte("layer",i);
+                int  lr = bank.getByte("order",i);
+                int  ip = bank.getShort("component",i);
+                int ADC = bank.getInt("ADC",i);
+                float t = bank.getFloat("time",i);               
+                int ped = bank.getShort("ped", i);
+                
+                if(ADC>0) {
+                if(!fadcs.hasItem(is,il,lr,ip)) fadcs.add(new ArrayList<Float>(),is,il,lr,ip);
+                    fadcs.getItem(is,il,lr,ip).add((float) ADC); 
+                if(!ftdcs.hasItem(is,il,lr,ip)) ftdcs.add(new ArrayList<Float>(),is,il,lr,ip);
+                    ftdcs.getItem(is,il,lr,ip).add((float) t); 
+                if(!fapmt.hasItem(is,il,ip)) fapmt.add(new ArrayList<Integer>(),is,il,ip);
+                    fapmt.getItem(is,il,ip).add(ip);              
+           
+                int lay=il-1; int ord=lr-0;
+                
+                this.getDataGroup().getItem(0,lay,0).getH2F("occADC"+lay+ord).fill(is,ip);
+                this.getDataGroup().getItem(is,lay,0).getH2F("datADC"+is+lay+ord).fill(ADC,ip);
+                if(t > 1)   this.getDataGroup().getItem(is,lay,0).getH2F("timeFADC"+is+lay+ord).fill(t,ip);
+                if(il == 2) this.getDetectorSummary().getH1F("sum_p1").fill(is);
+                if(il == 1) this.getDetectorSummary().getH1F("sum_p2").fill(is); 
+                if(il == 3) this.getDetectorSummary().getH1F("sum_p3").fill(is); 
+                storeADCHits(lay,is-1,ord,ip,ADC,t);
                 }
             }
         }
-        
+
+        getGMM(); 
+        getTDD();
+
+        /*
         for(int sec=1; sec<7; sec++) {
-          	if (isGoodECALTrigger(sec)) {
-          	    for(int il=0; il<3; il++) {
-        		        getGM(il,sec-1,this.getDataGroup().getItem(sec,il,0).getH2F("GMEAN"+sec+il));
-        		        getTD(il,sec-1,this.getDataGroup().getItem(sec,il,0).getH2F("TDIF"+sec+il));
-                 }
-          	}
+           for(int il=0; il<3; il++) {
+		        getGM(il,sec-1,this.getDataGroup().getItem(sec,il,0).getH2F("GMEAN"+sec+il));
+		        getTD(il,sec-1,this.getDataGroup().getItem(sec,il,0).getH2F("TDIF"+sec+il));
+
+           }
         }
+*/        
+
     }
+    
+    public void getGMM() {
+ 	   
+        IndexGenerator ig = new IndexGenerator();
+        
+        for (Map.Entry<Long,List<Integer>>  entry : fapmt.getMap().entrySet()){
+            long hash = entry.getKey();
+            int is = ig.getIndex(hash, 0);
+            int il = ig.getIndex(hash, 1);
+            int ip = ig.getIndex(hash, 2);
+         	   if(fadcs.hasItem(is,il,0,ip)&&fadcs.hasItem(is,il,1,ip)) {
+                 float gm = (float) Math.sqrt(fadcs.getItem(is,il,0,ip).get(0)*
+                                              fadcs.getItem(is,il,1,ip).get(0));
+                 this.getDataGroup().getItem(is,il-1,0).getH2F("GMEAN"+is+(il-1)).fill(gm,ip);
+         	   }
+        }        
+    }
+    
+    public void getTDD() {
+
+        IndexGenerator ig = new IndexGenerator();
+    	
+    	for (Map.Entry<Long,List<Integer>>  entry : ftpmt.getMap().entrySet()){
+            long hash = entry.getKey();
+            int is = ig.getIndex(hash, 0);
+            int il = ig.getIndex(hash, 1);
+            int ip = ig.getIndex(hash, 2);
+             	   
+         	   if(ttdcs.hasItem(is,il,0,ip)&&ttdcs.hasItem(is,il,1,ip)) {
+         		  float td = ttdcs.getItem(is,il,0,ip).get(0)-ttdcs.getItem(is,il,1,ip).get(0);
+         		  this.getDataGroup().getItem(is,il-1,0).getH2F("TDIF"+is+(il-1)).fill(td, ip);
+         	   }
+        }       
+    }     
     
     public class FTOFHits {
     	    public String  detName = null;
