@@ -94,45 +94,6 @@ public class TRKmonitor extends DetectorMonitor {
         this.getDataGroup().add(dg, 0,0,0);
     }
 
-    @Override
-    public void drawDetector() {
-        // Load the Constants
-//        Constants.Load(true, true, 0);
-//        GeometryLoader.Load(10, "default");
-
-        for(int s =0; s< 6; s++)
-            for(int slrnum = 5; slrnum > -1; slrnum--) {
-                //DetectorShape2D module = new DetectorShape2D(DetectorType.DC,s,slrnum,0);
-
-                 DetectorShape2D module = new DetectorShape2D();
-                 module.getDescriptor().setType(DetectorType.DC);
-                 module.getDescriptor().setSectorLayerComponent((s+1), (slrnum+1), 1);
-
-//                module.getShapePath().addPoint(GeometryLoader.dcDetector.getSector(0).getSuperlayer(slrnum).getLayer(0).getComponent(0).getLine().origin().x(),  
-//                        -GeometryLoader.dcDetector.getSector(0).getSuperlayer(slrnum).getLayer(0).getComponent(0).getLine().origin().y(),  0.0);
-//                module.getShapePath().addPoint(GeometryLoader.dcDetector.getSector(0).getSuperlayer(slrnum).getLayer(0).getComponent(0).getLine().end().x(),  
-//                        -GeometryLoader.dcDetector.getSector(0).getSuperlayer(slrnum).getLayer(0).getComponent(0).getLine().end().y(),  0.0);
-//                module.getShapePath().addPoint(GeometryLoader.dcDetector.getSector(0).getSuperlayer(slrnum).getLayer(0).getComponent(111).getLine().end().x(),  
-//                        -GeometryLoader.dcDetector.getSector(0).getSuperlayer(slrnum).getLayer(0).getComponent(111).getLine().end().y(),  0.0);
-//                module.getShapePath().addPoint(GeometryLoader.dcDetector.getSector(0).getSuperlayer(slrnum).getLayer(0).getComponent(111).getLine().origin().x(),  
-//                        -GeometryLoader.dcDetector.getSector(0).getSuperlayer(slrnum).getLayer(0).getComponent(111).getLine().origin().y(),  0.0);
-
-
-                if(slrnum%2==1)
-                        module.setColor(180-slrnum*15,180,255);
-                if(slrnum%2==0)
-                        module.setColor(255-slrnum*15,182,229, 200);
-
-                module.getShapePath().translateXYZ(110.0+((int)(slrnum/2))*50, 0, 0);
-                module.getShapePath().rotateZ(s*Math.toRadians(60.));
-
-                this.getDetectorView().getView().addShape("DC",module);			
-
-            }
-        this.getDetectorView().setName("DC"); 
-        //detectorViewDC.updateBox();
-    }
-
     public void PlotCrosses(DataEvent event){
     		
         if(event.hasBank("HitBasedTrkg::HBCrosses")==true){

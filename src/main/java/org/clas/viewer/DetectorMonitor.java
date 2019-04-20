@@ -64,7 +64,7 @@ public class DetectorMonitor implements IDataEventListener, ActionListener {
     public int bitsec = 0;
     public long trigger = 0;
     public long triggerPhase = 0;
-    public double max_occ = 5;
+    public double max_occ = 10.0;
     public int trigFD = 0;
     public int trigCD = 0;
     
