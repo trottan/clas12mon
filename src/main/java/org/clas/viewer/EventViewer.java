@@ -50,8 +50,10 @@ import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 import org.jlab.io.evio.EvioDataEvent;
 import org.jlab.io.hipo.HipoDataEvent;
-import org.jlab.io.task.DataSourceProcessorPane;
-import org.jlab.io.task.IDataEventListener;
+//import org.jlab.io.task.DataSourceProcessorPane;
+//import org.jlab.io.task.IDataEventListener;
+import org.clas.io.DataSourceProcessorPane;
+import org.clas.io.IDataEventListener;
 import org.jlab.elog.LogEntry; 
 
         
@@ -870,39 +872,29 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     @Override
     public void dataEventAction(DataEvent event) {
     	
-       // EvioDataEvent decodedEvent = deco.DecodeEvent(event, decoder, table);
-        //decodedEvent.show();
-        		
-        HipoDataEvent hipo = null;
-        
 	    if(event!=null ){
-            //event.show();
-            
             if(event instanceof EvioDataEvent){
-             	hipo = (HipoDataEvent) clasDecoder.getDataEvent(event);
-                DataBank   header = clasDecoder.createHeaderBank(hipo, this.ccdbRunNumber, 0, (float) 0, (float) 0);
-                DataBank  trigger = clasDecoder.createTriggerBank(hipo);
-                hipo.appendBanks(header);
-                hipo.appendBank(trigger);                
-            } 
-            else {
-                hipo = (HipoDataEvent) event;    
-            }
-            if(this.runNumber != this.getRunNumber(hipo)) {
-    //                this.saveToFile("mon12_histo_run_" + runNumber + ".hipo");
-                this.runNumber = this.getRunNumber(hipo);
+             	event = clasDecoder.getDataEvent(event);
+                DataBank   header = clasDecoder.createHeaderBank(event, this.ccdbRunNumber, 0, (float) 0, (float) 0);
+                DataBank  trigger = clasDecoder.createTriggerBank(event);
+                event.appendBanks(header);
+                event.appendBank(trigger);                 
+            }   
+           
+            if(this.runNumber != this.getRunNumber(event)) {
+                this.runNumber = this.getRunNumber(event);
                 System.out.println("Setting run number to: " +this.runNumber);
                 resetEventListener();
                 this.clas12Textinfo.setText("\nrun number: "+this.runNumber + "\n");
-    //                    this.clas12Textinfo.updateUI();
-            }            
+            }     
+            
             for(int k=0; k<this.monitors.length; k++) {
-                this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
-                this.monitors[k].setTriggerWord(getTriggerWord(hipo));
+                this.monitors[k].setTriggerPhase(getTriggerPhase(event));
+                this.monitors[k].setTriggerWord(getTriggerWord(event));
                 copyHitList(k,19,10);
-                this.monitors[k].dataEventAction(hipo);
+                this.monitors[k].dataEventAction(event);
             }      
-	}
+	    }
     }
 
     public void loadHistosFromFile(String fileName) {
