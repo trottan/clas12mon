@@ -37,7 +37,7 @@ import org.jlab.utils.groups.IndexedList;
 public class DetectorMonitor implements IDataEventListener, ActionListener {    
     
     private final String           detectorName;
-    private ConstantsManager                    ccdb = new ConstantsManager();
+    private ConstantsManager                    ccdb = new ConstantsManager(); 
     private ArrayList<String>      detectorTabNames  = new ArrayList();
     private IndexedList<DataGroup> detectorData      = new IndexedList<DataGroup>(3);
     private DataGroup              detectorSummary   = null;

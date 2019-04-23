@@ -39,7 +39,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import org.clas.detectors.*;
-import org.jlab.detector.decode.CLASDecoder;
+import org.jlab.detector.decode.CLASDecoder4;
 import org.jlab.detector.view.DetectorListener;
 import org.jlab.detector.view.DetectorPane2D;
 import org.jlab.detector.view.DetectorShape2D;
@@ -50,8 +50,12 @@ import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
 import org.jlab.io.evio.EvioDataEvent;
 import org.jlab.io.hipo.HipoDataEvent;
+import org.jlab.jnp.hipo4.data.Bank;
 //import org.jlab.io.task.DataSourceProcessorPane;
 //import org.jlab.io.task.IDataEventListener;
+import org.jlab.jnp.hipo4.data.Event;
+import org.jlab.jnp.hipo4.data.SchemaFactory;
+import org.jlab.utils.system.ClasUtilsFile;
 import org.clas.io.DataSourceProcessorPane;
 import org.clas.io.IDataEventListener;
 import org.jlab.elog.LogEntry; 
@@ -67,25 +71,26 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     
     List<DetectorPane2D> DetectorPanels     = new ArrayList<DetectorPane2D>();
     JTabbedPane tabbedpane           	    = null;
-    JPanel mainPanel 			    = null;
+    JPanel mainPanel 			            = null;
     JMenuBar menuBar                        = null;
     JTextPane clas12Textinfo                = new JTextPane();
     DataSourceProcessorPane processorPane   = null;
     EmbeddedCanvasTabbed CLAS12Canvas       = null;
-    //EmbeddedCanvasTabbed CLAS12CDCanvas         = null;
+    private SchemaFactory     schemaFactory = new SchemaFactory();
     
-    CLASDecoder                clasDecoder = new CLASDecoder();
+    CLASDecoder4                clasDecoder = new CLASDecoder4(); 
            
     private int canvasUpdateTime   = 2000;
     private int analysisUpdateTime = 100;
     private int runNumber     = 2284;
     private int ccdbRunNumber = 0;
+    private int eventNumber = 0;
     
     double PERIOD = 0;
     int     PHASE = 0;
     int    CYCLES = 0;    
     
-    public String outPath = "/home/clasrun/CLAS12MON";
+    public String outPath = "/home/clasrun/CLAS12MON"; 
     
     // detector monitors
     DetectorMonitor[] monitors = {
@@ -115,7 +120,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
      
     };
         
-    public EventViewer() {    	
+    public EventViewer() {    
+    	
+    	 String dir = ClasUtilsFile.getResourceDir("CLAS12DIR", "etc/bankdefs/hipo4");
+         schemaFactory.initFromDirectory(dir);
         		
 	// create menu bar
         menuBar = new JMenuBar();
@@ -860,6 +868,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         return rNum;
     }
     
+    private int getEventNumber(DataEvent event) {
+        DataBank bank = event.getBank("RUN::config");
+        return (bank!=null) ? bank.getInt("event", 0): this.eventNumber;
+    }
+    
     private void copyHitList(int k, int mon1, int mon2) {
     	if (k!=mon1) return;
     	monitors[mon1].ttdcs = monitors[mon2].ttdcs;
@@ -872,27 +885,33 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
     @Override
     public void dataEventAction(DataEvent event) {
     	
+    	DataEvent hipo = null;
+   	
 	    if(event!=null ){
             if(event instanceof EvioDataEvent){
-             	event = clasDecoder.getDataEvent(event);
-                DataBank   header = clasDecoder.createHeaderBank(event, this.ccdbRunNumber, 0, (float) 0, (float) 0);
-                DataBank  trigger = clasDecoder.createTriggerBank(event);
-                event.appendBanks(header);
-                event.appendBank(trigger);                 
+             	Event    dump = clasDecoder.getDataEvent(event);    
+                Bank   header = clasDecoder.createHeaderBank(this.ccdbRunNumber, getEventNumber(event), (float) 0, (float) 0);
+                Bank  trigger = clasDecoder.createTriggerBank();
+                if(header!=null)  dump.write(header);
+                if(trigger!=null) dump.write(trigger);
+                hipo = new HipoDataEvent(dump,schemaFactory);
             }   
-           
-            if(this.runNumber != this.getRunNumber(event)) {
-                this.runNumber = this.getRunNumber(event);
+            else {            	
+            	hipo = event; 
+            }
+        
+            if(this.runNumber != this.getRunNumber(hipo)) {
+                this.runNumber = this.getRunNumber(hipo);
                 System.out.println("Setting run number to: " +this.runNumber);
                 resetEventListener();
                 this.clas12Textinfo.setText("\nrun number: "+this.runNumber + "\n");
             }     
             
             for(int k=0; k<this.monitors.length; k++) {
-                this.monitors[k].setTriggerPhase(getTriggerPhase(event));
-                this.monitors[k].setTriggerWord(getTriggerWord(event));
+                this.monitors[k].setTriggerPhase(getTriggerPhase(hipo));
+                this.monitors[k].setTriggerWord(getTriggerWord(hipo));
                 copyHitList(k,19,10);
-                this.monitors[k].dataEventAction(event);
+                this.monitors[k].dataEventAction(hipo);
             }      
 	    }
     }
@@ -1169,7 +1188,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");
             }
             if (cur_runNumber > 0){ 
-                this.ccdbRunNumber = cur_runNumber;
+                this.ccdbRunNumber = cur_runNumber;               
                 clasDecoder.setRunNumber(cur_runNumber,true);
             } 
             else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   

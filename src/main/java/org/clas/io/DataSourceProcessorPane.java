@@ -51,7 +51,7 @@ public class DataSourceProcessorPane extends JPanel implements ActionListener {
     private JButton              sourceEt      = null;
     private int                  eventDelay    = 0;
     private Color paneBackground               = Color.GRAY;
-    public boolean               isHipo3Event  = false;          
+    public boolean               isHipo3Event  = false;           
         
     public DataSourceProcessorPane(){
         super();
@@ -314,7 +314,7 @@ public class DataSourceProcessorPane extends JPanel implements ActionListener {
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 String fileName = fc.getSelectedFile().getAbsolutePath();
-                System.out.println("file -> " + fileName);
+                System.out.println("HIPO3 file -> " + fileName);
                 Hipo3DataSource source = new Hipo3DataSource();
                 source.open(fileName);
 
@@ -340,7 +340,7 @@ public class DataSourceProcessorPane extends JPanel implements ActionListener {
             
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 String fileName = fc.getSelectedFile().getAbsolutePath();
-                System.out.println("file -> " + fileName);
+                System.out.println("HIPO4 file -> " + fileName);
                 HipoDataSource source = new HipoDataSource();
                 source.open(fileName);
 
