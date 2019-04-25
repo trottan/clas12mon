@@ -51,13 +51,11 @@ import org.jlab.io.base.DataEvent;
 import org.jlab.io.evio.EvioDataEvent;
 import org.jlab.io.hipo.HipoDataEvent;
 import org.jlab.jnp.hipo4.data.Bank;
-//import org.jlab.io.task.DataSourceProcessorPane;
-//import org.jlab.io.task.IDataEventListener;
+import org.jlab.io.task.DataSourceProcessorPane;
+import org.jlab.io.task.IDataEventListener;
 import org.jlab.jnp.hipo4.data.Event;
 import org.jlab.jnp.hipo4.data.SchemaFactory;
 import org.jlab.utils.system.ClasUtilsFile;
-import org.clas.io.DataSourceProcessorPane;
-import org.clas.io.IDataEventListener;
 import org.jlab.elog.LogEntry; 
 
         
