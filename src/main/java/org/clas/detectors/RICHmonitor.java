@@ -434,7 +434,6 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("RICH TDC").setStatBoxFontSize(14);
         this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc0);
         this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc1, "same");
-        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc1, "same");
         this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.hdeltaT, "same");
  
 
