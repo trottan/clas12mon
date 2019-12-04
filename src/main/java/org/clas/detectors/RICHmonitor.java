@@ -135,11 +135,11 @@ public class RICHmonitor  extends DetectorMonitor {
         occTDC.setTitleY("tile number");
         occTDC.setTitleX("channel number");
         occTDC.setTitle("TDC Occupancy");
-        H2F tdc_leading_edge = new H2F("tdc_leading_edge", "tdc leading edge", 200, 0, 400, 417, 0.5, 417.5);
+        H2F tdc_leading_edge = new H2F("tdc_leading_edge", "tdc leading edge", 260, 0, 260, 417, 0.5, 417.5);
         tdc_leading_edge.setTitleX("leading edge time [ns]");
         tdc_leading_edge.setTitleY("MAPMT (3 slots / tile)");
         tdc_leading_edge.setTitle("TDC timing");
-        H2F tdc_trailing_edge = new H2F("tdc_trailing_edge", "tdc trailing edge", 200, 0, 400, 417, 0.5, 417.5);
+        H2F tdc_trailing_edge = new H2F("tdc_trailing_edge", "tdc trailing edge", 260, 0, 260, 417, 0.5, 417.5);
         tdc_trailing_edge.setTitleX("trailing edge time [ns]");
         tdc_trailing_edge.setTitleY("MAPMT (3 slots / tile)");
         tdc_trailing_edge.setTitle("TDC timing");
@@ -434,6 +434,8 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("RICH TDC").setStatBoxFontSize(14);
         this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc0);
         this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc1, "same");
+        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc1, "same");
+        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.hdeltaT, "same");
  
 
         this.getDetectorView().getView().repaint();
@@ -478,7 +480,9 @@ public class RICHmonitor  extends DetectorMonitor {
             }
         }
         if(event.hasBank("RICH::tdc")==true) {
-            Map<Integer, RichHitCollection> rhitMap = new HashMap<>();
+            Map<Integer, Integer> tdcMap0 = new HashMap<>();
+            Map<Integer, Integer> tdcMap1 = new HashMap<>();
+
             DataBank  bank = event.getBank("RICH::tdc");
             int rows = bank.rows();
             for(int i = 0; i < rows; i++) {
@@ -489,46 +493,39 @@ public class RICHmonitor  extends DetectorMonitor {
                 long     pmt   = comp/64;
                 int        tdc = bank.getInt("TDC",i);
                 int  orderbyte = bank.getByte("order",i); // order specifies left-right for ADC
-                long     order = orderbyte & 0xFF;
-
-
 
 
                 //    int tileID = bank.getByte("layer", i) & 0xFF;
                 //  short channel = bank.getShort("component", i);
+
                 if(tdc>0) {
-                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp,layer*1.0);
+                    this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp,layer);
                     fillTile(comp,layer);
 
                     if(orderbyte == 1) this.getDataGroup().getItem(0,0,0).getH2F("tdc_leading_edge").fill(tdc, layer*3 + pmt);
                     if(orderbyte == 0) this.getDataGroup().getItem(0,0,0).getH2F("tdc_trailing_edge").fill(tdc, layer*3 + pmt);
 
-                    if(orderbyte==0) hdet.htdc0.fill(tdc);
-                    else hdet.htdc1.fill(tdc);
+                    Integer id = sector * 200000+ layerbyte * 1000 + (int) comp;
 
-                    this.getDetectorSummary().getH2F("summary").fill(comp,layer*1.0);
+                    if(orderbyte==0) tdcMap0.put(id, tdc);
+                    else tdcMap1.put(id,tdc);
 
+                    this.getDetectorSummary().getH2F("summary").fill(comp,layer);
 
-
+/*
                     int imaroc = ((int)comp - 1) / 64;
                     int ipix = chan2pix[((int)comp - 1) % 64] - 1;
                     Integer id = (int)layer * 1000 + imaroc * 100 + ipix;
-
-                    if (!rhitMap.containsKey(id)) {
-                        PixelXY pxy = getPixel((int)layer - 1, imaroc, ipix);
-                        RichHitCollection rhit = new RichHitCollection((int)layer, imaroc, ipix);
-                        rhit.setXY(pxy.x, pxy.y);
-                        rhitMap.put(id, rhit);
-                    }
-
-                    int edge = bank.getByte("order", i);
-                    int TDC = bank.getInt("TDC", i);
-                    rhitMap.get(id).fill(edge, TDC);
-
-
-                    fill(rhitMap);
+*/
                 }
+
             }
+
+            tdcMap0.forEach((k,v) -> {
+              hdet.htdc0.fill(v);
+              if(tdcMap1.containsKey(k)) hdet.hdeltaT.fill(v-tdcMap1.get(k));
+            });
+            tdcMap1.forEach((k,v) -> hdet.htdc1.fill(v));
         }
     }
 
@@ -618,13 +615,14 @@ public class RICHmonitor  extends DetectorMonitor {
 
     private class HistTDC {
 
-        H1F htdc0 = new H1F("RICH TDC0", "TDC", 300, 0, 300);
-        H1F htdc1 = new H1F("RICH TDC1", "TDC", 300, 0, 300);
+        H1F htdc0 = new H1F("RICH TDC0", "TDC", 260, 0, 260);
+        H1F htdc1 = new H1F("RICH TDC1", "TDC", 260, 0, 260);
         H1F hdeltaT = new H1F("RICH delta", "delta TDC", 150, 0, 150);
 
 
         public HistTDC() {
             htdc1.setLineColor(2);
+            hdeltaT.setLineColor(4);
         }
 
         public void setTitle(String title) {
@@ -662,7 +660,6 @@ public class RICHmonitor  extends DetectorMonitor {
 
         reset();
     }
-
 
 
 
@@ -776,29 +773,6 @@ public class RICHmonitor  extends DetectorMonitor {
     }
 
 
-    public void fill(Map<Integer, RichHitCollection> rhits) {
-        for (RichHitCollection rhit : rhits.values()) {
-
-            for (RichHit rh : rhit.hitList) {
-
-                int t1 = rh.time + rh.delta;
-
-                hdet.htdc0.fill(rh.time);
-                hpmt[rhit.itile][rhit.imaroc].htdc0.fill(rh.time);
-                hpix[rhit.itile][rhit.imaroc][rhit.ipix].htdc0.fill(rh.time);
-
-                hdet.htdc1.fill(t1);
-                hpmt[rhit.itile][rhit.imaroc].htdc1.fill(t1);
-                hpix[rhit.itile][rhit.imaroc][rhit.ipix].htdc1.fill(t1);
-
-                hdet.hdeltaT.fill(rh.delta);
-                hpmt[rhit.itile][rhit.imaroc].hdeltaT.fill(rh.delta);
-                hpix[rhit.itile][rhit.imaroc][rhit.ipix].hdeltaT.fill(rh.delta);
-            }
-        }
-    }
-
-
     public JPanel getPanel() {
         return mainPanel;
     }
@@ -807,74 +781,5 @@ public class RICHmonitor  extends DetectorMonitor {
         selectedITile = shape.getDescriptor().getLayer() - 1;
         selectedIMaroc = shape.getDescriptor().getComponent();
         redraw();
-    }
-
-    private enum Edge {
-        LEADING, TRAILING
-    };
-
-    private final class RichHitCollection {
-
-        public int itile;
-        public int imaroc;
-        public int ipix;
-        public double x, y;
-        public List<RichTDC> tdcList = new ArrayList<>();
-        public List<RichHit> hitList = new ArrayList<>();
-
-        public RichHitCollection(int tileId, int imaroc, int ipix) {
-            this.itile = tileId - 1;
-            this.imaroc = imaroc;
-            this.ipix = ipix;
-        }
-
-        public void setXY(double x, double y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public void fill(int edge, int tdc) {
-            tdcList.add(new RichTDC(edge, tdc));
-        }
-
-        public void processHits() {
-            tdcList.sort((RichTDC t1, RichTDC t2) -> t1.tdc - t2.tdc);
-
-            ListIterator<RichTDC> iter = tdcList.listIterator();
-            while (iter.hasNext()) {
-                RichTDC rlead = iter.next();
-                if (rlead.edge==Edge.LEADING && iter.hasNext()) {
-                    RichTDC rtrail = iter.next();
-                    if (rtrail.edge == Edge.TRAILING) {
-                        hitList.add(new RichHit(rlead.tdc, rtrail.tdc - rlead.tdc));
-                    } else {
-                        iter.previous();
-                    }
-                }
-            }
-        }
-    }
-
-    public class RichTDC {
-
-        public Edge edge = Edge.LEADING;
-        public int tdc;
-
-        RichTDC(int iedge, int tdc) {
-            if (iedge == 0) {
-                this.edge = Edge.TRAILING;
-            }
-            this.tdc = tdc;
-        }
-    }
-
-    private class RichHit {
-
-        public int time, delta;
-
-        RichHit(int t0, int dt) {
-            time = t0;
-            delta = dt;
-        }
     }
 }
