@@ -368,14 +368,19 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
 		        "FTxFTOFxPCALxCTOF","FTxFTOFxPCALxCND","FTxFTOFxPCALxCTOFxCND",
 		        "FTx(FTOFxPCAL)^2","FTx(FTOFxPCAL)^3","FT(>300)xHODO","FT(>500)xHODO","FT>300","FT>500",
 		        "1K Pulser"};  
-   
-        
+           
       //RGB
-        String TriggerDef[] = { "Electron OR",
+        String TriggerDefRGB[] = { "Electron OR",
 		        "Electron S1","Electron S2","Electron S3","Electron S4","Electron S5","Electron S6",
 		        "FTOFxPCALxECALxDC(1-4)","FTOFxPCALxECALxDC(2-5)","FTOFxPCALxECALxDC(3-6)",
 		        "Electron OR no DC","","","","","","","","","","","","","","","","","","","","",
 		        "1K Pulser"};   
+        
+        String TriggerDef[] = { "Electron OR",
+		        "e Sector 1","e Sector 2","e Sector 3","e Sector 4","e Sector 5","e Sector 6",
+		        "Muons S1+ S4-","Muons S2+ S5-","Muons S3+ S6-",
+		        "Muons S4+ S1-","Muons S5+ S2-","Muons S6+ S3-","","","","","","","","","","","","","","","","","","",
+		        "1K Pulser"};    
         
         JMenu trigBitsBeam = new JMenu("TriggerBits");
         trigBitsBeam.getAccessibleContext().setAccessibleDescription("Test Trigger Bits");
