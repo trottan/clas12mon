@@ -480,7 +480,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
        
         for(int k =0; k<this.monitors.length; k++) {
-                if(k!=7 && k!=16) this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName()); //don't show FMT tab
+                if(k!=16) this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName()); //don't show FMT tab
         	        this.monitors[k].getDetectorView().getView().addDetectorListener(this);
                         
         }
