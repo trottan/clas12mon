@@ -108,13 +108,14 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                 new HTCCmonitor("HTCC"),      // 12
                 new LTCCmonitor("LTCC"),      // 13
                 new RICHmonitor("RICH"),      // 14
-                new RECmonitor("RECON"),      // 15
+                new RTPCmonitor("RTPC"),      // 15
+                new RECmonitor("RECON"),      // 16
              //   new TRKmonitor("TRK"),        // 15
-                new RFmonitor("RF"),          // 16
-                new HELmonitor("HEL"),        // 17
-                new FCUPmonitor("Faraday Cup"),  // 18
-                new TRIGGERmonitor("Trigger"),   // 19
-                new TJITTERmonitor("TimeJitter") // 20
+                new RFmonitor("RF"),          // 17
+                new HELmonitor("HEL"),        // 18
+                new FCUPmonitor("Faraday Cup"),  // 19
+                new TRIGGERmonitor("Trigger"),   // 20
+                new TJITTERmonitor("TimeJitter") // 21
      
     };
         
@@ -264,7 +265,12 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         JMenuItem menuItemRICH = new JMenuItem("Reset RICH histograms");
         menuItemRICH.getAccessibleContext().setAccessibleDescription("Reset RICH histograms");
         menuItemRICH.addActionListener(this);
-        reset.add(menuItemRICH);
+        reset.add(menuItemRICH);        
+        
+        JMenuItem menuItemRTPC = new JMenuItem("Reset RTPC histograms");
+        menuItemRTPC.getAccessibleContext().setAccessibleDescription("Reset RTPC histograms");
+        menuItemRTPC.addActionListener(this);
+        reset.add(menuItemRTPC);
         
         JMenuItem menuItemTRIG = new JMenuItem("Reset TRIGGER histograms");
         menuItemTRIG.getAccessibleContext().setAccessibleDescription("Reset TRIGGER histograms");
@@ -474,7 +480,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
        
         for(int k =0; k<this.monitors.length; k++) {
-                if(k!=7 && k!=15) this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName()); //don't show FMT tab
+                if(k!=7 && k!=16) this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName()); //don't show FMT tab
         	        this.monitors[k].getDetectorView().getView().addDetectorListener(this);
                         
         }
@@ -648,6 +654,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("LTTC plots uploaded");
               System.out.println("RICH plot uploaded");
               entry.addAttachment(data+"/RICH_canvas0_"+tstamp+".png", "RICH occupancy");
+              System.out.println("RTPC plot uploaded");
+              entry.addAttachment(data+"/RTPC_canvas0_"+tstamp+".png", "RTPC occupancy");
               //entry.addAttachment(data+"/RECON_canvas0_"+tstamp+".png", "RECON CVT cosmic");
               //entry.addAttachment(data+"/RECON_canvas1_"+tstamp+".png", "RECON CVT positive tracks");
               //entry.addAttachment(data+"/RECON_canvas2_"+tstamp+".png", "RECON CVT negative tracks");
@@ -769,6 +777,8 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("LTCC plots uploaded");
               entry.addAttachment(data+"/RICH_canvas0_"+tstamp+".png", "RICH occupancy");
               System.out.println("RICH plot uploaded");
+              entry.addAttachment(data+"/RTPC_canvas0_"+tstamp+".png", "RTPC occupancy");
+              System.out.println("RTPC plot uploaded");
               entry.addAttachment(data+"/Trigger_canvas0_"+tstamp+".png", "Trigger bits");
               System.out.println("Trigger plots uploaded");
               entry.addAttachment(data+"/BAND_canvas0_"+tstamp+".png", "BAND ADC occupancies and spectra");
@@ -1028,17 +1038,17 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
         // RF
         this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(0);
-        if(this.monitors[16].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[16].getDetectorSummary().getH1F("summary"));
+        if(this.monitors[16].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[17].getDetectorSummary().getH1F("summary"));
         // HEL
         this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(1);
-        if(this.monitors[17].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[17].getDetectorSummary().getH1F("summary"));
+        if(this.monitors[17].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[18].getDetectorSummary().getH1F("summary"));
         // FCUP
         this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(2);
-        if(this.monitors[20].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[20].getDetectorSummary().getH1F("summary"));
+        if(this.monitors[20].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[21].getDetectorSummary().getH1F("summary"));
         // TRIGGER
         this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").cd(3);
         this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").getPad(3).getAxisY().setLog(true);
-        if(this.monitors[19].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[19].getDetectorSummary().getH1F("summary"));
+        if(this.monitors[19].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("RF/HEL/JITTER/TRIGGER").draw(this.monitors[20].getDetectorSummary().getH1F("summary"));
          
         ////////////////////////////////////////////////////
       
@@ -1411,9 +1421,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     }	
          }
         
-        if (actionCommand=="Reset RECON histograms"){
-            System.out.println("Reset RECON histograms");
-        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset RECON plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (actionCommand=="Reset RTPC histograms"){
+            System.out.println("Reset RTPC histograms");
+        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset RTPC plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
@@ -1427,10 +1437,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
  			this.monitors[15].eventResetTime_current = 0;
                     }	
          }
-        
-        if (actionCommand=="Reset RF histograms"){
-            System.out.println("Reset RF histograms");
-        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset RF plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+        if (actionCommand=="Reset RECON histograms"){
+            System.out.println("Reset RECON histograms");
+        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset RECON plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
@@ -1445,9 +1455,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     }	
          }
         
-        if (actionCommand=="Reset HEL histograms"){
-            System.out.println("Reset HEL histograms");
-        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset HEL plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (actionCommand=="Reset RF histograms"){
+            System.out.println("Reset RF histograms");
+        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset RF plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
@@ -1462,9 +1472,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     }	
          }
         
-        if (actionCommand=="Reset Faraday Cup histograms"){
-            System.out.println("Reset Faraday Cup histograms");
-        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset Faraday Cup plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (actionCommand=="Reset HEL histograms"){
+            System.out.println("Reset HEL histograms");
+        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset HEL plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
@@ -1479,9 +1489,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                     }	
          }
         
-        if (actionCommand=="Reset TRIGGER histograms"){
-            System.out.println("Reset TRIGGER histograms");
-        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset Trigger plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (actionCommand=="Reset Faraday Cup histograms"){
+            System.out.println("Reset Faraday Cup histograms");
+        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset Faraday Cup plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
                     if (resetOption == JOptionPane.YES_OPTION) {
                         String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
                         if (resetTiming != null) {    
@@ -1493,6 +1503,23 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
                         }
                     }else if (resetOption == JOptionPane.NO_OPTION){
  			this.monitors[19].eventResetTime_current = 0;
+                    }	
+         }
+        
+        if (actionCommand=="Reset TRIGGER histograms"){
+            System.out.println("Reset TRIGGER histograms");
+        	int resetOption = JOptionPane.showConfirmDialog(null, "Do you want to automaticaly reset Trigger plots ?", " ", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                    if (resetOption == JOptionPane.YES_OPTION) {
+                        String  resetTiming = (String) JOptionPane.showInputDialog(null, "Update every (number of events)", " ", JOptionPane.PLAIN_MESSAGE, null, null, "10000");
+                        if (resetTiming != null) {    
+                            int time = this.monitors[20].eventResetTime_default;
+                            try {time = Integer.parseInt(resetTiming);} 
+                            catch (NumberFormatException f) {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}
+                            if (time > 0) {this.monitors[20].eventResetTime_current = time;} 
+                            else {JOptionPane.showMessageDialog(null, "Value must be a positive integer!");}   
+                        }
+                    }else if (resetOption == JOptionPane.NO_OPTION){
+ 			this.monitors[20].eventResetTime_current = 0;
                     }	
          }
         
