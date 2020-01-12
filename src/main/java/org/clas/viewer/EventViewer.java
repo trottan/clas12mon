@@ -646,8 +646,10 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/LTCC_canvas1_"+tstamp+".png", "LTCC FADC timing");
               //entry.addAttachment(data+"/LTCC_canvas2_"+tstamp+".png", "LTCC TDC occupancies and spectra");
               System.out.println("LTTC plots uploaded");
+              entry.addAttachment(data+"/RICH_canvas0_"+tstamp+".png", "RICH window");
+              entry.addAttachment(data+"/RICH_canvas1_"+tstamp+".png", "RICH occupancies and spectra");
+              entry.addAttachment(data+"/RICH_canvas2_"+tstamp+".png", "RICH TDC");
               System.out.println("RICH plot uploaded");
-              entry.addAttachment(data+"/RICH_canvas0_"+tstamp+".png", "RICH occupancy");
               //entry.addAttachment(data+"/RECON_canvas0_"+tstamp+".png", "RECON CVT cosmic");
               //entry.addAttachment(data+"/RECON_canvas1_"+tstamp+".png", "RECON CVT positive tracks");
               //entry.addAttachment(data+"/RECON_canvas2_"+tstamp+".png", "RECON CVT negative tracks");
@@ -767,7 +769,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("HTCC plot uploaded");
               entry.addAttachment(data+"/LTCC_canvas0_"+tstamp+".png", "LTCC occupancies and spectra");
               System.out.println("LTCC plots uploaded");
-              entry.addAttachment(data+"/RICH_canvas0_"+tstamp+".png", "RICH occupancy");
+              entry.addAttachment(data+"/RICH_canvas0_"+tstamp+".png", "RICH window");
+              entry.addAttachment(data+"/RICH_canvas1_"+tstamp+".png", "RICH occupancies and spectra");
+              entry.addAttachment(data+"/RICH_canvas2_"+tstamp+".png", "RICH TDC");
               System.out.println("RICH plot uploaded");
               entry.addAttachment(data+"/Trigger_canvas0_"+tstamp+".png", "Trigger bits");
               System.out.println("Trigger plots uploaded");
