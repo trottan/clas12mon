@@ -426,8 +426,9 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").update();
 
 
+        this.getDetectorCanvas().getCanvas("PMT Window").getPad(0).setPalette("kRainBow");
         this.getDetectorCanvas().getCanvas("PMT Window").draw(this.getDataGroup().getItem(0,0,0).getH2F("RichScaler"));
-        this.getDetectorCanvas().getCanvas("PMT Window").getPad(0).getAxisZ().setLog(getLogZ());
+        //this.getDetectorCanvas().getCanvas("PMT Window").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("PMT Window").update();
 
 
@@ -620,7 +621,7 @@ public class RICHmonitor  extends DetectorMonitor {
         H1F htdc0 = new H1F("RICH TDC0", "TDC", 260, 0, 260);
         H1F htdc1 = new H1F("RICH TDC1", "TDC", 260, 0, 260);
         H1F hdeltaT = new H1F("RICH delta", "delta TDC", 150, 0, 150);
-        DataLine dl0 = new DataLine(24,0,24,3e10);
+        DataLine dl0 = new DataLine(28,0,28,3e10);
         DataLine dl1 = new DataLine(60,0,60,3e10);
 
 
