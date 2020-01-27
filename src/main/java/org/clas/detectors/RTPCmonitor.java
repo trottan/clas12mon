@@ -64,9 +64,9 @@ public class RTPCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Summary").setGridX(false);
         this.getDetectorCanvas().getCanvas("Summary").setGridY(false);
         this.getDetectorCanvas().getCanvas("Summary").cd(0);
-        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("Occupancy"));
+        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Occupancy"));
         this.getDetectorCanvas().getCanvas("Summary").cd(1);
-        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("Normalized Occupancy"));
+        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Normalized Occupancy"));
         this.getDetectorCanvas().getCanvas("Summary").cd(2);
         this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution"));
         this.getDetectorCanvas().getCanvas("Summary").cd(3);
@@ -95,7 +95,7 @@ public class RTPCmonitor extends DetectorMonitor {
             int numhitsperpad = 0;
             for (int row = 0; row < nRows; ++row) {
                 rtpcrow = bankRTPC.getShort("component",row);
-                rtpccol = bankRTPC.getByte("row",row);
+                rtpccol = bankRTPC.getByte("layer",row);
                 float time = bankRTPC.getFloat("time",row);
                 int ADC = bankRTPC.getInt("ADC", row);
                 
@@ -108,7 +108,7 @@ public class RTPCmonitor extends DetectorMonitor {
             }
             for(int row = 0; row < nRows; row++){
                 rtpcrow = bankRTPC.getShort("component",row);
-                rtpccol = bankRTPC.getByte("row",row);
+                rtpccol = bankRTPC.getByte("layer",row);
                 this.getDataGroup().getItem(0,0,0).getH2F("Normalized Occupancy").fill(rtpcrow,rtpccol,getNormOccupancy(rtpcrow,rtpccol));
             }
         }       
