@@ -29,24 +29,37 @@ public class RTPCmonitor extends DetectorMonitor {
         Occupancy.setTitleX("Row");
         Occupancy.setTitleY("Col");
         
-        H2F NormOccupancy = new H2F("Normalized Occupancy","Normalized Occupancy",180,1,181,96,1,97);
-        NormOccupancy.setTitleX("Row");
-        NormOccupancy.setTitleY("Col");
       
+        H2F NormOccupancyADC = new H2F("Occupancy ADC/signal","Occupancy ADC/signal",180,1,181,96,1,97);
+        NormOccupancyADC.setTitleX("Row");
+        NormOccupancyADC.setTitleY("Col");
         
         
-        H1F TimeDistribution = new H1F("Time Distribution","Time Distribution",200,0,12000);
+        H1F TimeDistribution = new H1F("Time Distribution","Time Distribution",80,-1200,8400);
         TimeDistribution.setTitleX("Time (ns)");
+        TimeDistribution.setOptStat(1110);
         
-        H1F ADC = new H1F("ADC","ADC",100,0,1000);
+        H1F NumberHits = new H1F("Number of Hits Per Event","Number of Hits Per Event",400,1,2001);
+        NumberHits.setTitleX("Number of Hits per event above threshold");
+        NumberHits.setOptStat(1110);
+        
+        H1F ADC = new H1F("ADC","ADC",256,0,4096);
         ADC.setTitleX("ADC");
+        ADC.setOptStat(1110);
+        
+        H1F PadsPerEvent = new H1F("Pads per Event","Pads per Event",1728,0,17281);
+        PadsPerEvent.setTitleX("Pads per Event");
+        PadsPerEvent.setOptStat(1110);
 
         
-        DataGroup dg = new DataGroup(2,2);
+        DataGroup dg = new DataGroup(3,2);
         dg.addDataSet(Occupancy, 0);
-        dg.addDataSet(NormOccupancy, 1);
+        dg.addDataSet(NormOccupancyADC, 1);
         dg.addDataSet(TimeDistribution, 2);
-        dg.addDataSet(ADC, 3);
+        dg.addDataSet(NumberHits,3);
+        dg.addDataSet(ADC, 4);
+        dg.addDataSet(PadsPerEvent, 5);
+       
 
         this.getDataGroup().add(dg,0,0,0);
         
@@ -60,23 +73,36 @@ public class RTPCmonitor extends DetectorMonitor {
     public void plotHistos() {
         // initialize canvas and plot histograms
         
-        this.getDetectorCanvas().getCanvas("Summary").divide(2, 2);
+        this.getDetectorCanvas().getCanvas("Summary").divide(2,3);
         this.getDetectorCanvas().getCanvas("Summary").setGridX(false);
         this.getDetectorCanvas().getCanvas("Summary").setGridY(false);
         this.getDetectorCanvas().getCanvas("Summary").cd(0);
         this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Occupancy"));
+        this.getDetectorCanvas().getCanvas("Summary").getPad(0).getAxisZ().setLog(true);
         this.getDetectorCanvas().getCanvas("Summary").cd(1);
-        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Normalized Occupancy"));
+        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC/signal"));
         this.getDetectorCanvas().getCanvas("Summary").cd(2);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(2).getAxisX().setRange(0,this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution").getMax() + 50);
         this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution"));
         this.getDetectorCanvas().getCanvas("Summary").cd(3);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(3).getAxisX().setRange(0,this.getDataGroup().getItem(0,0,0).getH1F("ADC").getMax() + 50);
         this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("ADC"));
+        this.getDetectorCanvas().getCanvas("Summary").cd(4);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(4).getAxisX().setRange(0,this.getDataGroup().getItem(0,0,0).getH1F("Number of Hits Per Event").getMax() + 50);
+        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("Number of Hits Per Event"));
+        this.getDetectorCanvas().getCanvas("Summary").cd(5);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(5).getAxisX().setRange(0,this.getDataGroup().getItem(0,0,0).getH1F("Pads per Event").getMax() + 50);
+        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("Pads per Event"));
         this.getDetectorCanvas().getCanvas("Summary").update();
 
         
         
     }
 
+    private float maxtime = 0;
+    private int maxadc = 0;
+    private int maxnumhits = 0;
+    private int maxpads = 0;
     @Override
     public void processEvent(DataEvent event) {
         
@@ -93,6 +119,11 @@ public class RTPCmonitor extends DetectorMonitor {
             int rtpcrow = 0;
             int rtpccol = 0;
             int numhitsperpad = 0;
+            int prevcol = -1;
+            int prevrow = -1;
+            int numhitsabovethresh = 0;
+            int numpads = 0;
+            usedevent = false;
             for (int row = 0; row < nRows; ++row) {
                 rtpcrow = bankRTPC.getShort("component",row);
                 rtpccol = bankRTPC.getByte("layer",row);
@@ -102,28 +133,47 @@ public class RTPCmonitor extends DetectorMonitor {
                 if(nRows > 0){
                     this.getDataGroup().getItem(0,0,0).getH2F("Occupancy").fill(rtpcrow,rtpccol);               
                     this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution").fill(time);
-                    this.getDataGroup().getItem(0,0,0).getH1F("ADC").fill(ADC);
+                    if(time > maxtime) maxtime = time;
+                    if(ADC > 350){
+                        this.getDataGroup().getItem(0,0,0).getH1F("ADC").fill(ADC);
+                        if(ADC > maxadc) maxadc = ADC;
+                        numhitsabovethresh++;
+                    }
+
                     normOccupancy(ADC,rtpcrow,rtpccol);
-                }               
+                } 
+                if(rtpcrow != prevrow || rtpccol != prevcol){
+                    numpads++;
+                }
             }
+            this.getDataGroup().getItem(0,0,0).getH1F("Pads per Event").fill(numpads);
+            if(numpads > maxpads) maxpads = numpads;
+            if(numhitsabovethresh > 0){
+                this.getDataGroup().getItem(0,0,0).getH1F("Number of Hits Per Event").fill(numhitsabovethresh);
+                if(numhitsabovethresh > maxnumhits) maxnumhits = numhitsabovethresh;
+            }
+            
             for(int row = 0; row < nRows; row++){
                 rtpcrow = bankRTPC.getShort("component",row);
                 rtpccol = bankRTPC.getByte("layer",row);
-                this.getDataGroup().getItem(0,0,0).getH2F("Normalized Occupancy").fill(rtpcrow,rtpccol,getNormOccupancy(rtpcrow,rtpccol));
-            }
-        }       
-                        
+                this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC/signal").setBinContent(rtpcrow-1,rtpccol-1,getNormOccupancy(rtpcrow,rtpccol));
+            }           
+        }                              
     }
     
     private HashMap<Integer,Integer> numhitsperpad = new HashMap<>();
     private HashMap<Integer,Integer> totADCperpad = new HashMap<>();
+    private boolean usedevent = false;
     
     private void normOccupancy(int ADC, int row, int col){
         int cellid = (row-1)*96 + col;
         
         if(!numhitsperpad.containsKey(cellid)) numhitsperpad.put(cellid, 1);
         else{
-            numhitsperpad.put(cellid, numhitsperpad.get(cellid)+1);
+            if(!usedevent){
+                numhitsperpad.put(cellid, numhitsperpad.get(cellid)+1);
+                usedevent = true;
+            }
         }
         
         if(!totADCperpad.containsKey(cellid)) totADCperpad.put(cellid, 0);
@@ -138,7 +188,10 @@ public class RTPCmonitor extends DetectorMonitor {
 
     @Override
     public void timerUpdate() {
-        
+        this.getDetectorCanvas().getCanvas("Summary").getPad(2).getAxisX().setRange(0,maxtime + 50);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(3).getAxisX().setRange(0,maxadc + 50);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(4).getAxisX().setRange(0,maxnumhits + 50);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(5).getAxisX().setRange(0,maxpads + 50);
     }
-
+        
 }
