@@ -584,7 +584,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             try{
               entry.addAttachment(data+"/summary_FD_"+tstamp+".png", "Summary plots FD");
               entry.addAttachment(data+"/summary_CD_"+tstamp+".png", "Summary plots CD");
-              entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots FT");
+//              entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots FT");
               entry.addAttachment(data+"/summary_RHJT_"+tstamp+".png", "Summary plots RF/HEL/JITTER/TRIGGER");
               System.out.println("Summary plots uploaded");
 //              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies c");
@@ -735,7 +735,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             try{
               entry.addAttachment(data+"/summary_FD_"+tstamp+".png", "Summary plots for the forward detector");
               entry.addAttachment(data+"/summary_CD_"+tstamp+".png", "Summary plots for the central detector");
-              entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots for the forward tagger");
+//              entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots for the forward tagger");
               entry.addAttachment(data+"/summary_RHJT_"+tstamp+".png", "Summary plots RF/HEL/JITTER/TRIGGER");
               System.out.println("Summary plots uploaded");
 //              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies c");
@@ -1007,14 +1007,20 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         // CTOF
         this.CLAS12Canvas.getCanvas("CD").cd(1);
         if(this.monitors[4].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[4].getDetectorSummary().getH1F("summary"));
-        // BVT
+        // RTPC
         this.CLAS12Canvas.getCanvas("CD").cd(2);
-        this.CLAS12Canvas.getCanvas("CD").getPad(2).getAxisZ().setLog(true);
-        if(this.monitors[1].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[1].getDetectorSummary().getH1F("summary"));
-        // BST
+        if(this.monitors[15].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[15].getDetectorSummary().getH1F("summary"));
+        // FMT
         this.CLAS12Canvas.getCanvas("CD").cd(3);
-        this.CLAS12Canvas.getCanvas("CD").getPad(3).getAxisZ().setLog(true);
-        if(this.monitors[2].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[2].getDetectorSummary().getH2F("summary"));
+        if(this.monitors[7].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[7].getDetectorSummary().getH1F("summary"));
+//        // BVMT
+//        this.CLAS12Canvas.getCanvas("CD").cd(2);
+//        this.CLAS12Canvas.getCanvas("CD").getPad(2).getAxisZ().setLog(true);
+//        if(this.monitors[1].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[1].getDetectorSummary().getH1F("summary"));
+//        // BST
+//        this.CLAS12Canvas.getCanvas("CD").cd(3);
+//        this.CLAS12Canvas.getCanvas("CD").getPad(3).getAxisZ().setLog(true);
+//        if(this.monitors[2].getDetectorSummary()!=null) this.CLAS12Canvas.getCanvas("CD").draw(this.monitors[2].getDetectorSummary().getH2F("summary"));
         
         
         

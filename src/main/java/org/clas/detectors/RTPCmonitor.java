@@ -24,13 +24,21 @@ public class RTPCmonitor extends DetectorMonitor {
         // create histograms
         this.setNumberOfEvents(0);
 
+        H1F summary = new H1F("summary","RTPC",500, 0, 100);
+        summary.setTitleX("Fill me");
+        summary.setTitleY("Counts");
+        summary.setFillColor(5);
+        DataGroup sum = new DataGroup(1,1);
+        sum.addDataSet(summary, 0);
+        this.setDetectorSummary(sum);
+        
         
         H2F Occupancy = new H2F("Occupancy","Occupancy",180,1,181,96,1,97);
         Occupancy.setTitleX("Row");
         Occupancy.setTitleY("Col");
         
       
-        H2F NormOccupancyADC = new H2F("Occupancy ADC/signal","Occupancy ADC/signal",180,1,181,96,1,97);
+        H2F NormOccupancyADC = new H2F("Occupancy ADC signal","Occupancy ADC signal",180,1,181,96,1,97);
         NormOccupancyADC.setTitleX("Row");
         NormOccupancyADC.setTitleY("Col");
         
@@ -82,7 +90,7 @@ public class RTPCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Occupancy"));
         this.getDetectorCanvas().getCanvas("Summary").getPad(0).getAxisZ().setLog(true);
         this.getDetectorCanvas().getCanvas("Summary").cd(1);
-        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC/signal"));
+        this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC signal"));
         this.getDetectorCanvas().getCanvas("Summary").cd(2);
         //this.getDetectorCanvas().getCanvas("Summary").getPad(2).getAxisX().setRange(0,this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution").getMax() + 50);
         this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution"));
@@ -167,7 +175,7 @@ public class RTPCmonitor extends DetectorMonitor {
             for(int row = 0; row < nRows; row++){
                 rtpcrow = bankRTPC.getShort("component",row);
                 rtpccol = bankRTPC.getByte("layer",row);
-                this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC/signal").setBinContent(rtpcrow-1,rtpccol-1,getNormOccupancy(rtpcrow,rtpccol));
+                this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC signal").setBinContent(rtpcrow-1,rtpccol-1,getNormOccupancy(rtpcrow,rtpccol));
             }           
         }                              
     }
