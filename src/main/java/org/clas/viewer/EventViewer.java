@@ -480,7 +480,7 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
         
        
         for(int k =0; k<this.monitors.length; k++) {
-                if(k!=16) this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName()); //don't show FMT tab
+                if(k!=0 && k!=1 && k!=2 && k!=8 && k!=9 && k!=11 && k!=16) this.tabbedpane.add(this.monitors[k].getDetectorPanel(), this.monitors[k].getDetectorName()); //don't show FMT tab
         	        this.monitors[k].getDetectorView().getView().addDetectorListener(this);
                         
         }
@@ -587,15 +587,15 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots FT");
               entry.addAttachment(data+"/summary_RHJT_"+tstamp+".png", "Summary plots RF/HEL/JITTER/TRIGGER");
               System.out.println("Summary plots uploaded");
-              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies c");
-              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies z");
-              entry.addAttachment(data+"/BMT_canvas2_"+tstamp+".png", "BMT time of max");
-              entry.addAttachment(data+"/BMT_canvas3_"+tstamp+".png", "BMT multiplicity");
-              System.out.println("BMT plots uploaded");
-              entry.addAttachment(data+"/BST_canvas0_"+tstamp+".png", "BST occupancies 2D");
-              entry.addAttachment(data+"/BST_canvas1_"+tstamp+".png", "BST occupancies 1D");
-              entry.addAttachment(data+"/BST_canvas2_"+tstamp+".png", "BST multiplicity"); 
-              System.out.println("BST plots uploaded");
+//              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies c");
+//              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies z");
+//              entry.addAttachment(data+"/BMT_canvas2_"+tstamp+".png", "BMT time of max");
+//              entry.addAttachment(data+"/BMT_canvas3_"+tstamp+".png", "BMT multiplicity");
+//              System.out.println("BMT plots uploaded");
+//              entry.addAttachment(data+"/BST_canvas0_"+tstamp+".png", "BST occupancies 2D");
+//              entry.addAttachment(data+"/BST_canvas1_"+tstamp+".png", "BST occupancies 1D");
+//              entry.addAttachment(data+"/BST_canvas2_"+tstamp+".png", "BST multiplicity"); 
+//              System.out.println("BST plots uploaded");
               entry.addAttachment(data+"/CND_canvas0_"+tstamp+".png", "CND ADC occupancies and spectra");
               entry.addAttachment(data+"/CND_canvas1_"+tstamp+".png", "CND TDC occupancies and spectra");
               System.out.println("CND plots uploaded");
@@ -619,16 +619,16 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("ECAL plots uploaded");
               //entry.addAttachment(data+"/Faraday Cup_canvas0_"+tstamp+".png", "Faraday Cup");
               //System.out.println("Farady Cup plots uploaded");
-//              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
-//              entry.addAttachment(data+"/FMT_canvas1_"+tstamp+".png", "FMT Time of Max");
-//              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
-//              entry.addAttachment(data+"/FMT_canvas3_"+tstamp+".png", "FMT Multiplicity");
-//              System.out.println("FMT plots uploaded");
-              entry.addAttachment(data+"/FTCAL_canvas0_"+tstamp+".png", "FTCAL");
-              System.out.println("FTCAL plot uploaded");
-              entry.addAttachment(data+"/FTHODO_canvas0_"+tstamp+".png", "FTHODO FADC occupancies");
-              entry.addAttachment(data+"/FTHODO_canvas1_"+tstamp+".png", "FTHODO FADC spectra");
-              System.out.println("FTHODO plots uploaded");
+              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
+              entry.addAttachment(data+"/FMT_canvas1_"+tstamp+".png", "FMT Time of Max");
+              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
+              entry.addAttachment(data+"/FMT_canvas3_"+tstamp+".png", "FMT Multiplicity");
+              System.out.println("FMT plots uploaded");
+//              entry.addAttachment(data+"/FTCAL_canvas0_"+tstamp+".png", "FTCAL");
+//              System.out.println("FTCAL plot uploaded");
+//              entry.addAttachment(data+"/FTHODO_canvas0_"+tstamp+".png", "FTHODO FADC occupancies");
+//              entry.addAttachment(data+"/FTHODO_canvas1_"+tstamp+".png", "FTHODO FADC spectra");
+//              System.out.println("FTHODO plots uploaded");
               entry.addAttachment(data+"/FTOF_canvas0_"+tstamp+".png", "FTOF ADC occupancies");
               entry.addAttachment(data+"/FTOF_canvas1_"+tstamp+".png", "FTOF TDC occupancies");
               entry.addAttachment(data+"/FTOF_canvas2_"+tstamp+".png", "FTOF ADC histograms");
@@ -636,11 +636,11 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/FTOF_canvas4_"+tstamp+".png", "FTOF TDC histograms");
               entry.addAttachment(data+"/FTOF_canvas5_"+tstamp+".png", "FTOF GMEAN");
               System.out.println("FTOF plots uploaded");
-              entry.addAttachment(data+"/FTTRK_canvas0_"+tstamp+".png", "FTTRK occupancies 2D");
-              entry.addAttachment(data+"/FTTRK_canvas1_"+tstamp+".png", "FTTRK occupancies 1D");
-              entry.addAttachment(data+"/FTTRK_canvas2_"+tstamp+".png", "FTTRK average time maximum");
-              entry.addAttachment(data+"/FTTRK_canvas3_"+tstamp+".png", "FTTRK ADC and time spectra");
-              System.out.println("FTTRK plots uploaded");
+//              entry.addAttachment(data+"/FTTRK_canvas0_"+tstamp+".png", "FTTRK occupancies 2D");
+//              entry.addAttachment(data+"/FTTRK_canvas1_"+tstamp+".png", "FTTRK occupancies 1D");
+//              entry.addAttachment(data+"/FTTRK_canvas2_"+tstamp+".png", "FTTRK average time maximum");
+//              entry.addAttachment(data+"/FTTRK_canvas3_"+tstamp+".png", "FTTRK ADC and time spectra");
+//              System.out.println("FTTRK plots uploaded");
               //entry.addAttachment(data+"/HEL_canvas0_"+tstamp+".png", "Helicity");
               //System.out.println("Helicity plot uploaded");
               entry.addAttachment(data+"/HTCC_canvas0_"+tstamp+".png", "HTCC occupancies");
@@ -680,9 +680,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("Trigger plots uploaded");
               entry.addAttachment(data+"/TimeJitter_canvas0_"+tstamp+".png", "Time Jitter");
               System.out.println("Time Jitter plots uploaded");              
-              entry.addAttachment(data+"/BAND_canvas0_"+tstamp+".png", "BAND ADC occupancies and spectra");
-              entry.addAttachment(data+"/BAND_canvas1_"+tstamp+".png", "BAND TDC occupancies and spectra");
-              System.out.println("BAND plots uploaded");
+//              entry.addAttachment(data+"/BAND_canvas0_"+tstamp+".png", "BAND ADC occupancies and spectra");
+//              entry.addAttachment(data+"/BAND_canvas1_"+tstamp+".png", "BAND TDC occupancies and spectra");
+//              System.out.println("BAND plots uploaded");
 
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
@@ -738,12 +738,12 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/summary_FT_"+tstamp+".png", "Summary plots for the forward tagger");
               entry.addAttachment(data+"/summary_RHJT_"+tstamp+".png", "Summary plots RF/HEL/JITTER/TRIGGER");
               System.out.println("Summary plots uploaded");
-              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies c");
-              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies z");
-              System.out.println("BMT plots uploaded");
-              entry.addAttachment(data+"/BST_canvas0_"+tstamp+".png", "BST occupancies 2D");
-              entry.addAttachment(data+"/BST_canvas1_"+tstamp+".png", "BST occupancies 1D"); 
-              System.out.println("BST plots uploaded");
+//              entry.addAttachment(data+"/BMT_canvas0_"+tstamp+".png", "BMT occupancies c");
+//              entry.addAttachment(data+"/BMT_canvas1_"+tstamp+".png", "BMT occupancies z");
+//              System.out.println("BMT plots uploaded");
+//              entry.addAttachment(data+"/BST_canvas0_"+tstamp+".png", "BST occupancies 2D");
+//              entry.addAttachment(data+"/BST_canvas1_"+tstamp+".png", "BST occupancies 1D"); 
+//              System.out.println("BST plots uploaded");
               entry.addAttachment(data+"/CND_canvas0_"+tstamp+".png", "CND ADC occupancies and spectra");
               entry.addAttachment(data+"/CND_canvas1_"+tstamp+".png", "CND TDC occupancies and spectra");
               System.out.println("CND plots uploaded");
@@ -758,19 +758,19 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               entry.addAttachment(data+"/ECAL_canvas0_"+tstamp+".png", "ECAL ADC occupancies");
               entry.addAttachment(data+"/ECAL_canvas1_"+tstamp+".png", "ECAL TDC occupancies");
               System.out.println("ECAL plots uploaded");
-//              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
-//              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
-//              System.out.println("FMT plots uploaded");
-              entry.addAttachment(data+"/FTCAL_canvas0_"+tstamp+".png", "FTCAL");
-              System.out.println("FTCAL plot uploaded");
-              entry.addAttachment(data+"/FTHODO_canvas0_"+tstamp+".png", "FTHODO FADC occupancies");
-              System.out.println("FTHODO plot uploaded");
+              entry.addAttachment(data+"/FMT_canvas0_"+tstamp+".png", "FMT occupancies 2D");
+              entry.addAttachment(data+"/FMT_canvas2_"+tstamp+".png", "FMT occupancies 1D");
+              System.out.println("FMT plots uploaded");
+//              entry.addAttachment(data+"/FTCAL_canvas0_"+tstamp+".png", "FTCAL");
+//              System.out.println("FTCAL plot uploaded");
+//              entry.addAttachment(data+"/FTHODO_canvas0_"+tstamp+".png", "FTHODO FADC occupancies");
+//              System.out.println("FTHODO plot uploaded");
               entry.addAttachment(data+"/FTOF_canvas0_"+tstamp+".png", "FTOF ADC occupancies");
               entry.addAttachment(data+"/FTOF_canvas1_"+tstamp+".png", "FTOF TDC occupancies");
               System.out.println("FTOF plots uploaded");
-              entry.addAttachment(data+"/FTTRK_canvas0_"+tstamp+".png", "FTTRK occupancies 2D");
-              entry.addAttachment(data+"/FTTRK_canvas1_"+tstamp+".png", "FTTRK occupancies 1D");
-              System.out.println("FTTRK plots uploaded");
+//              entry.addAttachment(data+"/FTTRK_canvas0_"+tstamp+".png", "FTTRK occupancies 2D");
+//              entry.addAttachment(data+"/FTTRK_canvas1_"+tstamp+".png", "FTTRK occupancies 1D");
+//              System.out.println("FTTRK plots uploaded");
               entry.addAttachment(data+"/HTCC_canvas0_"+tstamp+".png", "HTCC occupancies");
               System.out.println("HTCC plot uploaded");
               entry.addAttachment(data+"/LTCC_canvas0_"+tstamp+".png", "LTCC occupancies and spectra");
@@ -781,9 +781,9 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
               System.out.println("RTPC plot uploaded");
               entry.addAttachment(data+"/Trigger_canvas0_"+tstamp+".png", "Trigger bits");
               System.out.println("Trigger plots uploaded");
-              entry.addAttachment(data+"/BAND_canvas0_"+tstamp+".png", "BAND ADC occupancies and spectra");
-              entry.addAttachment(data+"/BAND_canvas1_"+tstamp+".png", "BAND TDC occupancies and spectra");
-              System.out.println("BAND plots uploaded");
+//              entry.addAttachment(data+"/BAND_canvas0_"+tstamp+".png", "BAND ADC occupancies and spectra");
+//              entry.addAttachment(data+"/BAND_canvas1_"+tstamp+".png", "BAND TDC occupancies and spectra");
+//              System.out.println("BAND plots uploaded");
             
               long lognumber = entry.submitNow();
               System.out.println("Successfully submitted log entry number: " + lognumber); 
