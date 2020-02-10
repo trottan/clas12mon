@@ -7,10 +7,7 @@ import org.jlab.groot.data.H2F;
 import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
-import org.jlab.clas.physics.Vector3;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
 
 
 public class RTPCmonitor extends DetectorMonitor {
