@@ -123,8 +123,8 @@ public class FMTmonitor extends DetectorMonitor {
                 this.getDataGroup().add(timeOfMaxGroup, sector, layer, 1);
 
                 H1F amplitudeHisto = new H1F("Amplitude : Layer " + layer + " Sector " + sector, "Amplitude : Layer " + layer + " Sector " + sector,
-                        100, 0., 500.);
-                amplitudeHisto.setTitleX("Time of max (Layer " + layer + " Sector " + sector + ")");
+                        500, 0., 5000.);
+                amplitudeHisto.setTitleX("Amplitude (Layer " + layer + " Sector " + sector + ")");
                 amplitudeHisto.setTitleY("Nb hits");
                 amplitudeHisto.setFillColor(4);
                 DataGroup amplitudeGroup = new DataGroup("");
@@ -193,6 +193,7 @@ public class FMTmonitor extends DetectorMonitor {
                         this.getDataGroup().getItem(sector, layer, 1).getH1F("TimeOfMax : Layer " + layer + " Sector " + sector));
 
                 this.getDetectorCanvas().getCanvas("Amplitude").cd(column + numberOfColumns * row);
+                this.getDetectorCanvas().getCanvas("Amplitude").getPad(column + numberOfColumns * row).getAxisY().setLog(true);
                 this.getDetectorCanvas().getCanvas("Amplitude").draw(
                         this.getDataGroup().getItem(sector, layer, 3).getH1F("Amplitude : Layer " + layer + " Sector " + sector));
             }
