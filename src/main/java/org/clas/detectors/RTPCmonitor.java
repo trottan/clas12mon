@@ -1,6 +1,8 @@
 package org.clas.detectors;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import org.clas.viewer.DetectorMonitor;
 import org.jlab.groot.data.H1F;
 import org.jlab.groot.data.H2F;
@@ -144,20 +146,16 @@ public class RTPCmonitor extends DetectorMonitor {
                 float time = bankRTPC.getFloat("time",row);
                 int ADC = bankRTPC.getInt("ADC", row);
                 
-                if(nRows > 0){
-
-                    this.getDataGroup().getItem(0,0,0).getH2F("Occupancy").fill(rtpcrow,rtpccol);
-         
-                    
-                    if(ADC > 350){
+                if(nRows > 0){                             
+                    if(ADC > 320){
+                        this.getDataGroup().getItem(0,0,0).getH2F("Occupancy").fill(rtpcrow,rtpccol);
                         this.getDataGroup().getItem(0,0,0).getH1F("ADC").fill(ADC);
                         if(ADC > maxadc) maxadc = ADC;
                         numhitsabovethresh++;
                         this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution").fill(time);
                         if(time > maxtime) maxtime = time;
-                    }
-
-                    normOccupancy(ADC,rtpcrow,rtpccol);
+                        normOccupancy(ADC,rtpcrow,rtpccol);
+                    }                    
                 } 
                 if((rtpcrow != prevrow || rtpccol != prevcol) && ADC > 350){
                     prevrow = rtpcrow;
@@ -183,17 +181,21 @@ public class RTPCmonitor extends DetectorMonitor {
     private HashMap<Integer,Integer> numhitsperpad = new HashMap<>();
     private HashMap<Integer,Integer> totADCperpad = new HashMap<>();
     private boolean usedevent = false;
+    private List<Integer> usedpads = new ArrayList<>();
     
     private void normOccupancy(int ADC, int row, int col){
         int cellid = (row-1)*96 + col;
-        
-        if(!numhitsperpad.containsKey(cellid)) numhitsperpad.put(cellid, 1);
-        else{
-            if(!usedevent){
-                numhitsperpad.put(cellid, numhitsperpad.get(cellid)+1);
-                usedevent = true;
-            }
+        if(!usedevent){
+            usedpads.clear();
+            usedevent = true;
         }
+        if(!numhitsperpad.containsKey(cellid)){
+            numhitsperpad.put(cellid, 1);
+        }
+        else if(!usedpads.contains(cellid)){
+            numhitsperpad.put(cellid, numhitsperpad.get(cellid)+1);
+        }
+        if(!usedpads.contains(cellid)) usedpads.add(cellid);
         
         if(!totADCperpad.containsKey(cellid)) totADCperpad.put(cellid, 0);
         totADCperpad.put(cellid, totADCperpad.get(cellid)+ADC);
