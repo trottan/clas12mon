@@ -426,15 +426,19 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Occupancies and spectra").update();
 
 
+        this.getDetectorCanvas().getCanvas("PMT Window").getPad(0).setPalette("kRainBow");
         this.getDetectorCanvas().getCanvas("PMT Window").draw(this.getDataGroup().getItem(0,0,0).getH2F("RichScaler"));
-        this.getDetectorCanvas().getCanvas("PMT Window").getPad(0).getAxisZ().setLog(getLogZ());
+        //this.getDetectorCanvas().getCanvas("PMT Window").getPad(0).getAxisZ().setLog(getLogZ());
         this.getDetectorCanvas().getCanvas("PMT Window").update();
 
 
         this.getDetectorCanvas().getCanvas("RICH TDC").setStatBoxFontSize(14);
-        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc0);
-        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc1, "same");
-        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.hdeltaT, "same");
+        // this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc0);
+        // this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc1, "same");
+        hdet.hdeltaT.setOptStat("1111");
+        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.hdeltaT);
+        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.dl0);
+        this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.dl1);
  
 
         this.getDetectorView().getView().repaint();
@@ -617,11 +621,15 @@ public class RICHmonitor  extends DetectorMonitor {
         H1F htdc0 = new H1F("RICH TDC0", "TDC", 260, 0, 260);
         H1F htdc1 = new H1F("RICH TDC1", "TDC", 260, 0, 260);
         H1F hdeltaT = new H1F("RICH delta", "delta TDC", 150, 0, 150);
+        DataLine dl0 = new DataLine(28,0,28,3e10);
+        DataLine dl1 = new DataLine(60,0,60,3e10);
 
 
         public HistTDC() {
             htdc1.setLineColor(2);
-            hdeltaT.setLineColor(4);
+            htdc0.setLineColor(4);
+            dl0.setLineColor(4);
+            dl1.setLineColor(4);
         }
 
         public void setTitle(String title) {

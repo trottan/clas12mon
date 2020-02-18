@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.clas.viewer.DetectorMonitor;
 import org.jlab.detector.calib.utils.DatabaseConstantProvider;
+import org.jlab.groot.base.GStyle;
 import org.jlab.groot.data.H1F;
+import org.jlab.groot.graphics.EmbeddedCanvas;
 import org.jlab.groot.group.DataGroup;
 import org.jlab.io.base.DataBank;
 import org.jlab.io.base.DataEvent;
@@ -100,11 +102,13 @@ public class BMTmonitor extends DetectorMonitor {
         DataGroup sum = new DataGroup(1, 1);
         sum.addDataSet(summary, 0);
         this.setDetectorSummary(sum);
-
-        H1F histmulti = new H1F("multi", "multi", 250, -0.5, 249.5);
+        
+        H1F histmulti = new H1F("multi", "multi", 100, -0.5, 999.5);
         histmulti.setTitleX("hit multiplicity");
         histmulti.setTitleY("counts");
         histmulti.setTitle("Multiplicity of BMT channels");
+        histmulti.setFillColor(34);
+        histmulti.setOptStat("111110");
         DataGroup occupancyGroup = new DataGroup("");
         occupancyGroup.addDataSet(histmulti, 0);
         this.getDataGroup().add(occupancyGroup, 0, 0, 0);
@@ -162,6 +166,13 @@ public class BMTmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("TimeMax").setAxisTitleSize(12);
         this.getDetectorCanvas().getCanvas("TimeMax").setAxisLabelSize(12);
 
+        this.getDetectorCanvas().getCanvas("Multiplicity").setGridX(false);
+        this.getDetectorCanvas().getCanvas("Multiplicity").setGridY(false);
+        this.getDetectorCanvas().getCanvas("Multiplicity").setAxisTitleSize(24);
+        this.getDetectorCanvas().getCanvas("Multiplicity").setAxisLabelSize(18);
+        this.getDetectorCanvas().getCanvas("Multiplicity").setTitleSize(18);
+        this.getDetectorCanvas().getCanvas("Multiplicity").setStatBoxFontSize(18);
+        
         for (int sector = 1; sector <= maxNumberSectors; sector++) {
             for (int layer = 1; layer <= maxNumberLayers; layer++) {
                 int column = maxNumberSectors - sector;
@@ -228,15 +239,11 @@ public class BMTmonitor extends DetectorMonitor {
                         this.getDataGroup().getItem(sector, layer, 1).getH1F("TimeOfMax : Layer " + layer + " Sector " + sector));
             }
         }
+        this.getDetectorCanvas().getCanvas("Multiplicity").draw(this.getDataGroup().getItem(0, 0, 0).getH1F("multi"));
+        
         this.getDetectorCanvas().getCanvas("Occupancy Z").update();
         this.getDetectorCanvas().getCanvas("Occupancy C").update();
         this.getDetectorCanvas().getCanvas("TimeMax").update();
-
-        this.getDetectorCanvas().getCanvas("Multiplicity").divide(1, 1);
-        this.getDetectorCanvas().getCanvas("Multiplicity").setGridX(false);
-        this.getDetectorCanvas().getCanvas("Multiplicity").setGridY(false);
-        this.getDetectorCanvas().getCanvas("Multiplicity").cd(0);
-        this.getDetectorCanvas().getCanvas("Multiplicity").draw(this.getDataGroup().getItem(0, 0, 0).getH1F("multi"));
         this.getDetectorCanvas().getCanvas("Multiplicity").update();
     }
 
