@@ -93,6 +93,7 @@ public class RTPCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Summary").getPad(0).getAxisZ().setLog(true);
         this.getDetectorCanvas().getCanvas("Summary").cd(1);
         this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC signal"));
+        this.getDetectorCanvas().getCanvas("Summary").getPad(1).getAxisZ().setLog(true);
         this.getDetectorCanvas().getCanvas("Summary").cd(2);
         //this.getDetectorCanvas().getCanvas("Summary").getPad(2).getAxisX().setRange(0,this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution").getMax() + 50);
         this.getDetectorCanvas().getCanvas("Summary").draw(this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution"));
