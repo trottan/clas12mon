@@ -146,18 +146,18 @@ public class RTPCmonitor extends DetectorMonitor {
                 float time = bankRTPC.getFloat("time",row);
                 int ADC = bankRTPC.getInt("ADC", row);
                 
-                if(nRows > 0){                             
+                if(nRows > 0){    
+                    this.getDataGroup().getItem(0,0,0).getH1F("ADC").fill(ADC);
+                    if(ADC > maxadc) maxadc = ADC;
                     if(ADC > 320){
                         this.getDataGroup().getItem(0,0,0).getH2F("Occupancy").fill(rtpcrow,rtpccol);
-                        this.getDataGroup().getItem(0,0,0).getH1F("ADC").fill(ADC);
-                        if(ADC > maxadc) maxadc = ADC;
                         numhitsabovethresh++;
                         this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution").fill(time);
                         if(time > maxtime) maxtime = time;
                         normOccupancy(ADC,rtpcrow,rtpccol);
                     }                    
                 } 
-                if((rtpcrow != prevrow || rtpccol != prevcol) && ADC > 350){
+                if((rtpcrow != prevrow || rtpccol != prevcol) && ADC > 320){
                     prevrow = rtpcrow;
                     prevcol = rtpccol;
                     numpads++;
@@ -209,7 +209,7 @@ public class RTPCmonitor extends DetectorMonitor {
 
     @Override
     public void timerUpdate() {
-        this.getDetectorCanvas().getCanvas("Summary").getPad(2).getAxisX().setRange(0,maxtime + 50);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(2).getAxisX().setRange(-1200,maxtime + 50);
         this.getDetectorCanvas().getCanvas("Summary").getPad(3).getAxisX().setRange(0,maxadc + 50);
         this.getDetectorCanvas().getCanvas("Summary").getPad(4).getAxisX().setRange(0,maxnumhits + 50);
         this.getDetectorCanvas().getCanvas("Summary").getPad(5).getAxisX().setRange(0,maxpads + 50);
