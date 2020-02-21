@@ -45,7 +45,7 @@ public class RTPCmonitor extends DetectorMonitor {
         NormOccupancyADC.setTitleY("Col");
         
         
-        H1F TimeDistribution = new H1F("Time Distribution","Time Distribution",80,-1200,8400);
+        H1F TimeDistribution = new H1F("Time Distribution","Time Distribution",80,0,9600);
         TimeDistribution.setTitleX("Time (ns)");
         TimeDistribution.setOptStat(1110);
         
@@ -210,7 +210,7 @@ public class RTPCmonitor extends DetectorMonitor {
 
     @Override
     public void timerUpdate() {
-        this.getDetectorCanvas().getCanvas("Summary").getPad(2).getAxisX().setRange(-1200,maxtime + 50);
+        this.getDetectorCanvas().getCanvas("Summary").getPad(2).getAxisX().setRange(0,maxtime + 50);
         this.getDetectorCanvas().getCanvas("Summary").getPad(3).getAxisX().setRange(0,maxadc + 50);
         this.getDetectorCanvas().getCanvas("Summary").getPad(4).getAxisX().setRange(0,maxnumhits + 50);
         this.getDetectorCanvas().getCanvas("Summary").getPad(5).getAxisX().setRange(0,maxpads + 50);
