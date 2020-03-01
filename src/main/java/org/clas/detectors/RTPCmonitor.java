@@ -227,7 +227,7 @@ public class RTPCmonitor extends DetectorMonitor {
             bin = h.getDataBufferBin(i);
             sum += bin;
         }
-        return (float) bin/length;
+        return (float) sum/length;
     }
 
     @Override
