@@ -207,6 +207,28 @@ public class RTPCmonitor extends DetectorMonitor {
         int cellid = (row-1)*96 + col;
         return (float) totADCperpad.get(cellid)/(float) numhitsperpad.get(cellid);
     }
+    
+    private float getRMS(H2F h){
+        double sum = 0;
+        int length = h.getDataBufferSize();
+        double bin = 0;
+        for(int i = 0; i < length; i++){
+            bin = h.getDataBufferBin(i);
+            sum += bin*bin;
+        }
+        return (float) Math.sqrt(sum/length);
+    }
+    
+    private float getMean(H2F h){
+        double sum = 0;
+        int length = h.getDataBufferSize();
+        double bin = 0;
+        for(int i = 0; i < length; i++){
+            bin = h.getDataBufferBin(i);
+            sum += bin;
+        }
+        return (float) bin/length;
+    }
 
     @Override
     public void timerUpdate() {
@@ -214,6 +236,13 @@ public class RTPCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Summary").getPad(3).getAxisX().setRange(0,maxadc + 50);
         this.getDetectorCanvas().getCanvas("Summary").getPad(4).getAxisX().setRange(0,maxnumhits + 50);
         this.getDetectorCanvas().getCanvas("Summary").getPad(5).getAxisX().setRange(0,maxpads + 50);
+        if(this.getNumberOfEvents() > 0){
+            H2F h = this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC signal");
+            float rms = getRMS(h);
+            float mean = getMean(h);
+            this.getDetectorCanvas().getCanvas("Summary").getPad(1).getAxisX().setTitle("row (RMS: " + rms + " Mean: " + mean + ")");
+            //this.getDetectorCanvas().getCanvas("Summary").update();
+        }
     }
         
 }
