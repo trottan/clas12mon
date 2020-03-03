@@ -53,7 +53,7 @@ public class RTPCmonitor extends DetectorMonitor {
         NumberHits.setTitleX("Number of Hits per event above threshold");
         NumberHits.setOptStat(1110);
         
-        H1F OccupancyADC1D = new H1F("OccupancyADC1D","OccupancyADC1D",200,0,2000);
+        H1F OccupancyADC1D = new H1F("OccupancyADC1D","OccupancyADC1D",500,0,5000);
         OccupancyADC1D.setTitleX("Occupancy ADC 1D");
         OccupancyADC1D.setOptStat(1110);
         
@@ -140,15 +140,17 @@ public class RTPCmonitor extends DetectorMonitor {
             int prevrow = -1;
             int numhitsabovethresh = 0;
             int numpads = 0;
+            int ADCthresh = 10;
             usedevent = false;
             for (int row = 0; row < nRows; ++row) {
                 rtpcrow = bankRTPC.getShort("component",row);
                 rtpccol = bankRTPC.getByte("layer",row);
                 float time = bankRTPC.getFloat("time",row);
                 int ADC = bankRTPC.getInt("ADC", row);
+                ADC -= 256;
                 
                 if(nRows > 0){    
-                    if(ADC > 320){
+                    if(ADC > ADCthresh){
                         this.getDataGroup().getItem(0,0,0).getH2F("Occupancy").fill(rtpcrow,rtpccol);
                         numhitsabovethresh++;
                         this.getDataGroup().getItem(0,0,0).getH1F("Time Distribution").fill(time);
@@ -156,7 +158,7 @@ public class RTPCmonitor extends DetectorMonitor {
                         normOccupancy(ADC,rtpcrow,rtpccol);
                     }                    
                 } 
-                if((rtpcrow != prevrow || rtpccol != prevcol) && ADC > 320){
+                if((rtpcrow != prevrow || rtpccol != prevcol) && ADC > ADCthresh){
                     prevrow = rtpcrow;
                     prevcol = rtpccol;
                     numpads++;
@@ -238,6 +240,8 @@ public class RTPCmonitor extends DetectorMonitor {
             double rms = getRMS(h);
             double mean = getMean(h);
             rms = Math.sqrt(rms*rms - mean*mean);
+            rms = Math.floor(rms);
+            mean = Math.floor(mean);
             this.getDetectorCanvas().getCanvas("Summary").getPad(1).getAxisX().setTitle("row (RMS: " + rms + " Mean: " + mean + ")");
             //this.getDetectorCanvas().getCanvas("Summary").update();
             
