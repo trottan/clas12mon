@@ -246,6 +246,7 @@ public class RTPCmonitor extends DetectorMonitor {
             //this.getDetectorCanvas().getCanvas("Summary").update();
             
             H1F h2 = this.getDataGroup().getItem(0,0,0).getH1F("OccupancyADC1D");
+            h2.reset();
             double bin = 0;
             for(int i = 0; i < h.getDataBufferSize(); i++){
                 bin = h.getDataBufferBin(i);
