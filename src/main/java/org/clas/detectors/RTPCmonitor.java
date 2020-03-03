@@ -206,7 +206,7 @@ public class RTPCmonitor extends DetectorMonitor {
         return (float) totADCperpad.get(cellid)/(float) numhitsperpad.get(cellid);
     }
     
-    private float getRMS(H2F h){
+    private double getRMS(H2F h){
         double sum = 0;
         int length = h.getDataBufferSize();
         double bin = 0;
@@ -214,10 +214,10 @@ public class RTPCmonitor extends DetectorMonitor {
             bin = h.getDataBufferBin(i);
             sum += bin*bin;
         }
-        return (float) Math.sqrt(sum/length);
+        return Math.sqrt(sum/length);
     }
     
-    private float getMean(H2F h){
+    private double getMean(H2F h){
         double sum = 0;
         int length = h.getDataBufferSize();
         double bin = 0;
@@ -225,7 +225,7 @@ public class RTPCmonitor extends DetectorMonitor {
             bin = h.getDataBufferBin(i);
             sum += bin;
         }
-        return (float) sum/length;
+        return  sum/length;
     }
 
     @Override
@@ -235,8 +235,8 @@ public class RTPCmonitor extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("Summary").getPad(5).getAxisX().setRange(0,maxpads + 50);
         if(this.getNumberOfEvents() > 0){
             H2F h = this.getDataGroup().getItem(0,0,0).getH2F("Occupancy ADC signal");
-            float rms = getRMS(h);
-            float mean = getMean(h);
+            double rms = getRMS(h);
+            double mean = getMean(h);
             rms = Math.sqrt(rms*rms - mean*mean);
             this.getDetectorCanvas().getCanvas("Summary").getPad(1).getAxisX().setTitle("row (RMS: " + rms + " Mean: " + mean + ")");
             //this.getDetectorCanvas().getCanvas("Summary").update();
