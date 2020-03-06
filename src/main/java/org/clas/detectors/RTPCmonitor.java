@@ -21,11 +21,21 @@ public class RTPCmonitor extends DetectorMonitor {
         this.init(false);
     }
     
+    private HashMap<Integer,Integer> numhitsperpad = new HashMap<>();
+    private HashMap<Integer,Integer> totADCperpad = new HashMap<>();
+    private boolean usedevent = false;
+    private List<Integer> usedpads = new ArrayList<>();
+    
+    
     @Override
     public void createHistos() {
         // create histograms
         this.setNumberOfEvents(0);
 
+        usedpads.clear();
+        numhitsperpad.clear();
+        totADCperpad.clear();
+        
         H1F summary = new H1F("summary","RTPC",500, 0, 100);
         summary.setTitleX("Fill me");
         summary.setTitleY("Counts");
@@ -57,7 +67,7 @@ public class RTPCmonitor extends DetectorMonitor {
         OccupancyADC1D.setTitleX("Occupancy ADC 1D");
         OccupancyADC1D.setOptStat(1110);
         
-        H1F PadsPerEvent = new H1F("Pads per Event","Pads per Event",1728,0,17281);
+        H1F PadsPerEvent = new H1F("Pads per Event","Pads per Event",8640,0,17280);
         PadsPerEvent.setTitleX("Pads per Event");
         PadsPerEvent.setOptStat(1110);
 
@@ -76,7 +86,7 @@ public class RTPCmonitor extends DetectorMonitor {
             
         
     }
-        
+    
     @Override
     public void plotHistos() {
         // initialize canvas and plot histograms
@@ -178,11 +188,6 @@ public class RTPCmonitor extends DetectorMonitor {
             }           
         }                              
     }
-    
-    private HashMap<Integer,Integer> numhitsperpad = new HashMap<>();
-    private HashMap<Integer,Integer> totADCperpad = new HashMap<>();
-    private boolean usedevent = false;
-    private List<Integer> usedpads = new ArrayList<>();
     
     private void normOccupancy(int ADC, int row, int col){
         int cellid = (row-1)*96 + col;
