@@ -58,11 +58,11 @@ public class RTPCmonitor extends DetectorMonitor {
         SuperPadOccupancy.setTitleY("Col");
         
         H1F PadsPerSuper = new H1F("Pads Per Super","Pads Per Super",32,1,33);
-        PadsPerSuper.setTitleX("Number of Unique pads occupied in a Superpad");
+        PadsPerSuper.setTitleX("Num Pads in Superpad");
         PadsPerSuper.setOptStat(1110);
         
         H1F PadsPerSuperPerTime = new H1F("Pads Per Super Per Time","Pads Per Super Per Time",32,1,33);
-        PadsPerSuperPerTime.setTitleX("Number of Unique pads occupied in a Superpad in each time");
+        PadsPerSuperPerTime.setTitleX("Num Pads in Superpad per time");
         PadsPerSuperPerTime.setOptStat(1110);
         
         H1F TimeDistribution = new H1F("Time Distribution","Time Distribution",80,0,9600);
@@ -208,8 +208,8 @@ public class RTPCmonitor extends DetectorMonitor {
                     padspersuper += superpadmap[i][j];
                     superpadmap[i][j] = 0;
                 }
-                padspersuper = 0;
                 this.getDataGroup().getItem(0,0,0).getH1F("Pads Per Super").fill(padspersuper);
+                padspersuper = 0;
             }
             
             padspersupertime = 0;
@@ -220,8 +220,8 @@ public class RTPCmonitor extends DetectorMonitor {
                         padspersupertime += superpadmappertime[t][i][j];
                         superpadmappertime[t][i][j] = 0;
                     }
-                    padspersupertime = 0;
                     this.getDataGroup().getItem(0,0,0).getH1F("Pads Per Super Per Time").fill(padspersupertime);
+                    padspersupertime = 0;
                 }
             }
 
