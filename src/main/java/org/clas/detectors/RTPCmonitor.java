@@ -69,7 +69,7 @@ public class RTPCmonitor extends DetectorMonitor {
         TimeDistribution.setTitleX("Time (ns)");
         TimeDistribution.setOptStat(1110);
         
-        H1F NumberHits = new H1F("Number of Hits Per Event","Number of Hits Per Event",1750,1,3501);
+        H1F NumberHits = new H1F("Number of Hits Per Event","Number of Hits Per Event",3500,1,7001);
         NumberHits.setTitleX("Number of Hits per event above threshold");
         NumberHits.setOptStat(1110);
         
