@@ -227,10 +227,10 @@ public class RTPCmonitor extends DetectorMonitor {
 
             
             this.getDataGroup().getItem(0,0,0).getH1F("Pads per Event").fill(numpads);
-            if(numpads > maxpads && numpads - maxpads < 500) maxpads = numpads;
+            if(numpads > maxpads) maxpads = numpads;
             if(numhitsabovethresh > 0){
                 this.getDataGroup().getItem(0,0,0).getH1F("Number of Hits Per Event").fill(numhitsabovethresh);
-                if(numhitsabovethresh > maxnumhits && numhitsabovethresh - maxnumhits < 500) maxnumhits = numhitsabovethresh;
+                if(numhitsabovethresh > maxnumhits) maxnumhits = numhitsabovethresh;
             }
             
             for(int row = 0; row < nRows; row++){
