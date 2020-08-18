@@ -558,7 +558,13 @@ public class EventViewer implements IDataEventListener, DetectorListener, Action
             }
             
             String fileName = data + "/clas12mon_histos_" + this.runNumber + "_" + tstamp + ".hipo"; 
-            this.saveHistosToFile(fileName);
+            try{
+                this.saveHistosToFile(fileName);
+            }
+            catch(IndexOutOfBoundsException exc){
+                exc.printStackTrace(); 
+                System.out.println( exc.getMessage());
+            }
             
             String fileName1 = data + "/summary_FD_"+tstamp+".png";
             System.out.println(fileName1);
