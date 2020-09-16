@@ -13,6 +13,7 @@ import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Arrays;
 
 
 import java.awt.FlowLayout;
@@ -42,6 +43,7 @@ import org.jlab.detector.base.DetectorType;
 import org.jlab.io.hipo.HipoDataEvent;
 
 import org.jlab.groot.data.DataLine;
+import org.jlab.utils.groups.IndexedTable;
 
 /* Edited by Nicholaus Trotta and Joshua GoodWill */
 
@@ -53,6 +55,10 @@ public class RICHmonitor  extends DetectorMonitor {
 
         this.setDetectorTabNames("PMT Window","Occupancies and spectra","RICH TDC");
         this.init(false);
+
+        this.getCcdb().setVariation("default");
+        this.getCcdb().init(Arrays.asList(new String[]{"/calibration/rich/pixels"}));
+
     }
 
 
@@ -159,6 +165,11 @@ public class RICHmonitor  extends DetectorMonitor {
 
 
     public void boarder() { // creates boarder around PMTs
+
+
+
+
+
         int pmt= 391;
         int[] twoBlock = {391,365,336,310,287,261,238,218,195,175,158,138,121,107,90,76,65,51,40,32,18,13,8}; //blocks that has two pmts instead of 3
         int[] firstTile = {363,336,310,285,261,238,216,195,175,156,138,121,105,90,76,63,51,40,30,21,13,6}; //start of each block
@@ -287,6 +298,7 @@ public class RICHmonitor  extends DetectorMonitor {
 
 
 
+
         int y = row *  8 + row - 1;
 
         if(layer == 3 || layer ==5 || layer ==7|| layer ==12 || layer ==15 || layer ==19 || layer ==24|| layer ==28 || layer ==33 ||layer ==39|| layer ==44 || layer ==50|| layer ==57|| layer ==63 || layer ==70 || layer ==78|| layer ==85 || layer ==93 || layer == 102|| layer == 110 || layer == 119 || layer ==129|| layer ==138) {
@@ -404,7 +416,16 @@ public class RICHmonitor  extends DetectorMonitor {
             }
         }
 
-        this.getDataGroup().getItem(0,0,0).getH2F("RichScaler").fill(x*1.0,y*1.0);
+
+
+
+      /* int runNumber    = head.getInt("run", 0);
+       IndexedTable  rfConfig =  this.getCcdb().getConstants(runNumber,"/calibration/rich/pixels:0:default:2020-08-06_23-18-47");
+       int stat = rfConfig.getIntValue("status",1,1,1);*/
+
+        this.getDataGroup().getItem(0,0,0).getH2F("RichScaler").fill(x*0.1,y*0.1);
+
+
 
     }
 
@@ -439,7 +460,7 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.hdeltaT);
         this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.dl0);
         this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.dl1);
- 
+
 
         this.getDetectorView().getView().repaint();
         this.getDetectorView().update();
@@ -462,6 +483,9 @@ public class RICHmonitor  extends DetectorMonitor {
         }
 
         //if (!testTriggerMask()) return;
+        if(!event.hasBank("RUN::config")) return;
+        DataBank head = event.getBank("RUN::config");
+        int run = head.getInt("run", 0);
 
         // process event info and save into data group
         if(event.hasBank("RICH::adc")==true) {
@@ -498,12 +522,18 @@ public class RICHmonitor  extends DetectorMonitor {
                 int  orderbyte = bank.getByte("order",i); // order specifies left-right for ADC
 
 
+
                 //    int tileID = bank.getByte("layer", i) & 0xFF;
                 //  short channel = bank.getShort("component", i);
 
                 if(tdc>0) {
                     this.getDataGroup().getItem(0,0,0).getH2F("occTDC").fill(comp,layer);
-                    fillTile(comp,layer);
+
+                    IndexedTable richStatus = this.getCcdb().getConstants(run,"/calibration/rich/pixels");
+                    int stat = richStatus.getIntValue("status", sector, layerbyte, (int) comp);
+
+
+                    if(stat==0) fillTile(comp,layer);
 
                     if(orderbyte == 1) this.getDataGroup().getItem(0,0,0).getH2F("tdc_leading_edge").fill(tdc, layer*3 + pmt);
                     if(orderbyte == 0) this.getDataGroup().getItem(0,0,0).getH2F("tdc_trailing_edge").fill(tdc, layer*3 + pmt);
@@ -715,7 +745,6 @@ public class RICHmonitor  extends DetectorMonitor {
         this.getDetectorCanvas().getCanvas("RICH TDC").clear();
         this.getDetectorCanvas().getCanvas("RICH TDC").divide(1, 1);
         this.getDetectorCanvas().getCanvas("RICH TDC").setStatBoxFontSize(14);
-
         if (lvlBox.getSelectedIndex() == 0) {
             if (tdcBox.getSelectedIndex() == 0) {
                 this.getDetectorCanvas().getCanvas("RICH TDC").draw(hdet.htdc0);
