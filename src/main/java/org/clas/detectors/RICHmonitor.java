@@ -423,7 +423,7 @@ public class RICHmonitor  extends DetectorMonitor {
        IndexedTable  rfConfig =  this.getCcdb().getConstants(runNumber,"/calibration/rich/pixels:0:default:2020-08-06_23-18-47");
        int stat = rfConfig.getIntValue("status",1,1,1);*/
 
-        this.getDataGroup().getItem(0,0,0).getH2F("RichScaler").fill(x*0.1,y*0.1);
+        this.getDataGroup().getItem(0,0,0).getH2F("RichScaler").fill(x*1.0,y*1.0);
 
 
 
